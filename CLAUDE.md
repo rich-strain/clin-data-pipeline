@@ -210,5 +210,5 @@ to a later step without confirming the current one works.
 
 ## Status
 
-Steps 1 (app shell), 2 (Stage A FHIR generation), and 3 (Stage A flatten)
-complete. Step 4 (Stage A notes generation) next.
+Steps 1 (app shell), 2 (Stage A FHIR generation), 3 (Stage A flatten), and 4
+(Stage A notes generation) complete. Step 5 (Stage B extraction) next.

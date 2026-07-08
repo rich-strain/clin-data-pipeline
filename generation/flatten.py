@@ -29,6 +29,8 @@ from pathlib import Path
 
 import pandas as pd
 
+from fhir_common import group_bundle_entries
+
 DATA_DIR = Path(__file__).resolve().parent.parent / "data" / "generated"
 
 OBSERVATION_DISPLAYS = [
@@ -50,40 +52,7 @@ def _slug(display):
 
 
 def flatten_bundle(bundle):
-    patient = None
-    conditions = []
-    medications = []
-    observations = {}  # display -> list of {date, value, unit}
-
-    for entry in bundle["entry"]:
-        resource = entry["resource"]
-        rtype = resource["resourceType"]
-
-        if rtype == "Patient":
-            patient = resource
-        elif rtype == "Condition":
-            conditions.append({
-                "code": resource["code"]["coding"][0]["code"],
-                "display": resource["code"]["text"],
-                "onset": resource.get("onsetDateTime"),
-            })
-        elif rtype == "MedicationStatement":
-            medications.append({
-                "code": resource["medicationCodeableConcept"]["coding"][0]["code"],
-                "display": resource["medicationCodeableConcept"]["text"],
-                "dosage_text": resource.get("dosage", [{}])[0].get("text", ""),
-                "effective": resource.get("effectiveDateTime"),
-            })
-        elif rtype == "Observation":
-            display = resource["code"]["text"]
-            observations.setdefault(display, []).append({
-                "date": resource.get("effectiveDateTime"),
-                "value": resource["valueQuantity"]["value"],
-                "unit": resource["valueQuantity"]["unit"],
-            })
-
-    if patient is None:
-        raise ValueError("Bundle has no Patient resource")
+    patient, conditions, medications, observations = group_bundle_entries(bundle)
 
     name = patient.get("name", [{}])[0]
     given = " ".join(name.get("given", []))
