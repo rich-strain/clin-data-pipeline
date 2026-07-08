@@ -194,6 +194,12 @@ to a later step without confirming the current one works.
 6. **Stage C — curation** — normalize/redact/rebalance/synthesize, one at a
    time.
    Verify: before/after diffs on sample records for each.
+   Known upstream gap to resolve here (flagged in `generation/flatten.py`
+   docstring): when the messiness toggle drops an Observation's
+   `effectiveDateTime`, flatten's "most recent by date" logic becomes
+   ambiguous. Decide whether the fix belongs in the generator (never drop
+   the timestamp, even when messy) or in flatten (handle missing dates
+   explicitly) — don't leave it unaddressed.
 7. **Stage D — split & format** — train/val JSONL output.
    Verify: inspect split ratios and JSONL shape.
 8. **Stage E — training** — script + config, then Rich runs it locally;
@@ -204,5 +210,5 @@ to a later step without confirming the current one works.
 
 ## Status
 
-Steps 1 (app shell) and 2 (Stage A FHIR generation) complete. Step 3 (Stage A
-flatten) next.
+Steps 1 (app shell), 2 (Stage A FHIR generation), and 3 (Stage A flatten)
+complete. Step 4 (Stage A notes generation) next.
