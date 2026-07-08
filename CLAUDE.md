@@ -38,7 +38,8 @@ the Anthropic API. This is the "LLM dump" — raw, useful, but not yet curated.
 Takes Stage B's extraction output as raw input and applies:
 
 - **Normalization** — consistent units, consistent formatting/terminology
-- **Redaction** — strip synthetic PHI/PII fields (names, MRNs, DOBs, addresses)
+- **Redaction** — strip synthetic PHI/PII fields (names, MRNs, DOBs, addresses,
+  visit/procedure dates)
 - **Rebalancing** — even out over/under-represented categories or lengths
 - **Synthesis** — LLM-generated additional records to fill an identified gap
 
@@ -174,7 +175,10 @@ to a later step without confirming the current one works.
    Verify: app launches, navigation works.
 2. **Stage A — FHIR generation** — `generate_fhir.py` producing synthetic
    Patient/Condition/Observation/MedicationStatement bundles, with the
-   messiness toggle.
+   messiness toggle. `Patient` resources include name and birthdate;
+   `Condition`/`Observation`/`MedicationStatement` resources include a date
+   for the associated procedure/visit (onset/effective/authored date) — these
+   are exactly the synthetic PHI/PII fields Stage C's redaction step targets.
    Verify: inspect generated JSON, confirm resources are valid-shaped FHIR.
 3. **Stage A — flatten** — `flatten.py` projecting FHIR bundles into a
    tabular feature table.
@@ -200,4 +204,5 @@ to a later step without confirming the current one works.
 
 ## Status
 
-Step 1 (app shell) in progress.
+Steps 1 (app shell) and 2 (Stage A FHIR generation) complete. Step 3 (Stage A
+flatten) next.
