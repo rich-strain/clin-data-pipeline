@@ -154,13 +154,231 @@ problem than redacting the JSONL record branch, and nothing currently
 reads that CSV downstream, so there's no fine-tuning-data leakage risk from
 leaving it raw.
 
-That said, it *is* a user-facing artifact — the app's Stage A page will
-display it once Step 9 wires up the app's data display (see Working plan).
-**Action item for Step 9:** when `patient_features.csv` (or any view of its
-contents) is rendered in the app, add a one-line caption stating it's raw,
-unredacted Stage A demonstration data, distinct from the redacted branch
-that actually feeds training — so a viewer doesn't mistake the visible raw
-names/birthdates for what the model was actually trained on. Not added now
-because the app doesn't render this table yet (Stage A's page is still the
-unbuilt stub); tracked here so it isn't forgotten by the time that page is
-built.
+That said, it *is* a user-facing artifact — the app's Stage A page displays
+it. **Resolved in Step 9:** the app's Stage A page now renders this table
+with a caption stating it's raw, unredacted Stage A demonstration data,
+distinct from the redacted branch that actually feeds training — so a
+viewer doesn't mistake the visible raw names/birthdates for what the model
+was actually trained on.
+
+**Known limitation, not fixed: a shifted `note_date` can land after the
+generation ceiling.** `generate_fhir.py` generates original onset/
+effective/authored dates up to a hardcoded ceiling (`2026-07-08`); `redact.py`
+then shifts by up to +/-365 days with no check against that ceiling
+afterward. On the current 100-patient dataset, 20/100 records end up with a
+`note_date` shifted past that date — e.g. a note reading "Visit Date:
+2026-12-31" while narrating the visit as already having happened. This is a
+data-realism nitpick, not a correctness or privacy issue: it doesn't affect
+diagnosis/medication/vitals content, doesn't weaken redaction (the shift
+still moved the true date), and doesn't change what the model was actually
+trained to do. The clean fix would be generating original dates with
+headroom equal to `redact.py`'s `SHIFT_RANGE_DAYS` rather than clamping
+after the fact (clamping would visibly cluster records at the ceiling
+date). Deliberately not fixed for this pass: Stage E has already completed
+a real training run against the current data, and Step 9's app/docs wiring
+already reference those specific results — regenerating now to fix a
+cosmetic date string would cost a full pipeline rebuild and retrain for a
+bug with no bearing on the model's actual learned behavior.
+
+## Stage C — rebalance
+
+**The problem:** Stage B's extraction, run at realistic scale, produces
+diagnosis-category counts shaped by `random.choice` over `generate_fhir.py`'s
+condition list, not by any deliberate class balance. A fine-tune trained on
+that raw distribution would see some diagnoses several times more often
+than others for no reason related to real-world prevalence.
+
+**Decision: oversample (duplicate existing records) rather than downsample.**
+With a dataset this size, throwing away over-represented records to match
+the rarest category would shrink an already-small training set further —
+actively worse for a data-starved fine-tune. Duplicating records that carry
+an under-represented diagnosis preserves every original example while
+boosting rare categories, at the cost of the duplicated content being an
+exact copy (a real overfitting risk per duplicate, not engineered away —
+see `rebalance.py`'s docstring). Duplicates are tagged
+`rebalance_duplicate_of` with a suffixed `patient_id` (`-dup1`, `-dup2`,
+...), both for auditability and because Stage D's split **must** keep every
+duplicate in the same split as its original (see the split section below).
+
+**Known, accepted limitation — multi-diagnosis records overshoot.** A record
+carrying two diagnoses boosts both when duplicated to fix one of them, even
+if the other was already at target. Documented rather than solved with a
+set-cover-style selection, which isn't worth the complexity at this scale.
+
+**Known, accepted limitation — a zero-represented category can't be
+rebalanced at all.** Oversampling can only amplify what's already present;
+a diagnosis with zero existing records has nothing to duplicate. That's
+exactly the gap `synthesize.py` exists to fill.
+
+## Stage C — synthesize
+
+**The problem:** whichever diagnosis categories `rebalance.py` leaves at
+zero can't be fixed by duplication — a category with no existing record has
+no record to amplify.
+
+**Decision: LLM generation (Anthropic API, cache-first, same pattern as
+`extractor.py`), not a hand-written template record.** A hand-authored
+record for the one missing category at dev scale would have been faster and
+free, but rejected because it doesn't scale (every zero-count category
+found needs its own manual record — exactly the kind of one-off work this
+pipeline is meant to automate) and because an LLM can reason about
+clinically plausible comorbidities and medications in a way a static
+template can't without re-deriving a small clinical knowledge base by hand.
+
+**Division of labor: the model picks *which*, code fills in *how*.** The
+model chooses comorbid diagnoses/medications/vitals, enum-constrained to
+`generate_fhir.py`'s own canonical tables — but the model never invents unit
+strings or dosage text; code fills those in canonically once the model
+picks a name. This guarantees synthesized records land in the dataset
+already `normalize.py`-canonical, rather than trusting the model to
+reproduce exact canonical strings verbatim. `patient_id`/`date_of_birth`/
+`note_date` are also generated in code (deterministic, seeded per record),
+since there's no clinical judgment in picking a plausible birth date and
+keeping them out of the API call keeps the cache key focused on the part
+that actually needs LLM reasoning.
+
+**Only fills actual gaps.** Never generates more than `target -
+current_count` for a category, and only for categories still at zero after
+rebalance — it doesn't round out every category to a nicer number. At the
+current 100-patient scale, every category already has organic
+representation after rebalancing, so this step runs and correctly makes
+zero API calls; the mechanism was exercised (and produced 3 new records) at
+the original 10-patient dev scale, when `Hyperlipidemia, unspecified` had
+zero records.
+
+Every synthesized record is tagged `"synthesized": true` /
+`"synthesized_category"` for traceability, and — same overshoot trade-off
+`rebalance.py` documents — the model's comorbidity choices can push an
+already-satisfied category further past target as a side effect. Not
+engineered away, for the same reason: avoiding it would mean either
+clinically unrealistic single-diagnosis records or a more complex
+constrained-generation setup neither justified at this scale.
+
+## Stage D — split
+
+**The problem:** Stage C's `rebalance.py` produces duplicate records that
+are near-identical copies of an existing record (marked
+`rebalance_duplicate_of`) — not independent patients. A random 80/20 split
+over raw records could easily put a duplicate in val while its original
+sits in train, silently leaking train-seen content into validation.
+
+**Decision: split by original patient identity, not raw record.** Every
+record belonging to the same original patient (the original plus every
+`-dupN` copy) is treated as one group and assigned to a single split,
+always. `synthesize.py`'s output has no matching note in
+`clinical_notes.jsonl` (Resolved decisions #8), so those records are
+excluded from the split entirely rather than force-fit into a differently-
+shaped instruction — a small, documented gap, not a silent one.
+
+**Consequence, stated honestly:** because group sizes vary (a patient with
+duplicates forms a group of 2–3; everyone else is a group of 1), splitting
+by group only *approximates* an 80/20 *record* ratio, not an exact one.
+Anti-leakage correctness takes priority over hitting an exact percentage.
+Groups are assigned in first-seen file order, not an additional random
+shuffle — patient UUIDs are already randomly generated in Stage A, so the
+file's existing order carries no structure worth correcting for.
+
+## Stage D — format into JSONL
+
+**Instruction/response shape.** `instruction` is the patient's redacted note
+text; `response` is a JSON-formatted **string** (not a nested object)
+containing `date_of_birth`/`diagnoses`/`medications`/`vitals` — a string
+because fine-tuning trains the model to generate *text*, and the target it
+must learn to produce is the serialized JSON itself, matching how it would
+actually need to emit structured output at inference time. Pipeline
+bookkeeping (`patient_id`, `rebalance_duplicate_of`, ...) is dropped from
+`response` — it's metadata, not something an extraction model should learn
+to predict. `note_date` is excluded (it was never an extraction target,
+just pipeline-assigned metadata about when the note was generated) but
+`date_of_birth` is included, since it *was* one of `extractor.py`'s actual
+LLM-extracted fields.
+
+**Note redaction via targeted find-and-replace, not generic de-identification**
+— see Resolved decisions #8 for the full rationale (generic free-text PHI
+inference is a hard, out-of-scope research problem; this repo already knows
+the exact ground-truth strings it inserted, so redaction is substitution,
+not inference). All of a patient's known PHI strings and dates are replaced
+in a **single compiled regex pass**, not sequential `.replace()` calls —
+sequential replacement risks a later rule matching text an earlier rule just
+produced (e.g. one date's shifted output happening to equal another field's
+original search string), a real correctness bug for simultaneous
+substitution, not just a style preference.
+
+**Leakage check is per-patient, not corpus-wide.** At 100-patient scale, a
+corpus-wide "does this real string appear anywhere in the output" scan
+produced a false positive: patient A's real DOB coincidentally equaled
+patient B's own correctly-shifted DOB (a birthday-paradox effect from 100
+independent per-patient offsets across a ~66-year range). That collision
+discloses nothing about patient A. The check that actually matters is
+scoped per patient — does record X's own real PHI appear in record X's own
+example — which is what the current implementation does.
+
+## Stage E — train
+
+**Base model: Qwen2.5-0.5B-Instruct**, chosen over TinyLlama-1.1B-Chat
+(older, weaker instruction-following, needlessly larger for worse quality)
+and SmolLM2-360M-Instruct (smaller, but 0.5B wasn't a meaningful
+download/runtime cost on this hardware, and the larger model gives the
+fine-tune a better chance of actually picking up the extraction pattern
+rather than fighting base capability). Already instruction-tuned, so the
+fine-tune only needs to shift behavior toward this specific extraction
+format rather than teach instruction-following from scratch.
+
+**No 4-bit/8-bit quantization.** `bitsandbytes` doesn't support MPS well;
+skipped rather than fighting a poorly-supported path. At 0.5B parameters,
+fp16 LoRA fits comfortably without it.
+
+**LoRA config deliberately modest:** `r=8, alpha=16` (standard `alpha=2r`
+heuristic), attention projections only (`q/k/v/o_proj`), not the MLP. With
+only 139 training examples, a higher rank or MLP-inclusive target set would
+add trainable capacity this dataset can't productively use — it would more
+easily memorize the specific 139 examples than learn the general pattern.
+
+**A plain PyTorch training loop, not `transformers.Trainer`.** `Trainer`
+would work, but a manual loop keeps every step (batching, chat-template loss
+masking, MPS device placement, per-epoch loss) directly inspectable in
+~100 lines — appropriate for a script whose job is partly to *demonstrate*
+the mechanics, not just produce a checkpoint. Loss is masked to the
+assistant continuation only (system+user prefix labels set to `-100`) — the
+model should learn to *produce* the extraction, not predict the note text
+it's reading.
+
+**A real bug was caught and fixed during this build, not shipped silently.**
+The first full run produced pure garbage ("API/API/API...") from *both*
+models during before/after sample generation. Root-caused to a missing
+`model.eval()` call before generation — the model was left in `.train()`
+mode (gradient-checkpointing hooks + LoRA dropout active), confirmed by
+reproducing the exact garbage output and warnings in isolation, then
+confirming the fix resolved it cleanly. A second, unrelated MPS
+out-of-memory issue on the first batch (from Qwen2.5's large 151,936-token
+vocab making the logits tensor large relative to this model's hidden size)
+was fixed with gradient checkpointing and a smaller batch size.
+
+**Honest framing:** 139 examples is small by real ML standards, and val
+loss plateaus/ticks up slightly after epoch 3 while train loss keeps
+falling — the textbook overfitting signature at this scale, reported
+plainly rather than smoothed over. What this run *does* demonstrate,
+correctly and on real hardware: real data loading, correct loss masking,
+LoRA attachment, a real training loop with genuinely declining loss,
+adapter checkpointing, and a real behavioral difference with vs. without
+the adapter. Not a claim of production-quality extraction accuracy.
+
+## Committing pipeline outputs (`data/`)
+
+**The problem, found during Step 9 polish:** `.gitignore` excluded
+`data/generated/`, `data/extracted/`, `data/curated/`, and `data/splits/` as
+"regenerated by the app; not committed." But nothing in this pipeline
+regenerates them live in a deployed context — Stages B and C's synthesize
+step call the Anthropic API, which a public Streamlit deployment has no key
+for, and even without that constraint, re-running ~100 Haiku calls on every
+visitor's page load would be slow and needlessly costly. Left as-is, the
+app's Stage A–D pages would have nothing to display at all in a fresh
+deployment.
+
+**Decision: commit the pipeline outputs, same precedent already set for
+`training_results/` (Resolved decisions #3).** This data is fully synthetic
+(no real PHI, per this project's Non-goals) and small (~1.5 MB total), so
+there's no privacy or repo-bloat cost to committing it. The deployed app now
+displays this real, committed, previously-generated run — consistent with
+how Stage E already works — rather than silently having five-sixths of the
+app be a stub in any environment without an API key.
