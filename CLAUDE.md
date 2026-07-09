@@ -210,6 +210,25 @@ clin-data-pipeline/
    JSONL rather than given a differently-shaped instruction, to keep the
    training set's instruction format consistent — a small, honestly
    documented gap (21 curated records → 18 in the final JSONL).
+9. **Adding MRN and address before Stage E** (revisited with extra runway
+   — build was ahead of schedule): `generate_fhir.py` already generates a
+   synthetic MRN on the `Patient` resource, but it never flowed downstream
+   (not into notes, extraction, or curated records) — `redact.py`'s own
+   docstring already flagged this, and `CLAUDE.md`'s redaction description
+   claims MRNs/addresses are redacted when neither field exists anywhere
+   in the pipeline. Both are genuine HIPAA Safe Harbor identifiers already
+   implicitly claimed as handled, so wiring them through (Patient →
+   note prose → extraction → redact, same pattern as name/DOB) closes a
+   real documentation-vs-reality gap rather than adding speculative scope.
+   Doing this now, before Stage E starts training, avoids retraining later
+   on data missing these fields.
+   Explicitly OUT of scope for this pass: phone/email (genuinely new
+   scope, never claimed anywhere in the docs — a real addition, not a gap
+   fix) and a `Practitioner` (doctor) resource/reference (not a Safe
+   Harbor *patient* identifier at all, so it doesn't serve the
+   redaction-completeness goal — it would reopen Resolved decision #1's
+   FHIR-resource-type scope for a different reason: EHR modeling depth,
+   which is a legitimate but separate ask this pass doesn't take on).
 
 ## Working plan
 
@@ -375,5 +394,44 @@ string found **zero matches**. Reruns are byte-identical (verified via
 diff) — fully deterministic, zero API calls.
 
 **Final counts:** `data/splits/train.jsonl` = 14 examples, `data/splits/
-val.jsonl` = 4 examples (18 total, matching split.py's output). Step 8
-(Stage E — training) is next.
+val.jsonl` = 4 examples (18 total, matching split.py's output).
+
+**MRN/address, Step A of 2 (Resolved decisions #9) — complete and
+verified.** Wires the synthetic MRN (already generated but never used
+downstream) and a new synthetic address through Patient -> note prose ->
+extraction, closing the gap #9 identified before Stage E starts training.
+
+- `generate_fhir.py`: added `address` (street/city/state/zip, from a small
+  fixed list of plausible-shaped values) to the Patient resource, alongside
+  the pre-existing `identifier`/MRN. Both get the same 0.15 messy-drop rate
+  already used for `gender`. Address/MRN-drop randomness is drawn from a
+  `patient_id`-seeded local RNG, not the shared generation `rng` stream —
+  verified this keeps the change purely additive: regenerating the 10-patient
+  dev bundle produced byte-identical conditions/observations/medications and
+  Patient name/gender/birthDate (only resource UUIDs differ, which were
+  already unseeded via `uuid.uuid4()` before this change, and the new
+  address/identifier fields).
+- `generate_notes.py`: note header now includes MRN (same line as name/DOB)
+  and address (its own line) when the Patient resource has them.
+- `extractor.py`: tool schema extended with nullable `mrn`/`address` fields
+  (nullable because messy generation can drop either), same pattern as
+  existing nullable `dosage`/vital `unit`.
+- Verified end-to-end: regenerated bundles show MRN present on all 10
+  patients and address present on 9/10 (1 dropped by messiness, as
+  expected); regenerated notes show both in the header prose; re-ran
+  extraction (cache grew 10 -> 20 entries — every note's cache key changed
+  since note text changed, all 10 correctly triggered fresh Haiku calls) and
+  confirmed **exact match** between extracted `mrn`/`address` and the source
+  FHIR data for all 10 records, including correctly extracting `null` for
+  the 2 patients missing MRN and the 1 patient missing address.
+
+**Not yet done — Step B of 2**: `redact.py` and `format_jsonl.py` are
+untouched (explicitly out of scope for this pass). `redact.py` doesn't yet
+strip MRN/address from curated records, and `format_jsonl.py`'s note
+find-and-replace doesn't yet substitute them out of instruction text either
+— both still need updating before this data is safe for Stage D/E. Also
+note: Stage C's curated outputs (`normalized.jsonl` through
+`synthesized.jsonl`) and Stage D's splits are now stale relative to the
+freshly-regenerated `extractions.jsonl` (different patient UUIDs, new
+fields) — re-running the full Stage C -> D pipeline is part of Step B's
+follow-up, not done yet.

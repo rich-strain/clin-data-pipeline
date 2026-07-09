@@ -10,6 +10,12 @@ Messiness toggle (`messy=True`) introduces realistic EHR-data problems
 (inconsistent units, missing optional fields, free-text dosage shorthand)
 directly at generation time, so Stage C's curation steps have real problems
 to fix.
+
+Patient resources carry a synthetic MRN (`identifier`) and a synthetic
+address (`address`) — both flow downstream into note prose and extraction
+(see `generate_notes.py`/`extractor.py`) so Stage C's redaction step has a
+real field to act on for these two Safe Harbor identifiers, matching
+name/DOB. See CLAUDE.md Resolved decisions #9.
 """
 
 import argparse
@@ -35,6 +41,18 @@ LAST_NAMES = [
     "Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller",
     "Davis", "Rodriguez", "Martinez", "Hernandez", "Lopez", "Gonzalez",
     "Wilson", "Anderson", "Thomas", "Taylor", "Moore", "Jackson", "Martin",
+]
+
+STREET_NAMES = [
+    "Main St", "Oak Ave", "Maple Dr", "Cedar Ln", "Elm St", "Pine Rd",
+    "Washington Ave", "Park Blvd", "Sunset Dr", "Lake St",
+]
+# (city, state) — plausible-shaped, not real address-to-patient mappings.
+CITIES_STATES = [
+    ("Springfield", "IL"), ("Franklin", "TX"), ("Greenville", "SC"),
+    ("Clinton", "OH"), ("Salem", "OR"), ("Georgetown", "KY"),
+    ("Arlington", "VA"), ("Madison", "WI"), ("Bristol", "CT"),
+    ("Fairview", "NC"),
 ]
 
 # (ICD-10-CM code, display)
@@ -105,12 +123,34 @@ def _new_id():
     return str(uuid.uuid4())
 
 
+def _make_address(rng):
+    street_number = rng.randint(100, 9999)
+    street_name = rng.choice(STREET_NAMES)
+    city, state = rng.choice(CITIES_STATES)
+    return {
+        "line": [f"{street_number} {street_name}"],
+        "city": city,
+        "state": state,
+        "postalCode": f"{rng.randint(10000, 99999)}",
+    }
+
+
 def make_patient(rng, messy):
     gender = rng.choice(["male", "female"])
     given = rng.choice(FIRST_NAMES_MALE if gender == "male" else FIRST_NAMES_FEMALE)
     family = rng.choice(LAST_NAMES)
     birth_date = _random_date(rng, date(1940, 1, 1), date(2005, 12, 31))
     patient_id = _new_id()
+
+    # Address (and its messy-drop checks, and MRN's) are drawn from a
+    # patient_id-seeded local RNG, not the shared `rng` stream. patient_id
+    # already comes from uuid4 (unseeded by `rng`), so this loses no
+    # reproducibility versus before, and it keeps this addition purely
+    # additive: it can't shift the shared stream's position and silently
+    # reshuffle every other field for this patient — or every later
+    # patient's conditions/observations/medications — just from adding an
+    # address.
+    addr_rng = random.Random(patient_id)
 
     resource = {
         "resourceType": "Patient",
@@ -122,10 +162,20 @@ def make_patient(rng, messy):
         "name": [{"family": family, "given": [given]}],
         "gender": gender,
         "birthDate": birth_date.isoformat(),
+        "address": [_make_address(addr_rng)],
     }
 
     if messy and rng.random() < 0.15:
         del resource["gender"]
+
+    # Same 0.15 messy-drop rate as gender above — MRN and address are both
+    # real-world "sometimes missing on intake" fields, not fields with a
+    # different plausible drop rate than demographics generally.
+    if messy and addr_rng.random() < 0.15:
+        del resource["identifier"]
+
+    if messy and addr_rng.random() < 0.15:
+        del resource["address"]
 
     return resource, patient_id, birth_date
 

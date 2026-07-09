@@ -24,6 +24,11 @@ so the same condition can appear abbreviated in one section and spelled out
 in another within a single note — real clinicians are inconsistent about
 this, and it's exactly the kind of terminology drift Stage C's normalization
 step exists to clean up.
+
+The note header also carries the patient's synthetic MRN and address (when
+the Patient resource has them — messy generation can drop either), right
+alongside name/DOB, since a real chart header includes them too. See
+CLAUDE.md Resolved decisions #9.
 """
 
 import argparse
@@ -117,14 +122,36 @@ def _header(key, messy):
     return short if messy else full
 
 
+def _mrn(patient):
+    identifiers = patient.get("identifier")
+    return identifiers[0]["value"] if identifiers else None
+
+
+def _address_str(patient):
+    addresses = patient.get("address")
+    if not addresses:
+        return None
+    addr = addresses[0]
+    street = ", ".join(addr.get("line", []))
+    city = addr.get("city", "")
+    state = addr.get("state", "")
+    postal_code = addr.get("postalCode", "")
+    return f"{street}, {city}, {state} {postal_code}".strip()
+
+
 def build_note_text(patient, conditions, medications, observations, messy, rng):
     name = patient.get("name", [{}])[0]
     full_name = f"{' '.join(name.get('given', []))} {name.get('family', '')}".strip()
     note_date = _note_date(conditions, medications, observations)
+    mrn = _mrn(patient)
+    address = _address_str(patient)
 
     lines = []
     lines.append(f"Patient: {full_name}, DOB {patient['birthDate']}"
-                  + (f", {patient['gender'].capitalize()}" if patient.get("gender") else ""))
+                  + (f", {patient['gender'].capitalize()}" if patient.get("gender") else "")
+                  + (f", MRN {mrn}" if mrn else ""))
+    if address:
+        lines.append(f"Address: {address}")
     lines.append(f"Visit Date: {note_date.isoformat()}")
     lines.append("")
 

@@ -1,10 +1,17 @@
 """Stage B — LLM-based structured extraction from synthetic clinical notes.
 
 Pulls diagnosis/medication/dosage/vitals fields (plus the note's PHI-bearing
-header fields — patient name, DOB — since Stage C's redaction step needs a
-concrete structured field to strip) out of each free-text note via the
-Anthropic API. This is the raw "LLM dump" — normalization, redaction,
-rebalancing, and synthesis all happen downstream in Stage C.
+header fields — patient name, DOB, MRN, address — since Stage C's redaction
+step needs a concrete structured field to strip for each) out of each
+free-text note via the Anthropic API. This is the raw "LLM dump" —
+normalization, redaction, rebalancing, and synthesis all happen downstream
+in Stage C.
+
+`mrn` and `address` are nullable (unlike `patient_name`/`date_of_birth`,
+which the note generator never omits): messy generation can drop either
+field from the Patient resource entirely, so the note header sometimes
+doesn't have one to extract — same nullability pattern already used below
+for `dosage`/vital `unit`.
 
 **Performance note (bulk text processing):** each note is sent to the model
 as a single API call — there's no local regex/parsing pass over note text at
@@ -59,6 +66,14 @@ EXTRACTION_TOOL = {
                 "type": "string",
                 "description": "Patient date of birth as it appears in the note header.",
             },
+            "mrn": {
+                "type": ["string", "null"],
+                "description": "Patient MRN as it appears in the note header, or null if not present.",
+            },
+            "address": {
+                "type": ["string", "null"],
+                "description": "Patient address as it appears in the note header, or null if not present.",
+            },
             "diagnoses": {
                 "type": "array",
                 "items": {
@@ -94,7 +109,7 @@ EXTRACTION_TOOL = {
                 },
             },
         },
-        "required": ["patient_name", "date_of_birth", "diagnoses", "medications", "vitals"],
+        "required": ["patient_name", "date_of_birth", "mrn", "address", "diagnoses", "medications", "vitals"],
         "additionalProperties": False,
     },
     "strict": True,
