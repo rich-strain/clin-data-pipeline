@@ -1,0 +1,363 @@
+{
+  "1785653842a5a570dcee5c0fb1b52be480ace0d0495e44e46d016062ccff7d6b": {
+    "date_of_birth": "1974-01-31",
+    "diagnoses": [
+      {
+        "name": "MDD"
+      },
+      {
+        "name": "GERD"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "2puff q4h PRN",
+        "name": "Albuterol 90 MCG Inhaler"
+      }
+    ],
+    "patient_name": "Patricia Williams",
+    "vitals": [
+      {
+        "name": "HR",
+        "unit": "beats/minute",
+        "value": "79.8"
+      },
+      {
+        "name": "Glu",
+        "unit": "mg/dL",
+        "value": "77.7"
+      },
+      {
+        "name": "Wt",
+        "unit": null,
+        "value": "198.4"
+      }
+    ]
+  },
+  "69b60e30cc0b0fa773be8d479f003fac7b255067863ea934673b22cbbe683082": {
+    "date_of_birth": "1954-10-08",
+    "diagnoses": [
+      {
+        "name": "Chronic obstructive pulmonary disease, unspecified management"
+      },
+      {
+        "name": "Hypothyroidism, unspecified management"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "Take 20 mg by mouth once daily",
+        "name": "Omeprazole 20 MG Oral Capsule"
+      }
+    ],
+    "patient_name": "Sandra Johnson",
+    "vitals": [
+      {
+        "name": "BP",
+        "unit": "mm[Hg]",
+        "value": "138.7"
+      },
+      {
+        "name": "HR",
+        "unit": "beats/minute",
+        "value": "88.7"
+      },
+      {
+        "name": "Wt",
+        "unit": "kg",
+        "value": "82.7"
+      },
+      {
+        "name": "Ht",
+        "unit": null,
+        "value": "60.3"
+      }
+    ]
+  },
+  "74114135387f1b2bba454419c24324497e172241464a8217de3acf02e9c8010a": {
+    "date_of_birth": "1977-08-11",
+    "diagnoses": [
+      {
+        "name": "Migraine, unspecified, not intractable"
+      },
+      {
+        "name": "Unspecified asthma, uncomplicated"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "10mg PO QD",
+        "name": "Lisinopril 10 MG Oral Tablet"
+      },
+      {
+        "dosage": "75mcg PO QAM",
+        "name": "Levothyroxine 75 MCG Oral Tablet"
+      }
+    ],
+    "patient_name": "Daniel Williams",
+    "vitals": [
+      {
+        "name": "HR",
+        "unit": "beats/minute",
+        "value": "75.6"
+      }
+    ]
+  },
+  "892064775550bef67b4f63a2b388577a5c3644b7c271c7713592f71e7eb2de43": {
+    "date_of_birth": "1991-09-11",
+    "diagnoses": [
+      {
+        "name": "Obesity, unspecified"
+      },
+      {
+        "name": "obesity (dx 2019-04-09)"
+      },
+      {
+        "name": "obesity (dx 2022-12-12)"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "2puff q4h PRN",
+        "name": "Albuterol 90 MCG Inhaler"
+      }
+    ],
+    "patient_name": "Anthony Jackson",
+    "vitals": [
+      {
+        "name": "Glu",
+        "unit": null,
+        "value": "107.3"
+      },
+      {
+        "name": "BP",
+        "unit": "mm[Hg]",
+        "value": "121.5"
+      },
+      {
+        "name": "Temp",
+        "unit": "Cel",
+        "value": "36.9"
+      },
+      {
+        "name": "Ht",
+        "unit": null,
+        "value": "153.9"
+      }
+    ]
+  },
+  "94f24ce10fdb0ba430458d9256a386b27f325fb4c7b63242df48b63888d72026": {
+    "date_of_birth": "1961-12-20",
+    "diagnoses": [
+      {
+        "name": "Hypothyroidism, unspecified"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "Take 75 mcg by mouth every morning",
+        "name": "Levothyroxine 75 MCG Oral Tablet"
+      },
+      {
+        "dosage": "20mg PO QD",
+        "name": "Omeprazole 20 MG Oral Capsule"
+      }
+    ],
+    "patient_name": "James Rodriguez",
+    "vitals": [
+      {
+        "name": "HR",
+        "unit": "beats/minute",
+        "value": "80.3"
+      }
+    ]
+  },
+  "bbf579a5586cd1b1a1b1d45292ccb00a83f9ba8bd981400e1aecc66a8ef622fc": {
+    "date_of_birth": "1973-02-14",
+    "diagnoses": [
+      {
+        "name": "Unspecified asthma, uncomplicated"
+      },
+      {
+        "name": "asthma"
+      },
+      {
+        "name": "T2DM"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "20mg PO QD",
+        "name": "Omeprazole 20 MG Oral Capsule"
+      },
+      {
+        "dosage": "Take 10 mg by mouth once daily",
+        "name": "Lisinopril 10 MG Oral Tablet"
+      }
+    ],
+    "patient_name": "Charles Johnson",
+    "vitals": [
+      {
+        "name": "Glu",
+        "unit": "mg/dL",
+        "value": "81.3"
+      },
+      {
+        "name": "Wt",
+        "unit": null,
+        "value": "108.6"
+      },
+      {
+        "name": "BP",
+        "unit": "mm[Hg]",
+        "value": "135.3"
+      }
+    ]
+  },
+  "d91fc74e2c7b54ae56e1cc4bb0615f22f067fda7a565bee516cf88ddc7f7ced6": {
+    "date_of_birth": "1961-06-25",
+    "diagnoses": [
+      {
+        "name": "HTN"
+      },
+      {
+        "name": "Gastro-esophageal reflux disease without esophagitis"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "Inhale 2 puffs every 4 hours as needed",
+        "name": "Albuterol 90 MCG Inhaler"
+      }
+    ],
+    "patient_name": "Sandra Martinez",
+    "vitals": [
+      {
+        "name": "BP",
+        "unit": "mm[Hg]",
+        "value": "137.2"
+      },
+      {
+        "name": "Wt",
+        "unit": "kg",
+        "value": "109.7"
+      },
+      {
+        "name": "Ht",
+        "unit": "[in_i]",
+        "value": "62.7"
+      },
+      {
+        "name": "HR",
+        "unit": "beats/minute",
+        "value": "65.3"
+      }
+    ]
+  },
+  "e2e715a97b13a5f17fa64cd6aa56be98fb6ba554c8d6d5f4aa31ba145eea4522": {
+    "date_of_birth": "1952-01-18",
+    "diagnoses": [
+      {
+        "name": "Hypothyroidism, unspecified"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "Take 20 mg by mouth at bedtime",
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      },
+      {
+        "dosage": "500mg PO BID",
+        "name": "Metformin 500 MG Oral Tablet"
+      }
+    ],
+    "patient_name": "Sandra Brown",
+    "vitals": [
+      {
+        "name": "Glucose",
+        "unit": "mg/dL",
+        "value": "107.7"
+      },
+      {
+        "name": "Temperature",
+        "unit": null,
+        "value": "97.2"
+      }
+    ]
+  },
+  "f5da0b4e1a3ce3734f2c862e5c0b0fefd171f11099ae7d9f5961b03b34119d18": {
+    "date_of_birth": "1945-01-06",
+    "diagnoses": [
+      {
+        "name": "Obesity, unspecified"
+      },
+      {
+        "name": "Major depressive disorder, single episode, unspecified"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "10mg PO QD",
+        "name": "Lisinopril 10 MG Oral Tablet"
+      },
+      {
+        "dosage": null,
+        "name": "Levothyroxine 75 MCG Oral Tablet"
+      }
+    ],
+    "patient_name": "Matthew Hernandez",
+    "vitals": [
+      {
+        "name": "Weight",
+        "unit": "kg",
+        "value": "103.7"
+      },
+      {
+        "name": "Blood Pressure",
+        "unit": "mm[Hg]",
+        "value": "129.8"
+      },
+      {
+        "name": "Height",
+        "unit": null,
+        "value": "167.1"
+      },
+      {
+        "name": "Heart Rate",
+        "unit": "beats/minute",
+        "value": "61.9"
+      }
+    ]
+  },
+  "fb53630f606c48e24f961ec7ab0afbff803991371528a30afcf7426947bb4f6f": {
+    "date_of_birth": "1963-12-09",
+    "diagnoses": [
+      {
+        "name": "Chronic obstructive pulmonary disease, unspecified"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "2puff q4h PRN",
+        "name": "Albuterol 90 MCG Inhaler"
+      },
+      {
+        "dosage": "dosage not recorded",
+        "name": "Metformin 500 MG Oral Tablet"
+      }
+    ],
+    "patient_name": "Matthew Moore",
+    "vitals": [
+      {
+        "name": "Glu",
+        "unit": null,
+        "value": "166.3"
+      },
+      {
+        "name": "BP",
+        "unit": "mm[Hg]",
+        "value": "120.3"
+      }
+    ]
+  }
+}
