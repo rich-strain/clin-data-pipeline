@@ -425,13 +425,57 @@ extraction, closing the gap #9 identified before Stage E starts training.
   FHIR data for all 10 records, including correctly extracting `null` for
   the 2 patients missing MRN and the 1 patient missing address.
 
-**Not yet done — Step B of 2**: `redact.py` and `format_jsonl.py` are
-untouched (explicitly out of scope for this pass). `redact.py` doesn't yet
-strip MRN/address from curated records, and `format_jsonl.py`'s note
-find-and-replace doesn't yet substitute them out of instruction text either
-— both still need updating before this data is safe for Stage D/E. Also
-note: Stage C's curated outputs (`normalized.jsonl` through
-`synthesized.jsonl`) and Stage D's splits are now stale relative to the
-freshly-regenerated `extractions.jsonl` (different patient UUIDs, new
-fields) — re-running the full Stage C -> D pipeline is part of Step B's
-follow-up, not done yet.
+**Step B of 2 — complete. Resolved decisions #9 is now fully done (Step A +
+Step B).**
+
+- `redact.py`: `STRIPPED_FIELDS` extended to `("patient_name", "mrn",
+  "address")` — same full-removal treatment as `patient_name` (neither MRN
+  nor address has temporal meaning worth preserving via shifting). The
+  existing pop-if-present loop needed no special-casing for the null case
+  (some records legitimately have no `mrn`/`address` due to messiness) —
+  popping a key works the same regardless of its value.
+- `format_jsonl.py`: `build_replacements` extended with the same "known
+  exact string -> placeholder" pattern already used for name — MRN value
+  -> `"[MRN]"`, full address string -> `"[ADDRESS]"` — sourced from the
+  same `fhir_bundles.json` Patient resource format_jsonl.py already reads
+  for name/DOB/dates, via two small helpers mirroring `generate_notes.py`'s
+  own `_mrn`/`_address_str` construction exactly (so the search string
+  matches what's actually in the note verbatim).
+- Rebuilt the full chain from the regenerated `extractions.jsonl` forward
+  (normalize -> redact -> rebalance -> synthesize -> split -> format), since
+  Step A's bundle regeneration gave every patient a new UUID and orphaned
+  all prior curated/split output.
+
+**Verification, in order:**
+1. `redact.py`: confirmed `mrn`/`address` keys absent from all 10 redacted
+   records (including the 2 records where `mrn` was already `None` and the
+   1 where `address` was already `None` pre-redaction) — same
+   before/after-table style check as `patient_name`.
+2. `rebalance.py`/`synthesize.py`: ran cleanly against the rebuilt data. A
+   fresh (non-deterministic) Haiku extraction call this round happened to
+   phrase one diagnosis as `"Hypertension (HTN)"` instead of matching
+   `normalize.py`'s canonical-form logic — a real, observed extraction
+   variance flagged here rather than silently fixed (out of scope for this
+   pass) — which meant *two* categories (`Essential (primary) hypertension`
+   and `Hyperlipidemia, unspecified`) landed at zero this time instead of
+   one. `synthesize.py` correctly detected and filled both dynamically
+   (target 3 each), confirming the dynamic category-detection design
+   doesn't assume a fixed gap.
+3. `split.py`: reconfirmed zero original patient-groups cross train/val on
+   the rebuilt data (10 groups -> 8 train / 2 val).
+4. `format_jsonl.py`: re-ran the full leakage grep — name, DOB, **and now
+   mrn and address** — against the rebuilt `train.jsonl`/`val.jsonl`.
+   **Zero matches.** Sample before/after output confirms MRN and address
+   are correctly replaced with `[MRN]`/`[ADDRESS]` placeholders in
+   instruction text, and dates remain consistent with `redacted.jsonl` as
+   before.
+
+**Final counts (rebuilt):** 10 extracted -> 10 normalized -> 10 redacted ->
+17 rebalanced (7 duplicates) -> 23 synthesized (6 new: 3 hypertension + 3
+hyperlipidemia) -> 17 eligible for Stage D (6 synthesized excluded) -> 13
+train / 4 val (`data/splits/train.jsonl` / `val.jsonl`).
+
+This data — with MRN and address now generated, embedded in notes,
+extracted, and fully redacted (stripped from structured records,
+placeholder-scrubbed from note text, zero leakage confirmed) — is ready for
+Stage E.

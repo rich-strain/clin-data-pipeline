@@ -39,6 +39,16 @@ problem). Substituted per patient:
   place to stay grammatically readable as a training instruction — so a
   placeholder is used here specifically for that reason, not for
   consistency with the structured field's treatment.
+- the patient's MRN value (e.g. `"MRN334053"`, exactly as
+  `generate_fhir.py` generated it) -> `"[MRN]"`, and the patient's full
+  address string (exactly as `generate_notes.py`'s own `_address_str`
+  builds it) -> `"[ADDRESS]"` — same "known exact string, from the same
+  FHIR source" pattern as the name, and the same placeholder-not-strip
+  reasoning (prose needs something in the value's place). Neither field
+  has temporal meaning, so unlike the dates below there's no shift to
+  apply — this mirrors `redact.py`'s own treatment of these two fields
+  (full removal, not shifting). Both are skipped when absent (messy
+  generation can drop either from the Patient resource).
 - `birthDate` -> `redact.shift_date(patient_id, "dob", ...)`.
 - every Condition `onsetDateTime`, Observation `effectiveDateTime`,
   MedicationStatement `effectiveDateTime`, and the note's own `note_date`
@@ -93,6 +103,30 @@ TRAIN_OUT = DATA_DIR / "splits" / "train.jsonl"
 VAL_OUT = DATA_DIR / "splits" / "val.jsonl"
 
 NAME_PLACEHOLDER = "[PATIENT NAME]"
+MRN_PLACEHOLDER = "[MRN]"
+ADDRESS_PLACEHOLDER = "[ADDRESS]"
+
+
+def _mrn(patient):
+    """Mirrors generate_notes.py's _mrn — duplicated rather than imported,
+    same reasoning as elsewhere in this codebase: that module's own
+    script-relative import isn't safely importable from here."""
+    identifiers = patient.get("identifier")
+    return identifiers[0]["value"] if identifiers else None
+
+
+def _address_str(patient):
+    """Mirrors generate_notes.py's _address_str exactly, so the string
+    being searched for matches the string actually written into note text."""
+    addresses = patient.get("address")
+    if not addresses:
+        return None
+    addr = addresses[0]
+    street = ", ".join(addr.get("line", []))
+    city = addr.get("city", "")
+    state = addr.get("state", "")
+    postal_code = addr.get("postalCode", "")
+    return f"{street}, {city}, {state} {postal_code}".strip()
 
 
 def load_notes(path):
@@ -117,6 +151,14 @@ def build_replacements(patient_id, bundle, note_date_str):
     full_name = f"{' '.join(name.get('given', []))} {name.get('family', '')}".strip()
     if full_name:
         replacements[full_name] = NAME_PLACEHOLDER
+
+    mrn = _mrn(patient)
+    if mrn:
+        replacements[mrn] = MRN_PLACEHOLDER
+
+    address = _address_str(patient)
+    if address:
+        replacements[address] = ADDRESS_PLACEHOLDER
 
     birth_date = patient["birthDate"]
     replacements[birth_date] = shift_date(patient_id, "dob", birth_date)
@@ -224,7 +266,7 @@ def main():
         if not (dob_ok and note_date_ok):
             print("MISMATCH: instruction dates do not match redact.py's shifted dates for this patient.")
 
-    print("\n--- leakage grep: any real (unshifted) name or DOB string in output files? ---")
+    print("\n--- leakage grep: any real (unshifted) name/DOB/mrn/address string in output files? ---")
     output_text = TRAIN_OUT.read_text() + VAL_OUT.read_text()
     leaks = []
     for patient_id, bundle in bundles_by_patient.items():
@@ -235,13 +277,19 @@ def main():
             leaks.append(f"real name {full_name!r} (patient {patient_id})")
         if patient["birthDate"] in output_text:
             leaks.append(f"real DOB {patient['birthDate']!r} (patient {patient_id})")
+        mrn = _mrn(patient)
+        if mrn and mrn in output_text:
+            leaks.append(f"real mrn {mrn!r} (patient {patient_id})")
+        address = _address_str(patient)
+        if address and address in output_text:
+            leaks.append(f"real address {address!r} (patient {patient_id})")
 
     if leaks:
         print(f"LEAKAGE FOUND ({len(leaks)}):")
         for leak in leaks:
             print(f"  {leak}")
     else:
-        print(f"No real (unshifted) name or DOB strings found in {TRAIN_OUT.name}/{VAL_OUT.name}.")
+        print(f"No real (unshifted) name/DOB/mrn/address strings found in {TRAIN_OUT.name}/{VAL_OUT.name}.")
 
 
 if __name__ == "__main__":

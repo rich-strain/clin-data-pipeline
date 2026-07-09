@@ -1,18 +1,24 @@
 """Stage C — redaction of synthetic PHI/PII fields from normalized records.
 
 Takes `data/curated/normalized.jsonl` (Stage C's normalize output) and
-handles the three PHI-standin fields `extractor.py` was deliberately built
-to capture as concrete structured fields for this step to act on (see that
-module's docstring): `patient_name`, `date_of_birth`, `note_date` (visit
-date). No MRN or address field exists anywhere in this pipeline's
-extraction output, so there's nothing to redact there.
+handles the PHI-standin fields `extractor.py` was deliberately built to
+capture as concrete structured fields for this step to act on (see that
+module's docstring): `patient_name`, `mrn`, `address`, `date_of_birth`,
+`note_date` (visit date). `mrn` and `address` were added in a later pass
+(CLAUDE.md Resolved decisions #9) — `generate_fhir.py` had generated a
+synthetic MRN from the start, but it never flowed downstream into notes,
+extraction, or curated records until then.
 
 **Two different actions for two different kinds of field.**
 
-- `patient_name` carries no analytic value for a diagnosis-extraction
-  model — it's dropped entirely, same reasoning as before: nothing
-  downstream benefits from a masked-but-present name, and a placeholder
-  token is just something the model has to learn to ignore.
+- `patient_name`, `mrn`, and `address` carry no analytic value for a
+  diagnosis-extraction model — all three are dropped entirely, same
+  reasoning: nothing downstream benefits from a masked-but-present value,
+  and a placeholder token is just something the model has to learn to
+  ignore. `mrn`/`address` are `None` on some records already (messy
+  generation can drop either from the Patient resource) — stripping the
+  key works the same whether the value is a string or already `None`, so
+  no special-casing is needed for that.
 
 - `date_of_birth` and `note_date` are **date-shifted, not stripped or
   dropped.** Dates carry clinical/temporal meaning a real fine-tune could
@@ -71,7 +77,7 @@ DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 NORMALIZED_PATH = DATA_DIR / "curated" / "normalized.jsonl"
 REDACTED_PATH = DATA_DIR / "curated" / "redacted.jsonl"
 
-STRIPPED_FIELDS = ("patient_name",)
+STRIPPED_FIELDS = ("patient_name", "mrn", "address")
 
 # field -> shift category. All fields in the same category share one offset
 # per patient. "visit" covers every visit/procedure-type date field; today

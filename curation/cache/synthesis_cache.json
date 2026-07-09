@@ -1,4 +1,94 @@
 {
+  "Essential (primary) hypertension": {
+    "diagnoses": [
+      "Essential (primary) hypertension"
+    ],
+    "medications": [
+      {
+        "name": "Lisinopril 10 MG Oral Tablet"
+      },
+      {
+        "name": "Amlodipine 5 MG Oral Tablet"
+      }
+    ],
+    "vitals": [
+      {
+        "name": "Systolic blood pressure",
+        "value": 142
+      },
+      {
+        "name": "Heart rate",
+        "value": 78
+      },
+      {
+        "name": "Body weight",
+        "value": 82
+      },
+      {
+        "name": "Body height",
+        "value": 175
+      }
+    ]
+  },
+  "Essential (primary) hypertension#2": {
+    "diagnoses": [
+      "Essential (primary) hypertension"
+    ],
+    "medications": [
+      {
+        "name": "Lisinopril 10 MG Oral Tablet"
+      },
+      {
+        "name": "Amlodipine 5 MG Oral Tablet"
+      }
+    ],
+    "vitals": [
+      {
+        "name": "Systolic blood pressure",
+        "value": 135
+      },
+      {
+        "name": "Heart rate",
+        "value": 72
+      },
+      {
+        "name": "Body weight",
+        "value": 82
+      },
+      {
+        "name": "Body height",
+        "value": 175
+      }
+    ]
+  },
+  "Essential (primary) hypertension#3": {
+    "diagnoses": [
+      "Essential (primary) hypertension"
+    ],
+    "medications": [
+      {
+        "name": "Lisinopril 10 MG Oral Tablet"
+      }
+    ],
+    "vitals": [
+      {
+        "name": "Heart rate",
+        "value": 78
+      },
+      {
+        "name": "Systolic blood pressure",
+        "value": 138
+      },
+      {
+        "name": "Body weight",
+        "value": 82
+      },
+      {
+        "name": "Body height",
+        "value": 175
+      }
+    ]
+  },
   "Hyperlipidemia, unspecified": {
     "diagnoses": [
       "Hyperlipidemia, unspecified",
