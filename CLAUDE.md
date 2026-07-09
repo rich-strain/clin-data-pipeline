@@ -38,8 +38,10 @@ the Anthropic API. This is the "LLM dump" — raw, useful, but not yet curated.
 Takes Stage B's extraction output as raw input and applies:
 
 - **Normalization** — consistent units, consistent formatting/terminology
-- **Redaction** — strip synthetic PHI/PII fields (names, MRNs, DOBs, addresses,
-  visit/procedure dates)
+- **Redaction** — strip synthetic PHI/PII fields with no analytic value
+  (names, MRNs, addresses); **date-shift** rather than strip dates that carry
+  clinical/temporal meaning (birthdate, procedure/visit dates) — see Resolved
+  decisions below for why
 - **Rebalancing** — even out over/under-represented categories or lengths
 - **Synthesis** — LLM-generated additional records to fill an identified gap
 
@@ -163,6 +165,30 @@ clin-data-pipeline/
 5. **Extraction cost**: `extractor.py` is cache-first by default. Seed a
    small cache early from real API calls (cheap on Haiku) and iterate Stage C
    against that cache rather than re-hitting the API on every dev cycle.
+6. **Date handling in redaction**: dates are never stripped, only
+   **date-shifted**. If real procedure/visit dates stay intact, they make
+   re-identification meaningfully easier (dates are one of HIPAA Safe
+   Harbor's identifying fields), but simply deleting them destroys clinically
+   meaningful time relationships (e.g., time between diagnosis and
+   treatment). Birthdate and procedure/visit dates get **independent** random
+   shifts per patient — using a single shared shift would let anyone who
+   recovers one true date (e.g., a known birthdate) trivially unshift every
+   other date for that patient. The shift must be seeded **per category**
+   (one `dob_shift`, one shared `visit_shift` applied to every visit/
+   procedure date for that patient), not per individual field — seeding
+   per-field looks correct with only one field per category today but
+   silently breaks the guarantee the moment a second visit-type date field
+   is added.
+7. **Redaction scope**: `redact.py` only redacts the notes → extraction →
+   curation → JSONL branch (the data that actually reaches Stage D/E
+   fine-tuning). It deliberately does NOT redact `patient_features.csv`
+   (Stage A's flattened FHIR feature table) — that table is a separate,
+   parallel artifact demonstrating the FHIR-source-of-truth/flatten skill
+   from the original project brief, and it is never consumed downstream by
+   any later stage. Since it's a user-facing artifact shown in the app,
+   it must be clearly labeled as raw, unredacted Stage A demonstration
+   output — distinct from the redacted branch that actually feeds training —
+   rather than left as a silent inconsistency.
 
 ## Working plan
 
@@ -177,8 +203,9 @@ to a later step without confirming the current one works.
    Patient/Condition/Observation/MedicationStatement bundles, with the
    messiness toggle. `Patient` resources include name and birthdate;
    `Condition`/`Observation`/`MedicationStatement` resources include a date
-   for the associated procedure/visit (onset/effective/authored date) — these
-   are exactly the synthetic PHI/PII fields Stage C's redaction step targets.
+   for the associated procedure/visit (onset/effective/authored date). Note:
+   these FHIR-level fields are NOT touched by Stage C's redaction step — see
+   Resolved decisions #7 for why.
    Verify: inspect generated JSON, confirm resources are valid-shaped FHIR.
 3. **Stage A — flatten** — `flatten.py` projecting FHIR bundles into a
    tabular feature table.
@@ -212,4 +239,29 @@ to a later step without confirming the current one works.
 
 Steps 1 (app shell), 2 (Stage A FHIR generation), 3 (Stage A flatten), 4
 (Stage A notes generation), and 5 (Stage B extraction) complete. Step 6
-(Stage C curation) next.
+(Stage C curation) in progress: the known upstream flatten.py date gap is
+resolved (`{vital}_date_unknown` column, see docs/design_decisions.md).
+`curation/normalize.py` and `curation/redact.py` (first two curation
+sub-steps) are done and verified against the 10-record dev sample —
+normalize matches diagnosis abbreviations/vital units/dosage shorthand to
+generate_fhir.py's canonical tables with zero unmatched values and dedupes
+repeated diagnoses; redact strips `patient_name` outright and date-shifts
+`date_of_birth`/`note_date` per patient (+/- 365 days), seeded per
+**category** (`dob_shift`, `visit_shift`) rather than per field — fixed
+after an audit caught that per-field seeding would silently break the
+shared-offset guarantee the moment a second visit-type date field was
+added, even though it looked correct with today's one-field-per-category
+data. Reverified on the 10-record dev sample: every record's `dob_shift`
+differs from its `visit_shift`, reruns are deterministic, and
+`patient_name` is absent from all 10 output records.
+
+`patient_features.csv` (Stage A's flattened FHIR feature table) is
+confirmed out of scope for `redact.py` (Resolved decisions #7) — it's a
+parallel demo artifact never consumed by Stage D/E, so it intentionally
+stays raw/unredacted. It isn't labeled as such in the app yet because the
+app doesn't render it yet (Stage A's page is still the unbuilt stub); the
+labeling requirement is tracked as an action item in
+docs/design_decisions.md for when Step 9 wires up the app's data display.
+
+Stage C's redact sub-step is now considered done and verified — no open
+issues. Rebalance/synthesize still to do.

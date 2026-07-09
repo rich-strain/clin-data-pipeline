@@ -15,11 +15,19 @@ of columns. The collapsing strategy here is a real design decision:
   for this portfolio's purposes and can be one-hot encoded later if needed.
 - Observations: collapsed to "most recent value" per vital/lab, since a
   single snapshot per patient is what most flat feature tables use latest
-  labs for. "Most recent" is picked by effectiveDateTime — except when the
-  messiness toggle has dropped that field, in which case there's no
-  reliable way to pick the true latest reading. That's a real Stage A gap,
-  not a Stage 3 shortcut: dropped dates should ideally be flagged upstream
-  rather than silently falling back to generation order.
+  labs for. "Most recent" is picked by effectiveDateTime.
+
+  Resolution of the missing-date gap: when the messiness toggle drops
+  effectiveDateTime, dropping the reading (rather than the value) is the
+  intended messiness — a real EHR feed does have observations with no
+  reliable timestamp, and that's a legitimate problem for curation to
+  surface, not paper over at generation time. So the fix belongs here in
+  flatten, not in the generator: when none of a vital's readings have a
+  date, flatten still picks a value (falling back to generation order,
+  the best available signal) but marks it with a companion
+  `{slug}_date_unknown` boolean column, so "most recent" is never silently
+  presented as reliable when it isn't. Downstream consumers (Stage C, or a
+  model) can then decide whether to trust or drop that value explicitly.
 """
 
 import argparse
@@ -91,9 +99,15 @@ def flatten_bundle(bundle):
         slug = _slug(display)
         readings = observations.get(display, [])
         dated = [r for r in readings if r["date"]]
-        latest = max(dated, key=lambda r: r["date"]) if dated else (readings[-1] if readings else None)
+        if dated:
+            latest = max(dated, key=lambda r: r["date"])
+            date_unknown = False
+        else:
+            latest = readings[-1] if readings else None
+            date_unknown = latest is not None
         row[f"{slug}_value"] = latest["value"] if latest else None
         row[f"{slug}_unit"] = latest["unit"] if latest else None
+        row[f"{slug}_date_unknown"] = date_unknown if latest else None
 
     return row
 
