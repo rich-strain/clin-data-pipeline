@@ -294,6 +294,10 @@ to a later step without confirming the current one works.
    splitting, not by raw record.
 8. **Stage E — training** — script + config, then Rich runs it locally;
    results get interpreted and wired into the app's display once available.
+   **In progress, with real results** — `train_runner.py` built and run
+   locally on MPS; see Status for the actual loss numbers, file sizes, and
+   verification. Not yet done: wiring these results into the app's display
+   (still Step 9/Polish) and Rich's own review of the results.
 9. **Polish** — README, `docs/design_decisions.md`, wire the app's display of
    Stage E results, rehearse the "one app, five stages" walkthrough
    narrative.
@@ -543,4 +547,85 @@ synthesized to exclude) -> **139 train / 20 val**
 (`data/splits/train.jsonl` / `val.jsonl`).
 
 This is now the live dataset — the 10-patient counts above are historical.
-Not yet started: Stage E (training script/config, then a real local run).
+
+---
+
+**Stage E (Resolved decisions #3) — script built, real local run completed
+and verified.** `train_runner.py` (repo root) LoRA fine-tunes a small open
+model on `data/splits/train.jsonl`/`val.jsonl`, run locally on Rich's Mac
+(Apple Silicon MPS) since Streamlit Cloud has no GPU. Results committed to
+`training_results/` (new top-level dir, confirmed not caught by
+`.gitignore` — the `data/` exclusions don't apply outside `data/`).
+
+**Environment:** confirmed `torch.backends.mps.is_available() == True` on
+this Mac (Apple M3, 16 GB RAM). Added `torch`, `transformers`, `peft`,
+`accelerate`, `matplotlib` to `requirements.txt` — deliberately no
+`bitsandbytes` (poor MPS support), so no 4-bit/8-bit quantization; fp16
+LoRA only, which fits comfortably at this model size without it.
+
+**Base model: Qwen2.5-0.5B-Instruct** — confirmed via the HF Hub API
+before downloading (~988 MB, single safetensors file) that this wasn't a
+timeline risk. Chosen over TinyLlama-1.1B (older, weaker instruction
+following, needlessly larger) and SmolLM2-360M-Instruct (smaller, but 0.5B
+wasn't a real download/runtime cost here and gives the fine-tune a better
+starting point). Full rationale in the script's module docstring.
+
+**LoRA config:** `r=8, alpha=16, target_modules=[q_proj,k_proj,v_proj,
+o_proj], dropout=0.05` — deliberately modest given only 139 training
+examples (higher rank/MLP targets would just add memorization capacity
+this dataset can't productively use). 6 epochs, batch size 2, lr 2e-4.
+
+**A real bug was caught and fixed during this build, not shipped
+silently:** the first full run produced pure garbage output ("API/API/API
+...") from *both* the base and fine-tuned model in the before/after
+samples. Root-caused (not just patched around) by isolating a minimal
+reproduction: the model was left in `.train()` mode (gradient-checkpointing
+hooks + LoRA dropout active) during the sample-generation step — a missing
+`model.eval()` call before generation, confirmed by reproducing the exact
+garbage output and exact warning messages in isolation, then confirming
+the fix (adding `model.eval()`) resolved it cleanly. A second, unrelated
+issue (MPS out-of-memory on the very first batch, from Qwen2.5's large
+151,936-token vocab making the logits tensor large relative to this
+model's hidden size) was fixed by enabling gradient checkpointing and
+reducing batch size to 2.
+
+**Verification — real numbers, not placeholders:**
+- Training ran to completion: 6 epochs, 139 train / 20 val examples,
+  909.8s (~15 min) wall clock on MPS.
+- **Train loss** declined every epoch: 0.1103 -> 0.0213 -> 0.0108 ->
+  0.0066 -> 0.0050 -> 0.0036.
+- **Val loss** declined through epoch 3 (0.0529 -> 0.0384 -> 0.0307), then
+  plateaued/ticked up slightly through epoch 6 (0.0349 -> 0.0340 ->
+  0.0336) while train loss kept dropping sharply — the textbook signature
+  of mild overfitting on a small dataset past epoch ~3. Reported here
+  plainly, not smoothed over: this is expected and honest at 139 examples,
+  not evidence of a broken run.
+- **Adapter size:** 4.2 MB (`training_results/adapter/adapter_model.
+  safetensors`) vs. the 953 MB base model on disk — about 0.4%, correctly
+  reflecting that only ~1.08M of the model's ~495M parameters (0.22%) are
+  trainable LoRA weights. The base model itself is not committed (it's
+  re-downloadable from HF; only the adapter is repo-worthy).
+- **Before/after samples** (`training_results/samples.md`, 3 val
+  examples): visibly and substantively different, not a subtle change.
+  The base model produces flat/abbreviated JSON that doesn't match the
+  target schema (e.g. `"diagnoses": ["T2DM", "GERD"]` instead of
+  `[{"name": "..."}]`) and in one case **hallucinates vitals** (`"blood_
+  pressure": "135/85 mmHg"`) that don't appear anywhere in the source
+  note at all. The fine-tuned model produces correctly-structured JSON
+  matching the schema, expands abbreviations to canonical diagnosis names
+  (`"HTN"` -> `"Essential (primary) hypertension"`), and in that same
+  case correctly outputs an empty vitals list — exactly matching ground
+  truth, with no hallucination.
+
+**Honest framing (per the script's own docstring):** this is a correct,
+working demonstration of LoRA fine-tuning mechanics — real data loading,
+correct chat-template loss masking, adapter attachment, a real training
+loop with genuinely declining loss on real hardware, adapter
+checkpointing, and a real behavioral difference with vs. without the
+adapter — on a genuinely small (139-example) dataset. It is not a claim of
+production-quality extraction accuracy, and the val-loss plateau/uptick
+after epoch 3 is reported as exactly that: a small-dataset overfitting
+signature, not hidden or explained away.
+
+**Not yet done:** wiring these results into the app's display (Step 9),
+and Rich's own review of the run.

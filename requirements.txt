@@ -2,3 +2,8 @@ streamlit
 anthropic
 pandas
 python-dotenv
+torch
+transformers
+peft
+accelerate
+matplotlib
