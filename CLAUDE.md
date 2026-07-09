@@ -229,6 +229,20 @@ clin-data-pipeline/
    redaction-completeness goal — it would reopen Resolved decision #1's
    FHIR-resource-type scope for a different reason: EHR modeling depth,
    which is a legitimate but separate ask this pass doesn't take on).
+10. **Scaling from 10 to 100 patients before Stage E**: the 10-patient dev
+    sample was enough to build and verify every pipeline stage, but too
+    little for actual training signal — most of the prior 13-record train
+    split was literal `rebalance.py` duplicates of the same 10 patients'
+    content, not real diversity. Scaling to 100 patients before Stage E
+    starts training addresses this directly: more organic diagnosis-category
+    coverage (less duplication needed to rebalance), a real train/val split
+    size, and genuinely distinct note content per patient. Cost stays
+    trivial (Haiku, ~100 short extraction calls). This is re-running the
+    existing, already-verified pipeline at scale — no new code, same
+    `--n-patients 100 --messy` flags, same chain (generate -> notes ->
+    extract -> normalize -> redact -> rebalance -> synthesize -> split ->
+    format), fully reverified at the new scale rather than assumed to still
+    hold because it worked at n=10.
 
 ## Working plan
 
@@ -470,12 +484,63 @@ Step B).**
    instruction text, and dates remain consistent with `redacted.jsonl` as
    before.
 
-**Final counts (rebuilt):** 10 extracted -> 10 normalized -> 10 redacted ->
-17 rebalanced (7 duplicates) -> 23 synthesized (6 new: 3 hypertension + 3
-hyperlipidemia) -> 17 eligible for Stage D (6 synthesized excluded) -> 13
-train / 4 val (`data/splits/train.jsonl` / `val.jsonl`).
+**Final counts (10-patient rebuild, now superseded — see below):** 10
+extracted -> 10 normalized -> 10 redacted -> 17 rebalanced (7 duplicates)
+-> 23 synthesized (6 new) -> 17 eligible for Stage D -> 13 train / 4 val.
 
-This data — with MRN and address now generated, embedded in notes,
-extracted, and fully redacted (stripped from structured records,
-placeholder-scrubbed from note text, zero leakage confirmed) — is ready for
-Stage E.
+---
+
+**Scaled to 100 patients (Resolved decisions #10) — complete and
+verified.** Re-ran the full, already-verified pipeline unchanged at
+`--n-patients 100 --messy` (no new code): generate_fhir -> generate_notes
+-> extractor -> normalize -> redact -> rebalance -> synthesize -> split ->
+format.
+
+- Stage A/B: 100 bundles generated; 100 notes generated; extraction made
+  ~100 fresh Haiku calls (all-new patient UUIDs mean all-new cache keys,
+  as expected — cache grew from 20 to 120 entries; took ~5 minutes wall
+  clock, cost trivial).
+- `normalize.py`: 32 unmatched values flagged at this scale (dosage text
+  without the `"Take ... by mouth"` framing, raw UCUM unit codes like
+  `lb_av`/`degF`/`in_i` leaking through unconverted, a couple of new
+  diagnosis phrasings) vs. 1 at n=10 — expected, more LLM calls surface
+  more paraphrase variance; handled gracefully (passed through unmatched,
+  no crash), **not fixed** — flagged here as a real gap for whenever
+  normalize.py's matching logic gets revisited, out of scope for this pass.
+- `redact.py`: spot-checked 8/100 redacted records — `patient_name`/`mrn`/
+  `address` keys absent from all 8.
+- `rebalance.py`: before-rebalance category counts were already organic and
+  non-zero across the board (11-26 per category, vs. 0-3 at n=10) — 59
+  duplicates added to bring every category to the target of 26 (max
+  observed count, `Essential (primary) hypertension`). Confirms the
+  expected effect of scale: proportionally much less duplication needed to
+  rebalance than at n=10.
+- `synthesize.py`: **zero categories at zero** this run (unlike the 10→18
+  rebuild, which needed 6 synthesized records) — correctly detected zero
+  deficit and made zero API calls. Confirms the dynamic zero-count
+  detection doesn't assume synthesis is always needed.
+- `split.py`: 100 original patient groups -> 80 train / 20 val; verified
+  twice — once by the script's own check, once independently recomputed —
+  that no patient group crosses the split.
+- `format_jsonl.py`: the full leakage grep **initially flagged 1 false
+  positive** at this scale — patient A's real DOB coincidentally equaled
+  patient B's own correctly-shifted DOB (a birthday-paradox effect from
+  100 independent per-patient offsets across a ~66-year range), which a
+  corpus-wide substring scan can't distinguish from a real leak. Verified
+  by hand: patient A's own record was correctly shifted to a *different*
+  value; the colliding string in the output was legitimately patient B's
+  own de-identified date, disclosing nothing about patient A. Fixed the
+  check itself (now documented in `format_jsonl.py`'s docstring) to be
+  **per-patient scoped** — does record X's own real PHI appear in record
+  X's own example — which is the property that actually matters privacy
+  wise. Re-ran: **zero leaks found across all 159 records** (name, DOB,
+  MRN, address).
+
+**Final counts (100-patient scale, current):** 100 patients -> 100
+extracted -> 100 normalized -> 100 redacted -> 159 rebalanced (59
+duplicates) -> 159 synthesized (0 new) -> 159 eligible for Stage D (0
+synthesized to exclude) -> **139 train / 20 val**
+(`data/splits/train.jsonl` / `val.jsonl`).
+
+This is now the live dataset — the 10-patient counts above are historical.
+Not yet started: Stage E (training script/config, then a real local run).

@@ -82,6 +82,18 @@ duplicate (`-dupN` patient_id) has no note of its own — `split.py`'s
 record back to the patient whose note/bundle it should actually draw from,
 so a duplicate's instruction is built from the *same* note as its original
 (consistent with them being near-identical training examples by design).
+
+**Leakage check is per-patient, not corpus-wide.** At 100 patients, a
+corpus-wide "does this real string appear *anywhere* in the output" scan
+produced a false positive: patient A's real DOB coincidentally equaled
+patient B's own correctly-shifted DOB (a birthday-paradox effect — 100
+independent per-patient offsets across a ~66-year birth-date range makes
+some coincidental collision likely, not a bug). That collision discloses
+nothing about patient A — the string appears only as patient B's own
+(properly de-identified) date, with no link back to A's identity anywhere
+in the data. So the check that actually matters is scoped per patient:
+does *record X's own* real name/DOB/mrn/address appear in *record X's own*
+example — not whether that string appears anywhere in the whole corpus.
 """
 
 import argparse
@@ -266,30 +278,34 @@ def main():
         if not (dob_ok and note_date_ok):
             print("MISMATCH: instruction dates do not match redact.py's shifted dates for this patient.")
 
-    print("\n--- leakage grep: any real (unshifted) name/DOB/mrn/address string in output files? ---")
-    output_text = TRAIN_OUT.read_text() + VAL_OUT.read_text()
+    print("\n--- leakage grep: does any example contain ITS OWN patient's real (unshifted) name/DOB/mrn/address? ---")
     leaks = []
-    for patient_id, bundle in bundles_by_patient.items():
-        patient, _, _, _ = group_bundle_entries(bundle)
+    for record in train_records + val_records:
+        base_id = original_patient_id(record)
+        patient, _, _, _ = group_bundle_entries(bundles_by_patient[base_id])
+        example = format_record(record, notes_by_patient, bundles_by_patient)
+        text = example["instruction"] + example["response"]
+
         name = patient.get("name", [{}])[0]
         full_name = f"{' '.join(name.get('given', []))} {name.get('family', '')}".strip()
-        if full_name and full_name in output_text:
-            leaks.append(f"real name {full_name!r} (patient {patient_id})")
-        if patient["birthDate"] in output_text:
-            leaks.append(f"real DOB {patient['birthDate']!r} (patient {patient_id})")
+        if full_name and full_name in text:
+            leaks.append(f"real name {full_name!r} leaked into {record['patient_id']}'s own example")
+        if patient["birthDate"] in text:
+            leaks.append(f"real DOB {patient['birthDate']!r} leaked into {record['patient_id']}'s own example")
         mrn = _mrn(patient)
-        if mrn and mrn in output_text:
-            leaks.append(f"real mrn {mrn!r} (patient {patient_id})")
+        if mrn and mrn in text:
+            leaks.append(f"real mrn {mrn!r} leaked into {record['patient_id']}'s own example")
         address = _address_str(patient)
-        if address and address in output_text:
-            leaks.append(f"real address {address!r} (patient {patient_id})")
+        if address and address in text:
+            leaks.append(f"real address {address!r} leaked into {record['patient_id']}'s own example")
 
     if leaks:
         print(f"LEAKAGE FOUND ({len(leaks)}):")
         for leak in leaks:
             print(f"  {leak}")
     else:
-        print(f"No real (unshifted) name/DOB/mrn/address strings found in {TRAIN_OUT.name}/{VAL_OUT.name}.")
+        print(f"No example leaks its own patient's real (unshifted) name/DOB/mrn/address "
+              f"({len(train_records) + len(val_records)} records checked).")
 
 
 if __name__ == "__main__":
