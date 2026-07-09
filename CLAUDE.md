@@ -189,6 +189,27 @@ clin-data-pipeline/
    it must be clearly labeled as raw, unredacted Stage A demonstration
    output — distinct from the redacted branch that actually feeds training —
    rather than left as a silent inconsistency.
+8. **Note-text redaction (Stage D)**: raw note text in
+   `data/generated/clinical_notes.jsonl` was found (during Stage D
+   planning) to contain unredacted PHI-shaped content in prose — patient
+   name, DOB, visit date, and diagnosis onset dates embedded in HPI/PMH
+   sentences — none of which `redact.py` ever touched (it only operates on
+   the structured curated fields). Generic free-text PHI de-identification
+   (inferring PHI from arbitrary prose) is a hard, research-grade problem
+   and out of scope for this project's timeline; a shallow regex attempt
+   at it risks looking redacted while silently missing phrasings, which is
+   worse than not attempting it. Instead: since these notes were generated
+   by this repo's own code, the exact ground-truth PHI values inserted
+   into each note are already known (from the same FHIR generation data
+   `redact.py` and `generate_notes.py` draw from) — redaction is a
+   **targeted find-and-replace of those known exact strings**, substituting
+   in the same per-patient `dob_shift`/`visit_shift` values `redact.py`
+   already computed, so note text and the structured response stay
+   date-consistent. The 3 `synthesize.py` records have no matching note
+   (documented trade-off from that step) and are excluded from Stage D's
+   JSONL rather than given a differently-shaped instruction, to keep the
+   training set's instruction format consistent — a small, honestly
+   documented gap (21 curated records → 18 in the final JSONL).
 
 ## Working plan
 
@@ -319,4 +340,40 @@ documented rather than engineered away. Every synthesized record is tagged
 **Stage C (curation) is now fully complete**: normalize, redact, rebalance,
 and synthesize are all built and verified. `data/curated/synthesized.jsonl`
 (21 records) is Stage C's final output and is what Stage D will consume.
-Step 7 (Stage D — split & format) is next.
+
+**Step 7 (Stage D — split & format) is now complete.** During planning, an
+audit found that raw note text in `data/generated/clinical_notes.jsonl`
+carries unredacted PHI-shaped content in prose (name, DOB, visit date,
+onset dates in HPI/PMH) that `redact.py` never touched (it only operates on
+structured curated fields) — documented as Resolved decisions #8, with the
+fix (targeted find-and-replace using known ground-truth strings, not
+generic free-text de-identification) settled before building `split.py`/
+`format_jsonl.py`.
+
+`split.py`: excludes the 3 `synthesize.py` records (no matching note),
+groups the remaining 18 by original patient identity (`rebalance.py`
+duplicates follow `rebalance_duplicate_of` back to their original) so no
+duplicate can land in a different split than its source, and splits
+80/20 *by group* (10 groups -> 8 train / 2 val). Verified: 14 train / 4 val
+records written to `data/curated/split_{train,val}.jsonl`, and an explicit
+check confirms zero original patient_ids appear in both splits.
+
+`format_jsonl.py`: builds each instruction from the matching note in
+`clinical_notes.jsonl`, redacted via a single-pass regex substituting every
+known PHI string (name -> `"[PATIENT NAME]"`; DOB and every onset/
+effective/authored date from `fhir_bundles.json` -> `curation.redact.
+shift_date`, reused directly rather than reimplemented, so shifts match
+`redact.py`'s output exactly). Response is a JSON string of
+`date_of_birth`/`diagnoses`/`medications`/`vitals`. Verified on 3 sample
+records: original vs. redacted note text printed side by side, and each
+record's shifted DOB *and* shifted note_date/onset dates were confirmed
+present in the instruction text, matching `redacted.jsonl`'s stored values
+exactly (proving the note and the structured response stay
+date-consistent, not just independently redacted). A full leakage grep
+across both output files for every patient's real (unshifted) name and DOB
+string found **zero matches**. Reruns are byte-identical (verified via
+diff) — fully deterministic, zero API calls.
+
+**Final counts:** `data/splits/train.jsonl` = 14 examples, `data/splits/
+val.jsonl` = 4 examples (18 total, matching split.py's output). Step 8
+(Stage E — training) is next.
