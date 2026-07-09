@@ -229,6 +229,15 @@ to a later step without confirming the current one works.
    explicitly) — don't leave it unaddressed.
 7. **Stage D — split & format** — train/val JSONL output.
    Verify: inspect split ratios and JSONL shape.
+   Known constraint from Stage C rebalancing (flagged during rebalance.py
+   review): `rebalance.py` produces duplicate records marked with
+   `rebalance_duplicate_of`, pointing back to their source `patient_id`.
+   The split step MUST keep every duplicate in the same split (train or
+   val) as its original — a duplicate landing in validation while its
+   original is in train would leak train-seen content into validation and
+   invalidate the val metric. Group by original `patient_id` (stripping
+   any `-dupN` suffix / following `rebalance_duplicate_of`) before
+   splitting, not by raw record.
 8. **Stage E — training** — script + config, then Rich runs it locally;
    results get interpreted and wired into the app's display once available.
 9. **Polish** — README, `docs/design_decisions.md`, wire the app's display of
@@ -264,4 +273,26 @@ labeling requirement is tracked as an action item in
 docs/design_decisions.md for when Step 9 wires up the app's data display.
 
 Stage C's redact sub-step is now considered done and verified — no open
-issues. Rebalance/synthesize still to do.
+issues.
+
+`curation/rebalance.py` (third curation sub-step) is done and verified
+against the 10-record dev sample. Rebalances on diagnosis-category
+representation (the clearest skew in the actual data — `Hypothyroidism,
+unspecified` in 3/10 records vs. three other conditions at 1/10 each) by
+duplicating existing records that carry an under-represented category, up
+to the max observed count (3), rather than downsampling — chosen because
+downsampling would shrink an already-tiny 10-record set further. Verified
+before/after count table: 8 duplicate records added (18 total), every
+non-zero category reaches or exceeds the target of 3 (some overshoot, e.g.
+asthma 2 -> 6, from multi-diagnosis records being duplicated together —
+documented as an accepted limitation, not silently ignored), duplicates are
+marked with `rebalance_duplicate_of` for traceability, and reruns are
+deterministic (verified via diff). `Hyperlipidemia, unspecified` stays at
+0/10 — it has zero existing records to duplicate, which rebalancing can't
+fix; flagged in the module docstring and CLI output as exactly the gap
+`synthesize.py` (last curation sub-step) needs to fill. Also flagged for
+later: Stage D's train/val split must keep each duplicate in the same split
+as its original, or validation metrics would be inflated by near-identical
+leakage across the split boundary.
+
+Synthesize still to do — last of Stage C's four sub-steps.
