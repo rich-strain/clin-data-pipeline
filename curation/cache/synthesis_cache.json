@@ -1,0 +1,96 @@
+{
+  "Hyperlipidemia, unspecified": {
+    "diagnoses": [
+      "Hyperlipidemia, unspecified",
+      "Essential (primary) hypertension",
+      "Obesity, unspecified"
+    ],
+    "medications": [
+      {
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      },
+      {
+        "name": "Lisinopril 10 MG Oral Tablet"
+      }
+    ],
+    "vitals": [
+      {
+        "name": "Heart rate",
+        "value": 78
+      },
+      {
+        "name": "Systolic blood pressure",
+        "value": 138
+      },
+      {
+        "name": "Body weight",
+        "value": 92
+      },
+      {
+        "name": "Body height",
+        "value": 175
+      }
+    ]
+  },
+  "Hyperlipidemia, unspecified#2": {
+    "diagnoses": [
+      "Hyperlipidemia, unspecified"
+    ],
+    "medications": [
+      {
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      }
+    ],
+    "vitals": [
+      {
+        "name": "Heart rate",
+        "value": 72
+      },
+      {
+        "name": "Systolic blood pressure",
+        "value": 128
+      },
+      {
+        "name": "Body weight",
+        "value": 82
+      },
+      {
+        "name": "Glucose",
+        "value": 105
+      }
+    ]
+  },
+  "Hyperlipidemia, unspecified#3": {
+    "diagnoses": [
+      "Hyperlipidemia, unspecified",
+      "Essential (primary) hypertension",
+      "Obesity, unspecified"
+    ],
+    "medications": [
+      {
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      },
+      {
+        "name": "Lisinopril 10 MG Oral Tablet"
+      }
+    ],
+    "vitals": [
+      {
+        "name": "Heart rate",
+        "value": 78
+      },
+      {
+        "name": "Systolic blood pressure",
+        "value": 132
+      },
+      {
+        "name": "Body weight",
+        "value": 95
+      },
+      {
+        "name": "Body height",
+        "value": 175
+      }
+    ]
+  }
+}

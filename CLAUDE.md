@@ -295,4 +295,28 @@ later: Stage D's train/val split must keep each duplicate in the same split
 as its original, or validation metrics would be inflated by near-identical
 leakage across the split boundary.
 
-Synthesize still to do — last of Stage C's four sub-steps.
+`curation/synthesize.py` (fourth and final curation sub-step) is done and
+verified against the 10-record dev sample (now 21 records after rebalance +
+synthesize). Uses the Anthropic API (Haiku, cache-first like `extractor.py`)
+to generate new records for whichever diagnosis categories `rebalance.py`
+left at zero — currently just `Hyperlipidemia, unspecified` — up to the
+same target rebalance used (3, computed from pre-rebalance counts, not the
+overshot post-rebalance counts). The model picks comorbid diagnoses,
+medications, and vitals (genuine clinical judgment, enum-constrained to
+`generate_fhir.py`'s canonical tables); code fills in canonical dosage
+text/units, patient_id, and birth/visit dates deterministically, so
+synthesized records land in the dataset already normalize.py-canonical.
+Verified: before/after count table shows Hyperlipidemia 0 -> 3 (target
+met); a spot-checked record paired Hyperlipidemia + comorbid Hypertension +
+Obesity with Atorvastatin + Lisinopril and consistent vitals (elevated BP,
+BMI ~30) — clinically coherent, not just a diagnosis name in isolation;
+reruns hit the cache (0.4s, zero API calls, byte-identical output, verified
+via diff). Comorbidity choice caused the same overshoot side effect
+`rebalance.py` documents (Hypertension/Obesity 3 -> 5) — same trade-off,
+documented rather than engineered away. Every synthesized record is tagged
+`"synthesized": true` / `"synthesized_category"` for traceability.
+
+**Stage C (curation) is now fully complete**: normalize, redact, rebalance,
+and synthesize are all built and verified. `data/curated/synthesized.jsonl`
+(21 records) is Stage C's final output and is what Stage D will consume.
+Step 7 (Stage D — split & format) is next.
