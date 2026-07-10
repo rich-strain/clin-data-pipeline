@@ -38,29 +38,32 @@ it), not the individual record: every record in a group goes to the same
 split, always. At the current 100-patient scale this collapses 132
 eligible records into 100 groups (group sizes vary more widely than the
 original 10-patient dev sample — most patients are a group of 1, but
-categories that needed heavier rebalancing produce groups as large as 10);
-an 80/20 split *on groups* gives 80 train groups / 20 val groups.
+categories that needed heavier rebalancing produce groups as large as 10).
 
-**Consequence, stated honestly:** because group sizes vary, splitting by
-group only *approximately* hits an 80/20 *record* ratio, not exactly — at
-the current scale it lands at 112/132 train (~85%) vs. 20/132 val (~15%),
-because the larger duplicate groups happen to have landed in train this
-run (see verification output for the live numbers on any given run).
-That's an intentional trade-off: correctness of the anti-leakage grouping
-constraint takes priority over hitting an exact record-count ratio.
-
-**Ordering:** groups are assigned to train/val in first-seen order from
-`synthesized.jsonl` (train = first 80% of groups encountered, val = the
-rest) rather than an additional random shuffle. Patient UUIDs were already
-randomly generated in Stage A, so the file's existing order carries no
-structure to correct for — adding a second RNG pass here would just be
-another seed to document for no real benefit, so this stays fully
-deterministic with zero randomness.
+**Assignment: largest-group-first, balanced against the record-level
+target, not first-seen file order.** An earlier version assigned groups to
+train/val in first-seen order (train = first 80% of groups encountered).
+That hits an exact 80/20 split *on groups*, but group sizes aren't uniform
+(1-10 records), so first-seen order can accidentally cluster several large
+duplicate groups into the same split by chance — observed in practice at
+this scale as a 112/132 train (~85%) vs. 20/132 val (~15%) *record* ratio,
+a visible drift from the 80/20 target despite the group split itself being
+exact. Fixed in `split_groups()`: groups are now sorted largest-first, and
+each one is assigned to whichever split is currently furthest below its
+target *record* count (`TRAIN_FRACTION` of the total). This still fully
+respects the anti-leakage guarantee (a group is never split across train/
+val) and stays deterministic (no randomness — a stable sort by size, with
+first-seen order as the tiebreak), but tracks the record-level 80/20 target
+directly instead of the group-count target. At the current scale this
+gives 74 train groups / 26 val groups -> 106/132 train (~80.3%) vs.
+26/132 val (~19.7%) — the group-count ratio now drifts slightly (74/26
+instead of an even 80/20) so that the record-count ratio, the number that
+actually matters for training/validation balance, lands close to the
+target instead.
 """
 
 import argparse
 import json
-import math
 from pathlib import Path
 
 DATA_DIR = Path(__file__).resolve().parent / "data"
@@ -96,11 +99,37 @@ def group_by_original_patient(records):
 
 
 def split_groups(groups):
-    """Return (train_records, val_records), split by whole group."""
+    """Return (train_records, val_records), split by whole group.
+
+    Groups are assigned largest-first, each one going to whichever split is
+    currently furthest below its target *record* count (not group count).
+    This keeps the anti-leakage guarantee (a group never splits across
+    train/val) while avoiding the record-level ratio drift that pure
+    first-seen-order assignment causes once group sizes vary a lot (some
+    patients have 1 record, others have up to 10 after rebalance
+    duplication) — first-seen order can accidentally cluster several large
+    groups into the same split by chance. Still fully deterministic: no
+    randomness, just a stable sort by size with first-seen order as the
+    tiebreak.
+    """
     group_keys = list(groups)
-    n_train_groups = math.ceil(len(group_keys) * TRAIN_FRACTION)
-    train_keys = group_keys[:n_train_groups]
-    val_keys = group_keys[n_train_groups:]
+    total_records = sum(len(groups[k]) for k in group_keys)
+    target_train_records = total_records * TRAIN_FRACTION
+
+    ordered_keys = sorted(group_keys, key=lambda k: len(groups[k]), reverse=True)
+
+    train_keys, val_keys = [], []
+    train_count = val_count = 0
+    for k in ordered_keys:
+        size = len(groups[k])
+        train_gap = target_train_records - train_count
+        val_gap = (total_records - target_train_records) - val_count
+        if train_gap >= val_gap:
+            train_keys.append(k)
+            train_count += size
+        else:
+            val_keys.append(k)
+            val_count += size
 
     train_records = [r for k in train_keys for r in groups[k]]
     val_records = [r for k in val_keys for r in groups[k]]
