@@ -13,8 +13,14 @@ turning "flattened for display" into "flattened for machine learning."
                      rather than an arbitrary integer map (male=0, female=1)
                      that would imply a meaningless ordering the model could
                      wrongly learn along. Missing gender (dropped ~15% of the
-                     time by messiness) is represented as all-zero across the
-                     one-hot columns via handle_unknown="ignore".
+                     time by messiness) still zeroes both one-hot columns via
+                     handle_unknown="ignore", but that alone is ambiguous —
+                     a lone 0 can't be told apart from "confirmed not this
+                     category." An explicit `gender_missing` flag makes
+                     "we don't know" its own visible signal instead of
+                     something inferred from two other columns being zero,
+                     the same pattern flatten.py already uses for
+                     `{vital}_date_unknown`.
 - conditions      -> MultiLabelBinarizer over the canonical ICD-10 conditions
 - medications        / RxNorm medications (imported from generate_fhir.py, the
                      single source of truth). One 0/1 column per canonical
@@ -116,7 +122,8 @@ def encode(df):
     for the leading patient_id join key."""
     pieces = [df[["patient_id"]].reset_index(drop=True)]
 
-    # --- gender: one-hot ---------------------------------------------------
+    # --- gender: one-hot + explicit missing indicator -----------------------
+    gender_missing = df["gender"].isna().reset_index(drop=True)
     gender = df[["gender"]].fillna("__missing__")
     ohe = OneHotEncoder(
         categories=[["female", "male"]],
@@ -125,7 +132,9 @@ def encode(df):
     )
     gender_encoded = ohe.fit_transform(gender)
     gender_cols = [f"gender_{c}" for c in ohe.categories_[0]]
-    pieces.append(pd.DataFrame(gender_encoded.astype(int), columns=gender_cols))
+    gender_df = pd.DataFrame(gender_encoded.astype(int), columns=gender_cols)
+    gender_df["gender_missing"] = gender_missing.astype(int)
+    pieces.append(gender_df)
 
     # --- conditions / medications: multi-label binarize --------------------
     for raw_col, prefix, classes, suffix in (

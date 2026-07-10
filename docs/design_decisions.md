@@ -40,14 +40,20 @@ learning."
 
 **The transforms, and why each (not just that each was used):**
 
-- **`gender` → `OneHotEncoder`.** A naive `male=0, female=1` integer map
-  would let the model compute `female - male = 1` and potentially learn a
-  pattern along that meaningless number line. One-hot gives each category
-  its own independent 0/1 column, encoding "these are unordered categories"
-  rather than "points on a scale." Missing gender (dropped ~15% of the time
-  by the messiness toggle) is represented as all-zero across the one-hot
-  columns via `handle_unknown="ignore"` — a defensible, explicit encoding of
-  "absent," distinct from either category being present.
+- **`gender` → `OneHotEncoder` + explicit `gender_missing` flag.** A naive
+  `male=0, female=1` integer map would let the model compute
+  `female - male = 1` and potentially learn a pattern along that meaningless
+  number line. One-hot gives each category its own independent 0/1 column,
+  encoding "these are unordered categories" rather than "points on a
+  scale." Missing gender (dropped ~15% of the time by the messiness toggle)
+  still zeroes both one-hot columns via `handle_unknown="ignore"` — but a
+  review caught that this alone is ambiguous: a lone `0` in `gender_female`
+  can't be told apart from "confirmed male" versus "unknown," since both
+  produce the same value. Corrected by adding an explicit `gender_missing`
+  indicator column, so "we don't know" is its own visible signal rather
+  than something inferred from two other columns both being zero — the
+  same pattern `flatten.py` already uses for `{vital}_date_unknown`, now
+  applied consistently to the encoding step too.
 - **`conditions` / `medications` → `MultiLabelBinarizer`.** These are the
   interesting case: a patient legitimately has *several* diagnoses at once,
   so this is multi-label, not single-category — one-hot cannot represent it.

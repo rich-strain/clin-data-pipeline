@@ -65,8 +65,11 @@ def find_by_patient(records: list[dict], patient_id: str) -> dict | None:
 ENCODING_CODE = '''from sklearn.preprocessing import OneHotEncoder, MultiLabelBinarizer
 from sklearn.impute import SimpleImputer
 
-# gender -> one independent 0/1 column per category (missing -> all-zero),
-# so the model never sees a false male<->female ordering.
+# gender -> one independent 0/1 column per category, so the model never sees
+# a false male<->female ordering. A missing gender still zeroes both
+# category columns, but that alone is ambiguous (0 could mean "confirmed
+# not this category" or "unknown") -- an explicit gender_missing flag makes
+# "we don't know" its own signal, not something inferred from two zeros.
 OneHotEncoder(categories=[["female", "male"]], handle_unknown="ignore")
 
 # conditions / medications -> one 0/1 column per canonical code. A patient
@@ -118,8 +121,9 @@ def render_encoding_section(features, encoded, example_id):
             dx_lines = "\n".join(f"    - `dx: {d}` = 1" for d in dx_on) or "    - (none)"
             st.markdown(
                 f"- `gender_female` = {enc_row['gender_female']}, "
-                f"`gender_male` = {enc_row['gender_male']}"
-                + ("  _(missing → all-zero)_" if raw_gender == "(missing)" else "")
+                f"`gender_male` = {enc_row['gender_male']}, "
+                f"`gender_missing` = {enc_row['gender_missing']}"
+                + ("  _(explicit flag — not inferred from both columns being zero)_" if raw_gender == "(missing)" else "")
                 + "\n- diagnosis columns set to 1 (all others 0):\n"
                 + dx_lines
             )
@@ -138,9 +142,9 @@ def render_encoding_section(features, encoded, example_id):
         "identifiers (MRN, name, DOB) and the now-constant unit columns are "
         "dropped."
     )
-    st.code(ENCODING_CODE, language="python")
+    # st.code(ENCODING_CODE, language="python")
 
-    st.markdown("**Full encoded matrix** (all patients) — for direct comparison against the raw table above:")
+    # st.markdown("**Full encoded matrix** (all patients) — for direct comparison against the raw table above:")
     st.dataframe(encoded, width='stretch')
 
 
