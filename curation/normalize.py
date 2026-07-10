@@ -74,12 +74,9 @@ _ABBREV_TO_CANONICAL = {v.lower(): k for k, v in CONDITION_ABBREVIATIONS.items()
 # Extraction paraphrase variants observed in real Haiku output at the
 # 100-patient scale (not generate_notes.py abbreviations, and not a
 # canonical-name prefix either — normalize_diagnosis_name's existing
-# startswith check doesn't catch these). Scope: only the 3 specific
-# phrasings actually observed and confirmed unmatched, not a general
-# paraphrase-matching pass — the rest of the unmatched-values list from that
-# run is unrelated dosage/unit variants, still out of scope.
+# startswith check doesn't catch these).
 _DIAGNOSIS_PARAPHRASES = {
-    "hypertension (htn)": "Essential (primary) hypertension",
+    "hypertension": "Essential (primary) hypertension",
     "major depressive disorder": "Major depressive disorder, single episode, unspecified",
     "type 2 diabetes mellitus": "Type 2 diabetes mellitus without complications",
 }
@@ -94,10 +91,22 @@ _DIAGNOSIS_PARAPHRASES = {
 # field instead of leaving it embedded in free text.
 _TRAILING_DX_DATE_RE = re.compile(r"\s*\(dx\s+[^)]*\)\s*$", re.IGNORECASE)
 
+# Extraction sometimes also appends a trailing "(ABBREV)" parenthetical
+# after the full name (e.g. "Major Depressive Disorder (MDD)") — a second,
+# distinct trailing-parenthetical pattern from the "(dx <date>)" one above.
+# Observed originally only on the hypertension paraphrase (hence the old
+# "hypertension (htn)" table entry, now folded away); confirmed via a
+# val-sample review that Haiku also produces it for other diagnoses (MDD).
+# Stripping it generically, rather than hand-adding a table entry per
+# diagnosis it happens to show up on, lets one base-name paraphrase entry
+# above cover both the bare and abbreviation-suffixed forms.
+_TRAILING_ABBREV_RE = re.compile(r"\s*\([A-Z0-9]{2,6}\)\s*$")
+
 
 def normalize_diagnosis_name(raw_name):
     """Return (canonical_name, matched: bool)."""
     stripped = _TRAILING_DX_DATE_RE.sub("", raw_name).strip()
+    stripped = _TRAILING_ABBREV_RE.sub("", stripped).strip()
 
     abbrev_match = _ABBREV_TO_CANONICAL.get(stripped.lower()) or _DIAGNOSIS_PARAPHRASES.get(stripped.lower())
     if abbrev_match:
@@ -200,6 +209,34 @@ _DOSAGE_LOOKUP = {
 }
 _MISSING_DOSAGE_MARKERS = {"", "dosage not recorded", "none"}
 
+# MEDICATIONS' canonical display is always "{drug} {strength} {form}", one
+# drug name per canonical entry in this closed vocabulary (no two
+# medications share a base drug name) — e.g. "Amlodipine 5 MG Oral Tablet".
+# Extraction sometimes splits this inconsistently: `name` comes back as just
+# the bare drug name ("Amlodipine"), and the "{strength} {form} - " prefix
+# ends up bundled into `dosage` instead (observed directly in
+# extractions.jsonl, not introduced here). Because the base name uniquely
+# identifies the canonical display in this vocabulary, it's always safe to
+# upgrade a bare-name match to the full canonical display; the bundled
+# strength/form prefix is additionally stripped off `dosage` when present,
+# so the remaining text can still match `_DOSAGE_LOOKUP` normally.
+_MED_BASE_NAME_TO_DISPLAY = {display.split(" ", 1)[0].lower(): display for _, display, _, _ in MEDICATIONS}
+
+
+def resplit_bare_medication_name(name, dosage_text):
+    """Return (name, dosage_text), upgrading a bare drug name to its full
+    canonical display and stripping any bundled strength/form prefix out of
+    dosage_text. No-op if `name` isn't a recognized bare drug name."""
+    display = _MED_BASE_NAME_TO_DISPLAY.get(name.strip().lower())
+    if display is None or display.lower() == name.strip().lower():
+        return name, dosage_text
+
+    prefix = display[len(name.strip()):].strip()
+    marker = f"{prefix} - "
+    if dosage_text is not None and dosage_text.lower().startswith(marker.lower()):
+        return display, dosage_text[len(marker):]
+    return display, dosage_text
+
 
 def normalize_dosage(med_name, dosage_text):
     """Return (canonical_dosage_or_None, matched: bool)."""
@@ -236,11 +273,26 @@ def normalize_record(record):
         diagnoses.append({"name": name})
 
     medications = []
+    seen_medications = set()
     for med in record["medications"]:
-        dosage, matched = normalize_dosage(med["name"], med["dosage"])
-        medications.append({"name": med["name"], "dosage": dosage})
+        name, dosage_text = resplit_bare_medication_name(med["name"], med["dosage"])
+        dosage, matched = normalize_dosage(name, dosage_text)
         if not matched:
-            unmatched.append(f"dosage for {med['name']!r}: {med['dosage']!r}")
+            unmatched.append(f"dosage for {name!r}: {dosage_text!r}")
+        # Notes can mention the same medication twice with identical
+        # canonical name+dosage (e.g. a shorthand mention and a full-text
+        # mention of the same prescription) — same rationale as the
+        # diagnosis dedup above: dedup after normalization, since it's what
+        # canonical form surfaces as an exact duplicate. Two mentions of the
+        # same drug with genuinely *different* dosage text (e.g. one with
+        # instructions, one "dosage not recorded") are kept as separate
+        # entries — that's a real distinct medication-list entry, not a
+        # duplicate.
+        key = (name, dosage)
+        if key in seen_medications:
+            continue
+        seen_medications.add(key)
+        medications.append({"name": name, "dosage": dosage})
 
     vitals = []
     for v in record["vitals"]:

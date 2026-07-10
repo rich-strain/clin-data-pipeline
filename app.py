@@ -62,6 +62,19 @@ def find_by_patient(records: list[dict], patient_id: str) -> dict | None:
     return next((r for r in records if r.get("patient_id") == patient_id), None)
 
 
+def pretty_json(raw: str) -> str:
+    """Display-only reformatting. The pipeline's actual JSONL/response
+    strings are compact single-line JSON on purpose (JSONL is one record per
+    line, and `response` is the literal training target the model learns to
+    generate) — this is purely to make that same string easier to read in
+    the app. Falls back to the raw string if it isn't valid JSON (e.g. a
+    malformed base-model generation)."""
+    try:
+        return json.dumps(json.loads(raw), indent=2)
+    except (json.JSONDecodeError, TypeError):
+        return raw
+
+
 ENCODING_CODE = '''from sklearn.preprocessing import OneHotEncoder, MultiLabelBinarizer
 from sklearn.impute import SimpleImputer
 
@@ -362,12 +375,15 @@ def render_stage_d():
     st.subheader("Sample training example")
     st.caption(
         "`instruction` is the patient's redacted note text; `response` is the "
-        "target JSON string the model is trained to produce."
+        "target JSON string the model is trained to produce. The actual "
+        "training data is compact single-line JSON (that's what JSONL is, "
+        "and it's the literal string the model learns to generate) — "
+        "pretty-printed below purely for readability."
     )
     if train:
         sample = train[0]
         st.text_area("instruction", sample["instruction"], height=200, disabled=True)
-        st.code(sample["response"], language="json")
+        st.code(pretty_json(sample["response"]), language="json")
 
 
 def render_stage_e():
@@ -420,22 +436,36 @@ def render_stage_e():
         )
 
     st.subheader("Before / after: base model vs. fine-tuned adapter")
+    st.caption(
+        "Ground truth and fine-tuned output are pretty-printed here for "
+        "readability — the model is actually trained on, and generates, "
+        "compact single-line JSON. Base model output is shown exactly as "
+        "generated, since it sometimes isn't valid JSON at all."
+    )
     for i, sample in enumerate(samples):
         with st.expander(f"Val example {i + 1}"):
             st.text_area("Instruction", sample["instruction"], height=150, disabled=True, key=f"instr_{i}")
             st.caption("Ground truth")
-            st.code(sample["ground_truth"], language="json")
+            st.code(pretty_json(sample["ground_truth"]), language="json")
             st.caption("Base model output")
             st.code(sample["base_model_output"])
             st.caption("Fine-tuned output")
-            st.code(sample["fine_tuned_output"], language="json")
+            st.code(pretty_json(sample["fine_tuned_output"]), language="json")
 
     st.info(
         "Honest framing: this demonstrates correct LoRA fine-tuning mechanics — "
         "real data, correct loss masking, a real training loop with genuinely "
         "declining loss, and a real behavioral difference with vs. without the "
         "adapter — on a genuinely small dataset. It is not a claim of "
-        "production-quality extraction accuracy."
+        "production-quality extraction accuracy. LoRA itself isn't a model — "
+        "it's a fine-tuning technique that adds a small set of trainable "
+        "weights on top of a frozen base model (here, Qwen2.5-0.5B-Instruct, "
+        "a real but very small open-weight LLM, not Stage B's much larger "
+        "Claude Haiku). Occasional errors in the samples above (a fabricated "
+        "diagnosis-name variant, a garbled dosage, a wrong vital value) are a "
+        "capability ceiling of this small model trained on ~100 examples, not "
+        "a data-pipeline bug — the same category of honest limitation as the "
+        "val-loss plateau above, not hidden or explained away."
     )
 
 

@@ -832,3 +832,112 @@ synthesize tables) shows the complete data, not just an example. Re-ran
 `AppTest`: initial load + all 5 stage clicks, zero exceptions; confirmed
 the encoding section renders real before/after content and the full table
 (not the missing-file fallback).
+
+---
+
+**Stage D split-ratio fix, `normalize.py` medication/diagnosis fixes, and a
+retrain — complete, with an honest finding about the fine-tuned model's
+remaining limits.**
+
+**`split.py`: group assignment is now record-count-aware, not just
+group-count-aware.** A review of the Stage D display noticed the actual
+train/val *record* ratio (112/132 train, ~85%, vs. 20/132 val, ~15%) had
+drifted well past 80/20, despite the *group*-level split itself being an
+exact 80/20 (80/100 groups). Root cause: `split_groups()` assigned groups
+to train/val in first-seen file order, and group sizes vary widely (1-10
+records after `rebalance.py` duplication) — first-seen order can
+accidentally cluster several large groups into the same split by chance,
+which is exactly what happened. Fixed: groups are now sorted largest-first
+and each one assigned to whichever split is currently furthest below its
+target *record* count, still fully respecting the anti-leakage guarantee
+(a group never splits across train/val) and staying fully deterministic
+(no randomness — a stable sort by size, first-seen order as tiebreak).
+Result: 105/131 train (~80.2%) vs. 26/131 val (~19.8%) on the current data
+— see below for why the record count changed slightly (131 vs. 132).
+
+**Reviewing Stage D/E's sample display surfaced two real `normalize.py`
+gaps, found by reading actual val examples, not just aggregate metrics:**
+
+1. **Medication dedup gap.** Diagnoses were already deduped after
+   normalization (same diagnosis mentioned in multiple note sections
+   collapses to one entry), but medications had no equivalent dedup — a
+   medication mentioned twice in a note (once in full-text form, once as
+   shorthand) normalized to two *identical* `{name, dosage}` entries
+   instead of one. Fixed: medications are now deduped the same way,
+   post-normalization, on `(name, dosage)` — two mentions of the same drug
+   with genuinely *different* dosage text (e.g. one with instructions, one
+   "dosage not recorded") are correctly kept as separate entries, since
+   that's a real distinct medication-list entry, not a duplicate.
+2. **Medication name/dosage split inconsistency**, traced to the raw Haiku
+   extraction itself (confirmed in `extractions.jsonl`, not introduced by
+   `normalize.py`): some records extract a medication as just its bare drug
+   name (`"Amlodipine"`) with the strength/form bundled into the dosage
+   text instead (`"5 MG Oral Tablet - Take 5 mg by mouth once daily"`),
+   instead of the more common `"Amlodipine 5 MG Oral Tablet"` name +
+   `"Take 5 mg by mouth once daily"` dosage split. Fixed: since
+   `MEDICATIONS`' canonical display is always "{drug} {strength} {form}"
+   with exactly one entry per drug name in this closed vocabulary, a bare
+   drug name safely and uniquely identifies its full canonical display —
+   `resplit_bare_medication_name()` upgrades the name and strips the
+   bundled strength/form prefix off the dosage text so it can still match
+   `_DOSAGE_LOOKUP` normally.
+3. **Diagnosis paraphrase generalized.** The existing 3-entry
+   `_DIAGNOSIS_PARAPHRASES` table (Resolved issue #2, an earlier pass)
+   already covered `"Hypertension (HTN)"` as one hardcoded full-string
+   entry. Reviewing a val sample surfaced the same trailing-`"(ABBREV)"`
+   pattern on a *different* diagnosis (`"Major Depressive Disorder (MDD)"`)
+   that the table didn't cover. Rather than hand-adding a second full-string
+   entry, `normalize_diagnosis_name` now strips a trailing `"(ABBREV)"`
+   parenthetical generically (mirroring the existing trailing-`"(dx date)"`
+   strip) before the paraphrase-table lookup, so one base-name entry
+   (`"hypertension"`, `"major depressive disorder"`) covers both the bare
+   and abbreviation-suffixed forms — closing this specific gap and any
+   future diagnosis it recurs on, not just the one instance found.
+
+**Full pipeline rebuilt and reverified** (normalize -> redact -> rebalance
+-> synthesize -> split -> format_jsonl), zero API calls except a
+zero-op `synthesize.py` check (every category already covered
+post-rebalance): unmatched-values count dropped 48 -> 33 (zero of them
+diagnosis-related now, down from some); zero exact-duplicate medications
+confirmed across the new val set; zero patient-group leakage; zero PHI
+leakage across all 131 records (full per-patient grep, same check as prior
+passes). **Final counts:** 100 patients -> 100 extracted -> 100 normalized
+-> 100 redacted -> 131 rebalanced (31 duplicates) -> 131 synthesized (0
+new) -> 131 eligible for Stage D -> **105 train / 26 val**.
+
+**Retrained on the corrected 105/26 split** (690.2s wall clock on MPS):
+train loss declined every epoch (0.1383 -> 0.0224 -> 0.0109 -> 0.0072 ->
+0.0076 -> 0.0044); val loss lowest at **epoch 4 (0.0256)**, the same
+overfitting shape as prior runs, correctly captured by best-epoch
+selection (checksum-verified against `checkpoints/epoch_4/`).
+
+**A genuine finding, reported honestly rather than declared a clean win:**
+re-reading the same 3 val samples after the fix confirmed the ground truth
+itself is now fully correct (deduped medications, correct canonical
+names) — but doing so exposed *new* fine-tuned-model errors that the
+previous buggy ground truth had been silently matching/masking. Val 1: the
+model hallucinates a diagnosis-name variant, `"...without pneumonia"`,
+that does not exist anywhere in `generate_fhir.py`'s canonical condition
+list, and garbles one medication's dosage text into a concatenation of
+both original note mentions instead of the now-correctly-deduped single
+entry. Val 2: near-perfect (diagnoses + all 3 medications match exactly),
+but omits the `"vitals": []` key entirely rather than emitting it empty —
+a schema-conformance miss, not a content error. Val 3: diagnoses and
+medications now match correctly, but the model outputs a **wrong body
+weight value** (58.8 kg vs. the correct 82.8 kg) — a fabricated number for
+a vital that is present and correctly extractable from the source note.
+
+Generation uses greedy decoding (`do_sample=False` in `train_runner.py`),
+so these are deterministic model outputs, not sampling noise. Assessed as
+a genuine capability ceiling of this specific (small model)/(small
+dataset) combination — Qwen2.5-0.5B fine-tuned via LoRA on ~105 examples
+learns the target JSON *shape* well (loss declines cleanly) but doesn't
+have the depth to reliably get every specific string/number exactly
+right, unlike Stage B's much larger Claude Haiku, which is doing genuine
+reading comprehension rather than pattern-matching a learned format. Not
+a data-pipeline bug to chase further — the same category of honest,
+undersold-not-oversold limitation as the already-documented val-loss
+overfitting plateau. `app.py`'s Stage E honest-framing note updated to
+state this explicitly, alongside a plain-language explainer that LoRA is
+a fine-tuning technique (not a model itself) layered onto the small base
+model, distinct from Stage B's Haiku.

@@ -4,39 +4,36 @@
 
 **Instruction:**
 ```
-Patient: [PATIENT NAME], DOB 1996-06-03, Female, MRN [MRN]
-Address: [ADDRESS]
-Visit Date: 2026-01-10
+Patient: [PATIENT NAME], DOB 1941-11-12, Female, MRN [MRN]
+Visit Date: 2024-05-25
 
 CC: Presents for routine follow-up of obesity.
 
-HPI: obesity (dx 2021-05-11) remains stable; no new complaints today.
+PMH: obesity (dx 2024-05-25), COPD (dx 2022-11-05), GERD (dx 2016-07-23).
 
-PMH: obesity (dx 2021-05-11).
+Meds: Atorvastatin 20 MG Oral Tablet - Take 20 mg by mouth at bedtime; Atorvastatin 20 MG Oral Tablet - 20mg PO QHS.
 
-Meds: Sertraline 50 MG Oral Tablet - 50mg PO QD; Atorvastatin 20 MG Oral Tablet - Take 20 mg by mouth at bedtime.
+VS: Glu 170.8, BP 134.1 mm[Hg], Temp 37.2.
 
-VS: Wt 236.6, Glu 80.2 mg/dL, Ht 165.9.
-
-A/P: Continue current management of obesity.
+A/P: Continue current management of obesity. Continue current management of COPD. No changes to GERD management at this time.
 ```
 
 **Ground truth response:**
 ```json
-{"date_of_birth": "1996-06-03", "diagnoses": [{"name": "Obesity, unspecified"}], "medications": [{"name": "Sertraline 50 MG Oral Tablet", "dosage": "Take 50 mg by mouth once daily"}, {"name": "Atorvastatin 20 MG Oral Tablet", "dosage": "Take 20 mg by mouth at bedtime"}], "vitals": [{"name": "Body weight", "value": 107.3, "unit": "kg"}, {"name": "Glucose", "value": 80.2, "unit": "mg/dL"}, {"name": "Body height", "value": 165.9, "unit": "cm"}]}
+{"date_of_birth": "1941-11-12", "diagnoses": [{"name": "Obesity, unspecified"}, {"name": "Chronic obstructive pulmonary disease, unspecified"}, {"name": "Gastro-esophageal reflux disease without esophagitis"}], "medications": [{"name": "Atorvastatin 20 MG Oral Tablet", "dosage": "Take 20 mg by mouth at bedtime"}], "vitals": [{"name": "Glucose", "value": 170.8, "unit": "mg/dL"}, {"name": "Systolic blood pressure", "value": 134.1, "unit": "mm[Hg]"}, {"name": "Body temperature", "value": 37.2, "unit": "Cel"}]}
 ```
 
 **Base model (no adapter) output:**
 ```
 ```json
 {
-  "date_of_birth": "1996-06-03",
-  "diagnoses": ["obesity"],
-  "medications": ["Sertraline", "Atorvastatin"],
+  "date_of_birth": "1941-11-12",
+  "diagnoses": ["obesity", "COPD", "GERD"],
+  "medications": ["Atorvastatin 20 MG Oral Tablet - Take 20 mg by mouth at bedtime; Atorvastatin 20 MG Oral Tablet - 20mg PO QHS"],
   "vitals": {
-    "weight": "236.6 kg",
-    "blood_pressure": "80.2 mmHg",
-    "heart_rate": "110 bpm"
+    "glucose": 170.8,
+    "blood_pressure": 134.1 mm[Hg],
+    "temperature": 37.2
   }
 }
 ```
@@ -44,50 +41,46 @@ A/P: Continue current management of obesity.
 
 **Fine-tuned model (with adapter) output:**
 ```
-{"date_of_birth": "1996-06-03", "diagnoses": [{"name": "Obesity"}], "medications": [{"name": "Sertraline 50 MG Oral Tablet", "dosage": "Take 50 mg by mouth once daily"}, {"name": "Atorvastatin 20 MG Oral Tablet", "dosage": "Take 20 mg by mouth at bedtime"}], "vitals": [{"name": "Body weight", "value": 236.6, "unit": "kg"}, {"name": "Glucose", "value": 80.2, "unit": "mg/dL"}, {"name": "Body height", "value": 165.9, "unit": "cm"}]}
+{"date_of_birth": "1941-11-12", "diagnoses": [{"name": "Obesity"}, {"name": "Chronic obstructive pulmonary disease without pneumonia"}, {"name": "Gastro-esophageal reflux disease without esophagitis"}], "medications": [{"name": "Atorvastatin 20 MG Oral Tablet", "dosage": "Take 20 mg by mouth at bedtime; Atorvastatin 20 MG Oral Tablet, 20 mg oral, take 20 mg by mouth every night"}], "vitals": [{"name": "Glucose", "value": 170.8, "unit": "mg/dL"}, {"name": "Systolic blood pressure", "value": 134.1, "unit": "mm[Hg]"}, {"name": "Body temperature", "value": 37.2, "unit": "Cel"}]}
 ```
 
 ## Sample 2
 
 **Instruction:**
 ```
-Patient: [PATIENT NAME], DOB 1996-06-10, Male, MRN [MRN]
+Patient: [PATIENT NAME], DOB 1979-03-13, Male, MRN [MRN]
 Address: [ADDRESS]
-Visit Date: 2024-10-02
+Visit Date: 2023-12-02
 
-CC: Follow-up visit for Essential (primary) hypertension management.
+CC: Presents for routine follow-up of HTN.
 
-HPI: Patient reports doing well on current regimen for HTN, diagnosed 2024-10-02.
+PMH: Essential (primary) hypertension (dx 2020-01-03).
 
-PMH: HTN (dx 2024-10-02).
+Meds: Atorvastatin 20 MG Oral Tablet - Take 20 mg by mouth at bedtime; Sertraline 50 MG Oral Tablet - dosage not recorded; Metformin 500 MG Oral Tablet - 500mg PO BID.
 
-Meds: Lisinopril 10 MG Oral Tablet - dosage not recorded.
-
-VS: Wt 55.0, BP 135.3, Temp 97.3, Glu 88.2 mg/dL.
-
-A/P: Continue present treatment for Essential (primary) hypertension; recheck at next visit.
+A/P: Continue current management of HTN.
 ```
 
 **Ground truth response:**
 ```json
-{"date_of_birth": "1996-06-10", "diagnoses": [{"name": "Essential (primary) hypertension"}], "medications": [{"name": "Lisinopril 10 MG Oral Tablet", "dosage": null}], "vitals": [{"name": "Body weight", "value": 55.0, "unit": "kg"}, {"name": "Systolic blood pressure", "value": 135.3, "unit": "mm[Hg]"}, {"name": "Body temperature", "value": 36.3, "unit": "Cel"}, {"name": "Glucose", "value": 88.2, "unit": "mg/dL"}]}
+{"date_of_birth": "1979-03-13", "diagnoses": [{"name": "Essential (primary) hypertension"}], "medications": [{"name": "Atorvastatin 20 MG Oral Tablet", "dosage": "Take 20 mg by mouth at bedtime"}, {"name": "Sertraline 50 MG Oral Tablet", "dosage": null}, {"name": "Metformin 500 MG Oral Tablet", "dosage": "Take 500 mg by mouth twice daily"}], "vitals": []}
 ```
 
 **Base model (no adapter) output:**
 ```
 ```json
 {
-  "date_of_birth": "1996-06-10",
-  "diagnoses": ["Essential (primary)", "HTN"],
-  "medications": ["Lisinopril", "No medication recorded"],
-  "vitals": {
-    "weight": "55.0 kg",
-    "blood_pressure": {
-      "systolic": "135.3 mmHg",
-      "diastolic": "97.3 mmHg"
+  "date_of_birth": "1979-03-13",
+  "diagnoses": ["HTN"],
+  "medications": {
+    "Atorvastatin": {
+      "Dosage": "20 MG Oral Tablet"
     },
-    "temperature": "97.3 °C",
-    "glucose": "88.2 mg/dL"
+    "Sertraline": {},
+    "Metformin": {}
+  },
+  "vitals": {
+    "Blood Pressure": "140/80 mmHg"
   }
 }
 ```
@@ -95,50 +88,53 @@ A/P: Continue present treatment for Essential (primary) hypertension; recheck at
 
 **Fine-tuned model (with adapter) output:**
 ```
-{"date_of_birth": "1996-06-10", "diagnoses": [{"name": "Essential (primary) hypertension"}], "medications": [{"name": "Lisinopril 10 MG Oral Tablet", "dosage": null}], "vitals": [{"name": "Body weight", "value": 55.0, "unit": "kg"}, {"name": "Systolic blood pressure", "value": 135.3, "unit": "mm[Hg]"}, {"name": "Body temperature", "value": 37.4, "unit": "Cel"}, {"name": "Glucose", "value": 88.2, "unit": "mg/dL"}]}
+{"date_of_birth": "1979-03-13", "diagnoses": [{"name": "Essential (primary) hypertension"}], "medications": [{"name": "Atorvastatin 20 MG Oral Tablet", "dosage": "Take 20 mg by mouth at bedtime"}, {"name": "Sertraline 50 MG Oral Tablet", "dosage": null}, {"name": "Metformin 500 MG Oral Tablet", "dosage": "Take 500 mg by mouth twice daily"}]}
 ```
 
 ## Sample 3
 
 **Instruction:**
 ```
-Patient: [PATIENT NAME], DOB 1941-08-21, Male, MRN [MRN]
+Patient: [PATIENT NAME], DOB 1949-07-06, Female, MRN [MRN]
 Address: [ADDRESS]
-Visit Date: 2024-08-07
+Visit Date: 2023-06-18
 
-CC: Here today to discuss obesity.
+CC: Here today to discuss MDD.
 
-HPI: obesity (dx 2022-06-11) remains stable; no new complaints today.
+HPI: Patient reports doing well on current regimen for MDD, diagnosed 2019-01-10. Unspecified asthma, uncomplicated (dx 2023-06-18) remains stable; no new complaints today.
 
-PMH: obesity (dx 2022-06-11).
+PMH: MDD (dx 2019-01-10), asthma (dx 2023-06-18).
 
-Meds: Atorvastatin 20 MG Oral Tablet - dosage not recorded; Metformin 500 MG Oral Tablet - Take 500 mg by mouth twice daily.
+Meds: Amlodipine 5 MG Oral Tablet - Take 5 mg by mouth once daily; Omeprazole 20 MG Oral Capsule - Take 20 mg by mouth once daily; Omeprazole 20 MG Oral Capsule - dosage not recorded.
 
-VS: BP 115.3 mm[Hg], HR 69.1.
+VS: BP 130.5 mm[Hg], Wt 82.8 kg, HR 57.3 beats/minute.
 
-A/P: Continue current management of obesity.
+A/P: Continue current management of MDD. No changes to asthma management at this time.
 ```
 
 **Ground truth response:**
 ```json
-{"date_of_birth": "1941-08-21", "diagnoses": [{"name": "Obesity, unspecified"}], "medications": [{"name": "Atorvastatin 20 MG Oral Tablet", "dosage": null}, {"name": "Metformin 500 MG Oral Tablet", "dosage": "Take 500 mg by mouth twice daily"}], "vitals": [{"name": "Systolic blood pressure", "value": 115.3, "unit": "mm[Hg]"}, {"name": "Heart rate", "value": 69.1, "unit": "beats/minute"}]}
+{"date_of_birth": "1949-07-06", "diagnoses": [{"name": "Major depressive disorder, single episode, unspecified"}, {"name": "Unspecified asthma, uncomplicated"}], "medications": [{"name": "Amlodipine 5 MG Oral Tablet", "dosage": "Take 5 mg by mouth once daily"}, {"name": "Omeprazole 20 MG Oral Capsule", "dosage": "Take 20 mg by mouth once daily"}, {"name": "Omeprazole 20 MG Oral Capsule", "dosage": null}], "vitals": [{"name": "Systolic blood pressure", "value": 130.5, "unit": "mm[Hg]"}, {"name": "Body weight", "value": 82.8, "unit": "kg"}, {"name": "Heart rate", "value": 57.3, "unit": "beats/minute"}]}
 ```
 
 **Base model (no adapter) output:**
 ```
 ```json
 {
-  "date_of_birth": "1941-08-21",
-  "diagnoses": ["obesity"],
+  "date_of_birth": "1949-07-06",
+  "diagnoses": ["MDD", "asthma"],
   "medications": {
-    "Atorvastatin": null,
-    "Metformin": {
-      "Dosage": null
+    "amlodipine": {
+      "Dosage": "5 mg by mouth once daily"
+    },
+    "omeprazole": {
+      "Dosage": "20 mg by mouth once daily"
     }
   },
   "vitals": {
-    "BP": "115.3 mm[Hg]",
-    "HR": "69.1"
+    "BP": "130.5 mm[Hg]",
+    "Wt": "82.8 kg",
+    "HR": "57.3 beats/minute"
   }
 }
 ```
@@ -146,5 +142,5 @@ A/P: Continue current management of obesity.
 
 **Fine-tuned model (with adapter) output:**
 ```
-{"date_of_birth": "1941-08-21", "diagnoses": [{"name": "Obesity"}], "medications": [{"name": "Atorvastatin 20 MG Oral Tablet", "dosage": null}, {"name": "Metformin 500 MG Oral Tablet", "dosage": "Take 500 mg by mouth twice daily"}], "vitals": [{"name": "Systolic blood pressure", "value": 115.3, "unit": "mm[Hg]"}, {"name": "Heart rate", "value": 69.1, "unit": "beats/minute"}]}
+{"date_of_birth": "1949-07-06", "diagnoses": [{"name": "Major depressive disorder, single episode, unspecified"}, {"name": "Unspecified asthma, uncomplicated"}], "medications": [{"name": "Amlodipine 5 MG Oral Tablet", "dosage": "Take 5 mg by mouth once daily"}, {"name": "Omeprazole 20 MG Oral Capsule", "dosage": null}, {"name": "Omeprazole 20 MG Oral Capsule", "dosage": "Take 20 mg by mouth once daily"}], "vitals": [{"name": "Systolic blood pressure", "value": 130.5, "unit": "mm[Hg]"}, {"name": "Body weight", "value": 58.8, "unit": "kg"}, {"name": "Heart rate", "value": 57.3, "unit": "beats/minute"}]}
 ```
