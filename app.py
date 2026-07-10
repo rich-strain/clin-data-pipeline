@@ -179,11 +179,12 @@ def render_stage_a():
 
     st.subheader("Flattened feature table")
     st.caption(
-        "A *view* derived from the FHIR bundles above — one row per patient. "
-        "This is the classical-ML preparation branch (parallel to the "
-        "notes → extraction branch); it is never consumed by Stage D/E "
-        "training. Expand for the raw table and the scikit-learn-ready "
-        "encoding derived from it."
+        "Shown to demonstrate a different route this data could take: "
+        "reshaped into a table of numbers a traditional machine-learning "
+        "model could use — for example, to predict a patient's risk for a "
+        "certain diagnosis — instead of the note-based approach the rest of "
+        "this demo uses. No model is actually trained on it here; this just "
+        "shows the data would be ready for one. Expand below to see it."
     )
     with st.expander("Flattened feature table (raw, one row per patient)", expanded=False):
         st.caption(
