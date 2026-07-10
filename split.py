@@ -1,29 +1,32 @@
 """Stage D — train/val split of Stage C's curated output.
 
-Takes `data/curated/synthesized.jsonl` (Stage C's final output, 21 records)
-and partitions it into `data/curated/split_train.jsonl` /
-`data/curated/split_val.jsonl` — still in the curated record shape
-(patient_id/diagnoses/medications/vitals/...), not yet the instruction/
-response training format. `format_jsonl.py` reads these two files next and
-does the note-lookup + redaction + instruction/response formatting into
-`data/splits/train.jsonl` / `data/splits/val.jsonl`. Splitting and
-formatting are kept as separate steps so the "which record goes in which
-split" decision and the "how a record becomes a training example" decision
-can each be inspected/verified independently.
+Takes `data/curated/synthesized.jsonl` (Stage C's final output, currently
+132 records at the 100-patient scale) and partitions it into
+`data/curated/split_train.jsonl` / `data/curated/split_val.jsonl` — still
+in the curated record shape (patient_id/diagnoses/medications/vitals/...),
+not yet the instruction/response training format. `format_jsonl.py` reads
+these two files next and does the note-lookup + redaction + instruction/
+response formatting into `data/splits/train.jsonl` / `data/splits/
+val.jsonl`. Splitting and formatting are kept as separate steps so the
+"which record goes in which split" decision and the "how a record becomes
+a training example" decision can each be inspected/verified independently.
 
-**Excluding the 3 `synthesize.py` records.** Per CLAUDE.md's Resolved
+**Excluding any `synthesize.py` records.** Per CLAUDE.md's Resolved
 decisions #8, these records (tagged `"synthesized": true`) have no matching
 entry in `data/generated/clinical_notes.jsonl` — they were fabricated
 directly as structured fields, bypassing note generation entirely. Since
 every other record's training instruction is built from real note text
-(see `format_jsonl.py`), giving these 3 a different instruction shape (e.g.
+(see `format_jsonl.py`), giving these a different instruction shape (e.g.
 a synthesized prompt instead of note text) would make the instruction
 format inconsistent across the training set. Excluded here rather than
-force-fit — a small, documented gap (21 curated records -> 18 eligible for
-Stage D), not a silent one.
+force-fit. At the current 100-patient scale, `synthesize.py` found every
+diagnosis category already represented after rebalancing and synthesized
+zero new records, so this exclusion is currently a no-op (132 curated
+records -> 132 eligible for Stage D) — but the exclusion logic stays in
+place since it isn't guaranteed to stay at zero on a future regeneration.
 
 **~80/20 split, but grouped by original patient identity, not by raw
-record.** `rebalance.py` produced 8 duplicate records (via
+record.** `rebalance.py` produces duplicate records (via
 `rebalance_duplicate_of`) that are near-identical copies of an existing
 record, just to correct diagnosis-category representation — they are not
 independent patients. If a duplicate landed in val while its original sat
@@ -32,20 +35,19 @@ during training almost verbatim, silently inflating the validation metric
 into meaninglessness. So the unit of splitting here is the **original
 patient group** (a patient's original record plus every `-dupN` copy of
 it), not the individual record: every record in a group goes to the same
-split, always. On the 18 eligible records this collapses to 10 groups
-(patients with duplicates form group sizes of 2-3; everyone else is a
-group of 1); an 80/20 split *on groups* gives 8 train groups / 2 val
-groups (10 * 0.8 = 8 exactly, no rounding needed on this dev sample).
+split, always. At the current 100-patient scale this collapses 132
+eligible records into 100 groups (group sizes vary more widely than the
+original 10-patient dev sample — most patients are a group of 1, but
+categories that needed heavier rebalancing produce groups as large as 10);
+an 80/20 split *on groups* gives 80 train groups / 20 val groups.
 
-**Consequence, stated honestly:** because group sizes vary (1-3 records),
-splitting by group only *approximately* hits an 80/20 *record* ratio, not
-exactly — on this sample it lands at 14/18 train (~78%) vs. 4/18 val
-(~22%), because the 2 val groups happen to include one duplicated group
-(see verification output for the live numbers on any given run). That's an
-intentional trade-off: correctness of the anti-leakage grouping constraint
-takes priority over hitting an exact record-count ratio, and 18 records is
-far too small a sample for the last percentage point of split ratio to
-matter anyway.
+**Consequence, stated honestly:** because group sizes vary, splitting by
+group only *approximately* hits an 80/20 *record* ratio, not exactly — at
+the current scale it lands at 112/132 train (~85%) vs. 20/132 val (~15%),
+because the larger duplicate groups happen to have landed in train this
+run (see verification output for the live numbers on any given run).
+That's an intentional trade-off: correctness of the anti-leakage grouping
+constraint takes priority over hitting an exact record-count ratio.
 
 **Ordering:** groups are assigned to train/val in first-seen order from
 `synthesized.jsonl` (train = first 80% of groups encountered, val = the
