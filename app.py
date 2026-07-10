@@ -68,7 +68,7 @@ from sklearn.impute import SimpleImputer
 # gender -> one independent 0/1 column per category, so the model never sees
 # a false male<->female ordering. A missing gender still zeroes both
 # category columns, but that alone is ambiguous (0 could mean "confirmed
-# not this category" or "unknown") -- an explicit gender_missing flag makes
+# not this category" or "unknown") -- an explicit gender_unknown flag makes
 # "we don't know" its own signal, not something inferred from two zeros.
 OneHotEncoder(categories=[["female", "male"]], handle_unknown="ignore")
 
@@ -122,7 +122,7 @@ def render_encoding_section(features, encoded, example_id):
             st.markdown(
                 f"- `gender_female` = {enc_row['gender_female']}, "
                 f"`gender_male` = {enc_row['gender_male']}, "
-                f"`gender_missing` = {enc_row['gender_missing']}"
+                f"`gender_unknown` = {enc_row['gender_unknown']}"
                 + ("  _(explicit flag — not inferred from both columns being zero)_" if raw_gender == "(missing)" else "")
                 + "\n- diagnosis columns set to 1 (all others 0):\n"
                 + dx_lines

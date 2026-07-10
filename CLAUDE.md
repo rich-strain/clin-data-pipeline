@@ -786,7 +786,7 @@ feature table alone only demonstrates "FHIR → flat CSV," not "FHIR →
 ML-ready features," which is what tying this branch to a classical-ML
 workflow claims. `generation/encode_features.py` closes that gap with real
 `sklearn.preprocessing` transforms: `OneHotEncoder` (gender, plus an
-explicit `gender_missing` flag — see below), `MultiLabelBinarizer`
+explicit `gender_unknown` flag — see below), `MultiLabelBinarizer`
 (conditions/medications, one 0/1 column per canonical code, imported from
 `generate_fhir.py`), and unit-normalize (lb→kg, in→cm, °F→°C) +
 `SimpleImputer` (mean) for vitals. Output:
@@ -800,15 +800,15 @@ A/encode" section).
 **Fixed after a review question:** the original gender encoding represented
 "missing" implicitly (both one-hot columns zeroed via
 `handle_unknown="ignore"`) — but a lone `0` in `gender_female` can't be
-told apart from "confirmed male." Added an explicit `gender_missing`
+told apart from "confirmed male." Added an explicit `gender_unknown`
 indicator column (35th feature column) so unknown gender is its own
 visible signal, not something inferred from two other columns both being
 zero — matching the pattern `flatten.py` already uses for
 `{vital}_date_unknown`. Verified: James Rodriguez (missing gender) →
-`gender_female=0, gender_male=0, gender_missing=1`; Patricia Williams
-(known female) → `gender_female=1, gender_male=0, gender_missing=0`; and
+`gender_female=0, gender_male=0, gender_unknown=1`; Patricia Williams
+(known female) → `gender_female=1, gender_male=0, gender_unknown=0`; and
 the aggregate count matches exactly (20 missing in the raw table, 20
-flagged `gender_missing=1` in the encoded output).
+flagged `gender_unknown=1` in the encoded output).
 
 Verified independently against source data: single-diagnosis patient
 (James Rodriguez) → exactly one `dx:` column = 1, gender all-zero

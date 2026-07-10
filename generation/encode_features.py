@@ -16,7 +16,7 @@ turning "flattened for display" into "flattened for machine learning."
                      time by messiness) still zeroes both one-hot columns via
                      handle_unknown="ignore", but that alone is ambiguous —
                      a lone 0 can't be told apart from "confirmed not this
-                     category." An explicit `gender_missing` flag makes
+                     category." An explicit `gender_unknown` flag makes
                      "we don't know" its own visible signal instead of
                      something inferred from two other columns being zero,
                      the same pattern flatten.py already uses for
@@ -123,7 +123,7 @@ def encode(df):
     pieces = [df[["patient_id"]].reset_index(drop=True)]
 
     # --- gender: one-hot + explicit missing indicator -----------------------
-    gender_missing = df["gender"].isna().reset_index(drop=True)
+    gender_unknown = df["gender"].isna().reset_index(drop=True)
     gender = df[["gender"]].fillna("__missing__")
     ohe = OneHotEncoder(
         categories=[["female", "male"]],
@@ -133,7 +133,7 @@ def encode(df):
     gender_encoded = ohe.fit_transform(gender)
     gender_cols = [f"gender_{c}" for c in ohe.categories_[0]]
     gender_df = pd.DataFrame(gender_encoded.astype(int), columns=gender_cols)
-    gender_df["gender_missing"] = gender_missing.astype(int)
+    gender_df["gender_unknown"] = gender_unknown.astype(int)
     pieces.append(gender_df)
 
     # --- conditions / medications: multi-label binarize --------------------
