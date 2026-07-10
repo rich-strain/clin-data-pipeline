@@ -150,13 +150,11 @@ def render_encoding_section(features, encoded, example_id):
 
 def render_stage_a():
     bundles = load_json("data/generated/fhir_bundles.json")
-    notes = load_jsonl("data/generated/clinical_notes.jsonl")
     features = load_csv("data/generated/patient_features.csv")
     encoded = load_csv("data/generated/patient_features_encoded.csv")
 
     if missing(
         "data/generated/fhir_bundles.json",
-        "data/generated/clinical_notes.jsonl",
         "data/generated/patient_features.csv",
     ):
         return
@@ -197,12 +195,6 @@ def render_stage_a():
         st.dataframe(features, width='stretch')
     with st.expander("Scikit-learn-ready encoding (numeric feature matrix)", expanded=False):
         render_encoding_section(features, encoded, patient_resource["id"])
-
-    st.subheader("Sample clinical note")
-    st.caption("Free-text note generated to feed Stage B's extraction — not derived from the FHIR data above.")
-    sample_note = find_by_patient(notes, patient_resource["id"])
-    if sample_note:
-        st.text(sample_note["note_text"])
 
 
 def render_stage_b():
