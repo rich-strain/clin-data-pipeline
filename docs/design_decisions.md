@@ -76,6 +76,25 @@ Not fixed now — Stage B is marked complete and the fix is more invasive
 than a Stage C concern — but should be revisited before this pipeline is
 called done.
 
+**Fixed: 3 specific paraphrase variants were invisible to `rebalance.py`'s
+category counting.** At the 100-patient scale, real Haiku extraction output
+included three diagnosis phrasings that matched neither a canonical name
+nor a known `CONDITION_ABBREVIATIONS` abbreviation: `"Hypertension (HTN)"`,
+`"Major depressive disorder"` (missing the canonical's `", single episode,
+unspecified"` suffix), and `"Type 2 Diabetes Mellitus"` (missing `"without
+complications"`). Left unmatched, records carrying only one of these
+phrasings didn't count toward their true diagnosis category in
+`rebalance.py`'s `category_counts()`, silently understating that category's
+representation. Fixed with a small `_DIAGNOSIS_PARAPHRASES` lookup
+(mirroring the existing `_ABBREV_TO_CANONICAL` pattern, checked alongside
+it in `normalize_diagnosis_name`) mapping exactly these 3 observed
+phrasings to their canonical names — scoped narrowly to what was actually
+observed and confirmed unmatched, not a general paraphrase-matching pass.
+The rest of the ~32-48-item unmatched-values list seen at this scale
+(dosage text without the `"Take ... by mouth"` framing, raw UCUM unit codes
+like `lb_av`/`degF`/`in_i`) is unrelated dosage/unit variance, still out of
+scope for this pass.
+
 ## Stage C — redact
 
 **The problem:** normalized records carry three PHI-standin fields —
@@ -161,24 +180,32 @@ distinct from the redacted branch that actually feeds training — so a
 viewer doesn't mistake the visible raw names/birthdates for what the model
 was actually trained on.
 
-**Known limitation, not fixed: a shifted `note_date` can land after the
-generation ceiling.** `generate_fhir.py` generates original onset/
-effective/authored dates up to a hardcoded ceiling (`2026-07-08`); `redact.py`
-then shifts by up to +/-365 days with no check against that ceiling
-afterward. On the current 100-patient dataset, 20/100 records end up with a
+**Fixed: a shifted `note_date` could land after the generation ceiling.**
+`generate_fhir.py` generates original onset/effective/authored dates up to
+a hardcoded ceiling (`date(2026, 7, 8)`); `redact.py` then shifts by up to
++/-`SHIFT_RANGE_DAYS` (365) with no check against that ceiling afterward.
+At the previous 100-patient scale, 20/100 records ended up with a
 `note_date` shifted past that date — e.g. a note reading "Visit Date:
-2026-12-31" while narrating the visit as already having happened. This is a
-data-realism nitpick, not a correctness or privacy issue: it doesn't affect
-diagnosis/medication/vitals content, doesn't weaken redaction (the shift
-still moved the true date), and doesn't change what the model was actually
-trained to do. The clean fix would be generating original dates with
-headroom equal to `redact.py`'s `SHIFT_RANGE_DAYS` rather than clamping
-after the fact (clamping would visibly cluster records at the ceiling
-date). Deliberately not fixed for this pass: Stage E has already completed
-a real training run against the current data, and Step 9's app/docs wiring
-already reference those specific results — regenerating now to fix a
-cosmetic date string would cost a full pipeline rebuild and retrain for a
-bug with no bearing on the model's actual learned behavior.
+2026-12-31" while narrating the visit as already having happened. Not a
+correctness or privacy issue (doesn't affect diagnosis/medication/vitals
+content, doesn't weaken redaction — the shift still moved the true date),
+but a real data-realism gap, previously left unfixed because Stage E had
+already completed a real run against the then-current data.
+
+**Fix applied:** `generate_fhir.py` now imports `SHIFT_RANGE_DAYS` directly
+from `curation.redact` (a single source of truth, not a duplicated magic
+number — verified this creates no circular import, since `redact.py` has
+no dependency on `generate_fhir.py`) and generates onset/effective/asserted
+dates against `GENERATION_CEILING = TRUE_CEILING - timedelta(days=
+SHIFT_RANGE_DAYS)` instead of the raw `TRUE_CEILING`. This is still a fixed
+historical ceiling, just correctly reduced by the maximum possible shift —
+not a dynamic `date.today()` — so no post-shift date can ever exceed
+`TRUE_CEILING` (`2026-07-08`) regardless of shift direction. Verified after
+the full pipeline rebuild this fix required: max generated onset/effective
+date across all 677 dated resources was `2025-07-05`, safely under the
+`2025-07-08` generation ceiling; max shifted `note_date` across all 100
+redacted records was `2026-05-10`, safely under the true `2026-07-08`
+ceiling.
 
 ## Stage C — rebalance
 
@@ -209,6 +236,17 @@ set-cover-style selection, which isn't worth the complexity at this scale.
 rebalanced at all.** Oversampling can only amplify what's already present;
 a diagnosis with zero existing records has nothing to duplicate. That's
 exactly the gap `synthesize.py` exists to fill.
+
+**Confirmed fixed by the normalize.py paraphrase fix above:** before that
+fix, records extracted with one of the 3 unmatched phrasings didn't count
+toward their true category here, occasionally understating a category down
+to zero when it wasn't actually zero (observed previously: `"Hypertension
+(HTN)"` phrasing left `Essential (primary) hypertension` looking
+zero-represented in one run). Re-verified on the rebuilt 100-patient
+dataset: every one of the 10 canonical categories shows a non-zero,
+plausible `before` count (13-22 records) in `category_counts()`'s output —
+no phantom zero/singleton categories from mis-normalized diagnosis names
+remain.
 
 ## Stage C — synthesize
 
@@ -354,14 +392,53 @@ out-of-memory issue on the first batch (from Qwen2.5's large 151,936-token
 vocab making the logits tensor large relative to this model's hidden size)
 was fixed with gradient checkpointing and a smaller batch size.
 
-**Honest framing:** 139 examples is small by real ML standards, and val
-loss plateaus/ticks up slightly after epoch 3 while train loss keeps
-falling — the textbook overfitting signature at this scale, reported
-plainly rather than smoothed over. What this run *does* demonstrate,
-correctly and on real hardware: real data loading, correct loss masking,
-LoRA attachment, a real training loop with genuinely declining loss,
-adapter checkpointing, and a real behavioral difference with vs. without
-the adapter. Not a claim of production-quality extraction accuracy.
+**Honest framing:** small dataset by real ML standards, and val loss
+plateaus/ticks up after its lowest epoch while train loss keeps falling —
+the textbook overfitting signature at this scale, reported plainly rather
+than smoothed over. What this run *does* demonstrate, correctly and on
+real hardware: real data loading, correct loss masking, LoRA attachment, a
+real training loop with genuinely declining loss, adapter checkpointing,
+and a real behavioral difference with vs. without the adapter. Not a claim
+of production-quality extraction accuracy.
+
+**Fixed: reproducibility gap and no checkpoint recovery from overfitting.**
+Two gaps in the original script: (1) only the per-epoch data-shuffle order
+was seeded (`torch.Generator().manual_seed(42)`); the LoRA adapter's own
+initial weights (its `A` matrices are Kaiming-uniform initialized from the
+*global* RNG — `B` is zero-init, so it doesn't matter, but `A` does) were
+not, so two runs with "the same seed" could still start from different
+adapter weights. (2) the script only ever kept the *last* epoch's adapter,
+even though val loss reliably plateaus/ticks up well before the last epoch
+on this dataset size — so the shipped adapter was never actually the best
+one produced during the run.
+
+**Fix applied:** `torch.manual_seed(42)` now runs before `get_peft_model`
+creates the adapter, fixing gap (1). Every epoch now saves a full
+checkpoint to `training_results/checkpoints/epoch_{N}/`; the epoch with the
+lowest val_loss is tracked during training, and after all epochs complete,
+that checkpoint's weights are reloaded into the model (via PEFT's
+`load_adapter` with the existing `"default"` adapter name, which replaces
+in place rather than adding a second adapter) *before* generating the
+before/after samples and saving the primary `training_results/adapter/` —
+so both the samples and the shipped adapter now reflect the best epoch,
+not whichever epoch happened to run last. `config.json` records
+`best_epoch`, `best_train_loss`, `best_val_loss` alongside the full
+per-epoch `loss_history`, so which epoch was selected and why is explicit,
+not implicit in "whatever ran last."
+
+**Real numbers from the full pipeline rebuild + retrain (100-patient scale,
+112 train / 20 val examples, 906.0s wall clock on MPS):**
+train loss declined every epoch (0.1309 -> 0.0238 -> 0.0127 -> 0.0101 ->
+0.0068 -> 0.0055); val loss was lowest at **epoch 3 (0.0304)**, after
+declining from 0.0548 (epoch 1) and 0.0375 (epoch 2), then ticking back up
+through epochs 4-6 (0.0338, 0.0368, 0.0364) — the same mild-overfitting
+shape as the prior run, just now with the shipped adapter actually
+reloaded from its best point (epoch 3) rather than its last (epoch 6).
+Verified: `training_results/checkpoints/` contains 6 valid epoch
+checkpoints (`epoch_1`-`epoch_6`, each a complete adapter), the selected
+best epoch (3) matches the lowest val_loss in the printed history, and
+`training_results/adapter/adapter_model.safetensors` is byte-identical
+(confirmed via checksum) to `checkpoints/epoch_3/adapter_model.safetensors`.
 
 ## Committing pipeline outputs (`data/`)
 

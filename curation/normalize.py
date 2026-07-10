@@ -71,6 +71,19 @@ CONDITION_ABBREVIATIONS = {
 }
 _ABBREV_TO_CANONICAL = {v.lower(): k for k, v in CONDITION_ABBREVIATIONS.items()}
 
+# Extraction paraphrase variants observed in real Haiku output at the
+# 100-patient scale (not generate_notes.py abbreviations, and not a
+# canonical-name prefix either — normalize_diagnosis_name's existing
+# startswith check doesn't catch these). Scope: only the 3 specific
+# phrasings actually observed and confirmed unmatched, not a general
+# paraphrase-matching pass — the rest of the unmatched-values list from that
+# run is unrelated dosage/unit variants, still out of scope.
+_DIAGNOSIS_PARAPHRASES = {
+    "hypertension (htn)": "Essential (primary) hypertension",
+    "major depressive disorder": "Major depressive disorder, single episode, unspecified",
+    "type 2 diabetes mellitus": "Type 2 diabetes mellitus without complications",
+}
+
 # Notes render PMH entries as "{condition} (dx {onset date})" (see
 # generate_notes.py's build_note_text); extraction sometimes captures that
 # trailing date parenthetical as part of the diagnosis name. Stripping it
@@ -86,7 +99,7 @@ def normalize_diagnosis_name(raw_name):
     """Return (canonical_name, matched: bool)."""
     stripped = _TRAILING_DX_DATE_RE.sub("", raw_name).strip()
 
-    abbrev_match = _ABBREV_TO_CANONICAL.get(stripped.lower())
+    abbrev_match = _ABBREV_TO_CANONICAL.get(stripped.lower()) or _DIAGNOSIS_PARAPHRASES.get(stripped.lower())
     if abbrev_match:
         return abbrev_match, True
 

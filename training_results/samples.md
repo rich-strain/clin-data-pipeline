@@ -4,40 +4,39 @@
 
 **Instruction:**
 ```
-Patient: [PATIENT NAME], DOB 2000-10-02, Female, MRN [MRN]
+Patient: [PATIENT NAME], DOB 1996-06-03, Female, MRN [MRN]
 Address: [ADDRESS]
-Visit Date: 2026-12-31
+Visit Date: 2026-01-10
 
-CC: Presents for routine follow-up of T2DM.
+CC: Presents for routine follow-up of obesity.
 
-HPI: Continues management of T2DM, first diagnosed 2024-11-11. No acute concerns reported. Patient reports doing well on current regimen for GERD, diagnosed 2022-03-15. Continues management of Chronic obstructive pulmonary disease, unspecified, first diagnosed 2023-03-19. No acute concerns reported.
+HPI: obesity (dx 2021-05-11) remains stable; no new complaints today.
 
-PMH: T2DM (dx 2024-11-11), GERD (dx 2022-03-15), COPD (dx 2023-03-19).
+PMH: obesity (dx 2021-05-11).
 
-Meds: Omeprazole 20 MG Oral Capsule - 20mg PO QD.
+Meds: Sertraline 50 MG Oral Tablet - 50mg PO QD; Atorvastatin 20 MG Oral Tablet - Take 20 mg by mouth at bedtime.
 
-VS: HR 71.6, Temp 99.3, Wt 109.9, BP 106.0 mm[Hg], Ht 163.9 cm.
+VS: Wt 236.6, Glu 80.2 mg/dL, Ht 165.9.
 
-A/P: Continue current management of T2DM. No changes to GERD management at this time. Continue current management of COPD.
+A/P: Continue current management of obesity.
 ```
 
 **Ground truth response:**
 ```json
-{"date_of_birth": "2000-10-02", "diagnoses": [{"name": "Type 2 Diabetes Mellitus"}, {"name": "Gastro-esophageal reflux disease without esophagitis"}, {"name": "Chronic obstructive pulmonary disease, unspecified"}], "medications": [{"name": "Omeprazole 20 MG Oral Capsule", "dosage": "Take 20 mg by mouth once daily"}], "vitals": [{"name": "Heart rate", "value": 71.6, "unit": "beats/minute"}, {"name": "Body temperature", "value": 37.4, "unit": "Cel"}, {"name": "Body weight", "value": 109.9, "unit": "kg"}, {"name": "Systolic blood pressure", "value": 106.0, "unit": "mm[Hg]"}, {"name": "Body height", "value": 163.9, "unit": "cm"}]}
+{"date_of_birth": "1996-06-03", "diagnoses": [{"name": "Obesity, unspecified"}], "medications": [{"name": "Sertraline 50 MG Oral Tablet", "dosage": "Take 50 mg by mouth once daily"}, {"name": "Atorvastatin 20 MG Oral Tablet", "dosage": "Take 20 mg by mouth at bedtime"}], "vitals": [{"name": "Body weight", "value": 107.3, "unit": "kg"}, {"name": "Glucose", "value": 80.2, "unit": "mg/dL"}, {"name": "Body height", "value": 165.9, "unit": "cm"}]}
 ```
 
 **Base model (no adapter) output:**
 ```
 ```json
 {
-  "date_of_birth": "2000-10-02",
-  "diagnoses": ["T2DM", "GERD", "COPD"],
-  "medications": ["Omeprazole 20 MG Oral Capsule - 20mg PO QD"],
+  "date_of_birth": "1996-06-03",
+  "diagnoses": ["obesity"],
+  "medications": ["Sertraline", "Atorvastatin"],
   "vitals": {
-    "HR": 71.6,
-    "Temp": 99.3,
-    "Wt": 109.9,
-    "BP": 106.0
+    "weight": "236.6 kg",
+    "blood_pressure": "80.2 mmHg",
+    "heart_rate": "110 bpm"
   }
 }
 ```
@@ -45,88 +44,101 @@ A/P: Continue current management of T2DM. No changes to GERD management at this 
 
 **Fine-tuned model (with adapter) output:**
 ```
-{"date_of_birth": "2000-10-02", "diagnoses": [{"name": "Type 2 diabetes mellitus without complications"}, {"name": "Gastro-esophageal reflux disease without esophagitis"}, {"name": "Chronic obstructive pulmonary disease, unspecified"}], "medications": [{"name": "Omeprazole 20 MG Oral Capsule", "dosage": "Take 20 mg by mouth once daily"}], "vitals": [{"name": "Heart rate", "value": 71.6, "unit": "beats/minute"}, {"name": "Body temperature", "value": 37.3, "unit": "Cel"}, {"name": "Body weight", "value": 98.0, "unit": "kg"}, {"name": "Systolic blood pressure", "value": 106.0, "unit": "mm[Hg]"}, {"name": "Body height", "value": 163.9, "unit": "cm"}]}
+{"date_of_birth": "1996-06-03", "diagnoses": [{"name": "Obesity"}], "medications": [{"name": "Sertraline 50 MG Oral Tablet", "dosage": "Take 50 mg by mouth once daily"}, {"name": "Atorvastatin 20 MG Oral Tablet", "dosage": "Take 20 mg by mouth at bedtime"}], "vitals": [{"name": "Body weight", "value": 236.6, "unit": "kg"}, {"name": "Glucose", "value": 80.2, "unit": "mg/dL"}, {"name": "Body height", "value": 165.9, "unit": "cm"}]}
 ```
 
 ## Sample 2
 
 **Instruction:**
 ```
-Patient: [PATIENT NAME], DOB 1946-02-19, Male, MRN [MRN]
+Patient: [PATIENT NAME], DOB 1996-06-10, Male, MRN [MRN]
 Address: [ADDRESS]
-Visit Date: 2024-09-20
+Visit Date: 2024-10-02
 
-CC: Here today to discuss T2DM.
+CC: Follow-up visit for Essential (primary) hypertension management.
 
-HPI: T2DM (dx 2019-10-10) remains stable; no new complaints today.
+HPI: Patient reports doing well on current regimen for HTN, diagnosed 2024-10-02.
 
-PMH: Type 2 diabetes mellitus without complications (dx 2019-10-10).
+PMH: HTN (dx 2024-10-02).
 
-Meds: Lisinopril 10 MG Oral Tablet - 10mg PO QD.
+Meds: Lisinopril 10 MG Oral Tablet - dosage not recorded.
 
-A/P: Continue present treatment for T2DM; recheck at next visit.
+VS: Wt 55.0, BP 135.3, Temp 97.3, Glu 88.2 mg/dL.
+
+A/P: Continue present treatment for Essential (primary) hypertension; recheck at next visit.
 ```
 
 **Ground truth response:**
 ```json
-{"date_of_birth": "1946-02-19", "diagnoses": [{"name": "Type 2 diabetes mellitus without complications"}], "medications": [{"name": "Lisinopril 10 MG Oral Tablet", "dosage": "Take 10 mg by mouth once daily"}], "vitals": []}
+{"date_of_birth": "1996-06-10", "diagnoses": [{"name": "Essential (primary) hypertension"}], "medications": [{"name": "Lisinopril 10 MG Oral Tablet", "dosage": null}], "vitals": [{"name": "Body weight", "value": 55.0, "unit": "kg"}, {"name": "Systolic blood pressure", "value": 135.3, "unit": "mm[Hg]"}, {"name": "Body temperature", "value": 36.3, "unit": "Cel"}, {"name": "Glucose", "value": 88.2, "unit": "mg/dL"}]}
 ```
 
 **Base model (no adapter) output:**
 ```
+```json
 {
-  "date_of_birth": "1946-02-19",
-  "diagnoses": ["T2DM", "Type 2 diabetes mellitus without complications"],
-  "medications": ["Lisinopril 10 MG Oral Tablet"],
+  "date_of_birth": "1996-06-10",
+  "diagnoses": ["Essential (primary)", "HTN"],
+  "medications": ["Lisinopril", "No medication recorded"],
   "vitals": {
-    "blood_pressure": "135/85 mmHg",
-    "heart_rate": "72 bpm"
+    "weight": "55.0 kg",
+    "blood_pressure": {
+      "systolic": "135.3 mmHg",
+      "diastolic": "97.3 mmHg"
+    },
+    "temperature": "97.3 °C",
+    "glucose": "88.2 mg/dL"
   }
 }
+```
 ```
 
 **Fine-tuned model (with adapter) output:**
 ```
-{"date_of_birth": "1946-02-19", "diagnoses": [{"name": "Type 2 diabetes mellitus without complications"}], "medications": [{"name": "Lisinopril 10 MG Oral Tablet", "dosage": "Take 10 mg by mouth once daily"}], "vitals": []}
+{"date_of_birth": "1996-06-10", "diagnoses": [{"name": "Essential (primary) hypertension"}], "medications": [{"name": "Lisinopril 10 MG Oral Tablet", "dosage": null}], "vitals": [{"name": "Body weight", "value": 55.0, "unit": "kg"}, {"name": "Systolic blood pressure", "value": 135.3, "unit": "mm[Hg]"}, {"name": "Body temperature", "value": 37.4, "unit": "Cel"}, {"name": "Glucose", "value": 88.2, "unit": "mg/dL"}]}
 ```
 
 ## Sample 3
 
 **Instruction:**
 ```
-Patient: [PATIENT NAME], DOB 1953-10-20, Male, MRN [MRN]
+Patient: [PATIENT NAME], DOB 1941-08-21, Male, MRN [MRN]
 Address: [ADDRESS]
-Visit Date: 2024-03-20
+Visit Date: 2024-08-07
 
-CC: Here today to discuss HTN.
+CC: Here today to discuss obesity.
 
-HPI: Continues management of HTN, first diagnosed 2022-02-12. No acute concerns reported. Patient reports doing well on current regimen for HLD, diagnosed 2024-03-20.
+HPI: obesity (dx 2022-06-11) remains stable; no new complaints today.
 
-PMH: HTN (dx 2022-02-12), HLD (dx 2024-03-20).
+PMH: obesity (dx 2022-06-11).
 
-Meds: Metformin 500 MG Oral Tablet - Take 500 mg by mouth twice daily.
+Meds: Atorvastatin 20 MG Oral Tablet - dosage not recorded; Metformin 500 MG Oral Tablet - Take 500 mg by mouth twice daily.
 
-VS: HR 59.1, Glu 136.4, Temp 36.4.
+VS: BP 115.3 mm[Hg], HR 69.1.
 
-A/P: Continue present treatment for HTN; recheck at next visit. Continue present treatment for Hyperlipidemia, unspecified; recheck at next visit.
+A/P: Continue current management of obesity.
 ```
 
 **Ground truth response:**
 ```json
-{"date_of_birth": "1953-10-20", "diagnoses": [{"name": "Essential (primary) hypertension"}, {"name": "Hyperlipidemia, unspecified"}], "medications": [{"name": "Metformin 500 MG Oral Tablet", "dosage": "Take 500 mg by mouth twice daily"}], "vitals": [{"name": "Heart rate", "value": 59.1, "unit": "beats/minute"}, {"name": "Glucose", "value": 136.4, "unit": "mg/dL"}, {"name": "Body temperature", "value": 36.4, "unit": "Cel"}]}
+{"date_of_birth": "1941-08-21", "diagnoses": [{"name": "Obesity, unspecified"}], "medications": [{"name": "Atorvastatin 20 MG Oral Tablet", "dosage": null}, {"name": "Metformin 500 MG Oral Tablet", "dosage": "Take 500 mg by mouth twice daily"}], "vitals": [{"name": "Systolic blood pressure", "value": 115.3, "unit": "mm[Hg]"}, {"name": "Heart rate", "value": 69.1, "unit": "beats/minute"}]}
 ```
 
 **Base model (no adapter) output:**
 ```
 ```json
 {
-  "date_of_birth": "1953-10-20",
-  "diagnoses": ["HTN", "HLD"],
-  "medications": ["Metformin 500 MG Oral Tablet"],
+  "date_of_birth": "1941-08-21",
+  "diagnoses": ["obesity"],
+  "medications": {
+    "Atorvastatin": null,
+    "Metformin": {
+      "Dosage": null
+    }
+  },
   "vitals": {
-    "HR": "59.1",
-    "Glu": "136.4",
-    "Temp": "36.4"
+    "BP": "115.3 mm[Hg]",
+    "HR": "69.1"
   }
 }
 ```
@@ -134,5 +146,5 @@ A/P: Continue present treatment for HTN; recheck at next visit. Continue present
 
 **Fine-tuned model (with adapter) output:**
 ```
-{"date_of_birth": "1953-10-20", "diagnoses": [{"name": "Essential (primary) hypertension"}, {"name": "Hyperlipidemia, unspecified"}], "medications": [{"name": "Metformin 500 MG Oral Tablet", "dosage": "Take 500 mg by mouth twice daily"}], "vitals": [{"name": "Heart rate", "value": 59.1, "unit": "beats/minute"}, {"name": "Glucose", "value": 136.4, "unit": "mg/dL"}, {"name": "Body temperature", "value": 36.4, "unit": "Cel"}]}
+{"date_of_birth": "1941-08-21", "diagnoses": [{"name": "Obesity"}], "medications": [{"name": "Atorvastatin 20 MG Oral Tablet", "dosage": null}, {"name": "Metformin 500 MG Oral Tablet", "dosage": "Take 500 mg by mouth twice daily"}], "vitals": [{"name": "Systolic blood pressure", "value": 115.3, "unit": "mm[Hg]"}, {"name": "Heart rate", "value": 69.1, "unit": "beats/minute"}]}
 ```

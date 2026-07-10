@@ -309,12 +309,18 @@ def render_stage_e():
         {"epoch": hist["epoch"], "train_loss": hist["train_loss"], "val_loss": hist["val_loss"]}
     )
     st.dataframe(loss_df, width='stretch', hide_index=True)
-    st.caption(
-        "Val loss plateaus/ticks up slightly after epoch 3 while train loss keeps "
-        "falling — the expected signature of mild overfitting on a "
-        f"{config['train_examples']}-example dataset, reported plainly rather "
-        "than smoothed over."
-    )
+    best_epoch = config.get("best_epoch")
+    if best_epoch is not None:
+        st.caption(
+            f"Val loss is lowest at epoch {best_epoch} "
+            f"(val_loss={config['best_val_loss']:.4f}) and plateaus/ticks up after "
+            "that while train loss keeps falling — the expected signature of mild "
+            f"overfitting on a {config['train_examples']}-example dataset, reported "
+            "plainly rather than smoothed over. The shipped adapter below is "
+            f"reloaded from epoch {best_epoch}'s checkpoint, not simply the final "
+            "epoch — every epoch is checkpointed under training_results/checkpoints/ "
+            "so the best one can be recovered after training finishes."
+        )
 
     if adapter_file.exists():
         adapter_mb = adapter_file.stat().st_size / (1024 * 1024)

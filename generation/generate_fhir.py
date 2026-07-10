@@ -21,11 +21,27 @@ name/DOB. See CLAUDE.md Resolved decisions #9.
 import argparse
 import json
 import random
+import sys
 import uuid
 from datetime import date, timedelta
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from curation.redact import SHIFT_RANGE_DAYS  # noqa: E402
+
 DATA_DIR = Path(__file__).resolve().parent.parent / "data" / "generated"
+
+# redact.py date-shifts onset/effective/asserted dates by up to
+# +/- SHIFT_RANGE_DAYS after the fact (see curation/redact.py). A date
+# generated right up against TRUE_CEILING could shift past it into the
+# future relative to that ceiling. Generation must never produce a date
+# whose *post-shift* value can exceed TRUE_CEILING, so the ceiling actually
+# used at generation time is reduced by SHIFT_RANGE_DAYS up front — a single
+# source of truth (imported, not a duplicated magic number) rather than two
+# constants that could drift out of sync.
+TRUE_CEILING = date(2026, 7, 8)
+GENERATION_CEILING = TRUE_CEILING - timedelta(days=SHIFT_RANGE_DAYS)
 
 FIRST_NAMES_MALE = [
     "James", "Robert", "Michael", "William", "David", "Richard", "Joseph",
@@ -182,7 +198,7 @@ def make_patient(rng, messy):
 
 def make_condition(rng, patient_id, birth_date, messy):
     code, display = rng.choice(CONDITIONS)
-    onset = _random_date(rng, max(birth_date, date(2015, 1, 1)), date(2026, 7, 8))
+    onset = _random_date(rng, max(birth_date, date(2015, 1, 1)), GENERATION_CEILING)
 
     resource = {
         "resourceType": "Condition",
@@ -216,7 +232,7 @@ def make_observation(rng, patient_id, birth_date, messy):
         value = spec["convert"](value)
         unit = spec["alt_unit"]
 
-    effective = _random_date(rng, max(birth_date, date(2020, 1, 1)), date(2026, 7, 8))
+    effective = _random_date(rng, max(birth_date, date(2020, 1, 1)), GENERATION_CEILING)
 
     resource = {
         "resourceType": "Observation",
@@ -244,7 +260,7 @@ def make_observation(rng, patient_id, birth_date, messy):
 
 def make_medication_statement(rng, patient_id, birth_date, messy):
     code, display, shorthand, full_text = rng.choice(MEDICATIONS)
-    asserted = _random_date(rng, max(birth_date, date(2020, 1, 1)), date(2026, 7, 8))
+    asserted = _random_date(rng, max(birth_date, date(2020, 1, 1)), GENERATION_CEILING)
     dosage_text = shorthand if (messy and rng.random() < 0.5) else full_text
 
     resource = {

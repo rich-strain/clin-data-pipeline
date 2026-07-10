@@ -193,6 +193,83 @@
       }
     ]
   },
+  "06fb9900bedc30e1474bdff50eaeb1481381ffd3b830b8b24b8aa334d0c7d11f": {
+    "address": "2785 Oak Ave, Salem, OR 53370",
+    "date_of_birth": "1976-06-16",
+    "diagnoses": [
+      {
+        "name": "Unspecified asthma, uncomplicated"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "2puff q4h PRN",
+        "name": "Albuterol 90 MCG Inhaler"
+      }
+    ],
+    "mrn": "MRN750810",
+    "patient_name": "Richard Moore",
+    "vitals": [
+      {
+        "name": "HR",
+        "unit": null,
+        "value": "63.1"
+      },
+      {
+        "name": "Wt",
+        "unit": null,
+        "value": "74.2"
+      },
+      {
+        "name": "BP",
+        "unit": "mm[Hg]",
+        "value": "131.5"
+      }
+    ]
+  },
+  "076a1bd8699b01399de62ba615b3e38279445cc934e506306a8a817430c5903f": {
+    "address": "4414 Washington Ave, Bristol, CT 27845",
+    "date_of_birth": "1981-06-12",
+    "diagnoses": [
+      {
+        "name": "Migraine, unspecified, not intractable"
+      },
+      {
+        "name": "Gastro-esophageal reflux disease without esophagitis"
+      },
+      {
+        "name": "Chronic obstructive pulmonary disease, unspecified"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "Take 75 mcg by mouth every morning",
+        "name": "Levothyroxine 75 MCG Oral Tablet"
+      },
+      {
+        "dosage": "5mg PO QD",
+        "name": "Amlodipine 5 MG Oral Tablet"
+      },
+      {
+        "dosage": "20mg PO QHS",
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN533321",
+    "patient_name": "Matthew Moore",
+    "vitals": [
+      {
+        "name": "Weight",
+        "unit": "kg",
+        "value": "107.1"
+      },
+      {
+        "name": "Height",
+        "unit": null,
+        "value": "65.5"
+      }
+    ]
+  },
   "08273da92f5b89b50e9159c1dbc6bee813d71b1ac1d0438260e97e712d033f81": {
     "address": "3517 Cedar Ln, Georgetown, KY 72243",
     "date_of_birth": "1982-04-01",
@@ -253,6 +330,231 @@
       {
         "name": "Ht",
         "unit": "in_i",
+        "value": "62.3"
+      }
+    ]
+  },
+  "0b351ce4b084c650399d8d71a84b52d93b90726f5eb650c145c5e55d673c199a": {
+    "address": "7481 Elm St, Springfield, IL 26157",
+    "date_of_birth": "1957-08-07",
+    "diagnoses": [
+      {
+        "name": "HLD"
+      },
+      {
+        "name": "Migraine, unspecified, not intractable"
+      },
+      {
+        "name": "GERD"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "5mg PO QD",
+        "name": "Amlodipine 5 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN445888",
+    "patient_name": "Elizabeth Jones",
+    "vitals": [
+      {
+        "name": "Weight",
+        "unit": "kg",
+        "value": "64.3"
+      },
+      {
+        "name": "Height",
+        "unit": null,
+        "value": "169.5"
+      },
+      {
+        "name": "Heart Rate",
+        "unit": "beats/minute",
+        "value": "78.6"
+      },
+      {
+        "name": "Glucose",
+        "unit": null,
+        "value": "95.5"
+      }
+    ]
+  },
+  "0b83f308350626ff869c3442bb9bf6d6b3d1f6bee9c1312c52fb913f30cd5adf": {
+    "address": "8274 Main St, Madison, WI 76191",
+    "date_of_birth": "1965-02-05",
+    "diagnoses": [
+      {
+        "name": "Hypothyroidism, unspecified"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "50mg PO QD",
+        "name": "Sertraline 50 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN501620",
+    "patient_name": "Mary Williams",
+    "vitals": [
+      {
+        "name": "Weight",
+        "unit": null,
+        "value": "216.1"
+      },
+      {
+        "name": "Temperature",
+        "unit": "Cel",
+        "value": "37.7"
+      }
+    ]
+  },
+  "10079631ebe24677c00ee690d05f3c8d8549912a232f0d853c3076332f3bf70f": {
+    "address": "5822 Maple Dr, Madison, WI 41348",
+    "date_of_birth": "1955-09-24",
+    "diagnoses": [
+      {
+        "name": "COPD"
+      },
+      {
+        "name": "T2DM"
+      },
+      {
+        "name": "obesity"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "10mg PO QD",
+        "name": "Lisinopril 10 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN496764",
+    "patient_name": "Linda Jackson",
+    "vitals": [
+      {
+        "name": "BP",
+        "unit": "mm[Hg]",
+        "value": "124.1"
+      },
+      {
+        "name": "Ht",
+        "unit": "cm",
+        "value": "158.8"
+      }
+    ]
+  },
+  "10695273eb36c9252af1dccfdfbc3a52c2c66b75e8cc6b5e9b80e2e17df591d1": {
+    "address": "9569 Park Blvd, Franklin, TX 67604",
+    "date_of_birth": "1967-12-27",
+    "diagnoses": [
+      {
+        "name": "Obesity, unspecified"
+      },
+      {
+        "name": "Major depressive disorder, single episode, unspecified"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "500mg PO BID",
+        "name": "Metformin 500 MG Oral Tablet"
+      },
+      {
+        "dosage": "20mg PO QD",
+        "name": "Omeprazole 20 MG Oral Capsule"
+      }
+    ],
+    "mrn": "<UNKNOWN>",
+    "patient_name": "Daniel Smith",
+    "vitals": [
+      {
+        "name": "Heart Rate",
+        "unit": "beats/minute",
+        "value": "86.4"
+      },
+      {
+        "name": "Height",
+        "unit": "cm",
+        "value": "182.2"
+      },
+      {
+        "name": "Temperature",
+        "unit": null,
+        "value": "37.0"
+      }
+    ]
+  },
+  "13c78f20bce9e7fd7389bd84ac935eebac74870ffd8df7d96f378fcdb14f74b8": {
+    "address": null,
+    "date_of_birth": "1968-08-04",
+    "diagnoses": [
+      {
+        "name": "Migraine, unspecified, not intractable"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "20mg PO QD",
+        "name": "Omeprazole 20 MG Oral Capsule"
+      },
+      {
+        "dosage": "Inhale 2 puffs every 4 hours as needed",
+        "name": "Albuterol 90 MCG Inhaler"
+      },
+      {
+        "dosage": "75mcg PO QAM",
+        "name": "Levothyroxine 75 MCG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN373812",
+    "patient_name": "David Smith",
+    "vitals": [
+      {
+        "name": "Glu",
+        "unit": null,
+        "value": "73.4"
+      },
+      {
+        "name": "HR",
+        "unit": null,
+        "value": "70.2"
+      }
+    ]
+  },
+  "16f188b0edb8158fa7fb6ed1ca9bf4d7134ec0f74a12f410abbc117d652f2fc6": {
+    "address": "3497 Washington Ave, Greenville, SC 89574",
+    "date_of_birth": "1999-07-31",
+    "diagnoses": [
+      {
+        "name": "Major depressive disorder, single episode, unspecified"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "75mcg PO QAM",
+        "name": "Levothyroxine 75 MCG Oral Tablet"
+      },
+      {
+        "dosage": "dosage not recorded",
+        "name": "Metformin 500 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN965708",
+    "patient_name": "Margaret Moore",
+    "vitals": [
+      {
+        "name": "Height",
+        "unit": "cm",
+        "value": "169.6"
+      },
+      {
+        "name": "Temperature",
+        "unit": null,
+        "value": "37.6"
+      },
+      {
+        "name": "Weight",
+        "unit": "kg",
         "value": "62.3"
       }
     ]
@@ -375,6 +677,35 @@
       }
     ]
   },
+  "1d07bd97e92b7779bf05b2449f547a52472b4d8099b2a13f99548ae8e83edf8a": {
+    "address": "2118 Elm St, Franklin, TX 76506",
+    "date_of_birth": "1973-07-19",
+    "diagnoses": [
+      {
+        "name": "Migraine, unspecified, not intractable"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "Take 5 mg by mouth once daily",
+        "name": "Amlodipine 5 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN347231",
+    "patient_name": "Joseph Taylor",
+    "vitals": [
+      {
+        "name": "Glu",
+        "unit": null,
+        "value": "141.5"
+      },
+      {
+        "name": "HR",
+        "unit": "beats/minute",
+        "value": "67.9"
+      }
+    ]
+  },
   "1d5c879db724ba0b9e4e5e52e956d38c13cd241e82903f1dcfae7afa3a2070d8": {
     "address": "5045 Main St, Franklin, TX 25992",
     "date_of_birth": "1963-12-09",
@@ -456,6 +787,129 @@
       }
     ]
   },
+  "1dbd056bfb934db579ad8e796bb63f2ce809cef6fa8d62b81d2276d1ad1f5f41": {
+    "address": null,
+    "date_of_birth": "1943-05-17",
+    "diagnoses": [
+      {
+        "name": "HTN"
+      },
+      {
+        "name": "Essential (primary) hypertension"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "20mg PO QHS",
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      },
+      {
+        "dosage": "20mg PO QD",
+        "name": "Omeprazole 20 MG Oral Capsule"
+      },
+      {
+        "dosage": "50mg PO QD",
+        "name": "Sertraline 50 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN159653",
+    "patient_name": "Jessica Anderson",
+    "vitals": [
+      {
+        "name": "Weight",
+        "unit": null,
+        "value": "86.9"
+      },
+      {
+        "name": "Temperature",
+        "unit": null,
+        "value": "100.0"
+      },
+      {
+        "name": "BP",
+        "unit": null,
+        "value": "128.3"
+      }
+    ]
+  },
+  "1e7a74c387bd3b318ea855b3bd90f097c12345faa1fbabb925fa153f8edbeb17": {
+    "address": null,
+    "date_of_birth": "2003-03-23",
+    "diagnoses": [
+      {
+        "name": "Essential (primary) hypertension"
+      },
+      {
+        "name": "Hypothyroidism, unspecified"
+      },
+      {
+        "name": "Hyperlipidemia, unspecified"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "20mg PO QD",
+        "name": "Omeprazole 20 MG Oral Capsule"
+      },
+      {
+        "dosage": "Take 20 mg by mouth at bedtime",
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN325230",
+    "patient_name": "Susan Smith",
+    "vitals": [
+      {
+        "name": "Height",
+        "unit": null,
+        "value": "60.9"
+      },
+      {
+        "name": "Glucose",
+        "unit": null,
+        "value": "147.7"
+      },
+      {
+        "name": "Heart Rate",
+        "unit": "beats/minute",
+        "value": "63.2"
+      }
+    ]
+  },
+  "1f58fcd16aa148daffd1c952c7a393a9c29e03945f7003b17fc0a780bdc7f2c0": {
+    "address": "9196 Elm St, Fairview, NC 72910",
+    "date_of_birth": "2005-12-15",
+    "diagnoses": [
+      {
+        "name": "migraine"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "50mg PO QD",
+        "name": "Sertraline 50 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN893435",
+    "patient_name": "Mark Jackson",
+    "vitals": [
+      {
+        "name": "Glucose",
+        "unit": "mg/dL",
+        "value": "121.1"
+      },
+      {
+        "name": "Blood Pressure",
+        "unit": "mm[Hg]",
+        "value": "132.5"
+      },
+      {
+        "name": "Weight",
+        "unit": "[lb_av]",
+        "value": "125.7"
+      }
+    ]
+  },
   "207e36a97fbf10787d11dba2ddd509e59a72e43a1f0c17e7c016331a8a50a033": {
     "address": "789 Elm St, Salem, OR 27620",
     "date_of_birth": "1945-01-06",
@@ -499,6 +953,40 @@
         "name": "Heart Rate",
         "unit": "beats/minute",
         "value": "61.9"
+      }
+    ]
+  },
+  "24827a4d89d5e04e83299b9abac9c83bfc6701691d3e4fa298d18ae12a327cee": {
+    "address": "4268 Lake St, Franklin, TX 66180",
+    "date_of_birth": "1968-04-19",
+    "diagnoses": [
+      {
+        "name": "Major depressive disorder, single episode, unspecified"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "20mg PO QHS",
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN520651",
+    "patient_name": "William Johnson",
+    "vitals": [
+      {
+        "name": "Glu",
+        "unit": null,
+        "value": "124.9"
+      },
+      {
+        "name": "Wt",
+        "unit": null,
+        "value": "138.7"
+      },
+      {
+        "name": "Temp",
+        "unit": "Cel",
+        "value": "37.4"
       }
     ]
   },
@@ -546,6 +1034,38 @@
         "name": "HR",
         "unit": "beats/minute",
         "value": "81.5"
+      }
+    ]
+  },
+  "2688ba03f55cb954a34805b598378a52797e833ea498a9b12be5e1abf791f0f9": {
+    "address": null,
+    "date_of_birth": "1941-05-30",
+    "diagnoses": [
+      {
+        "name": "T2DM"
+      },
+      {
+        "name": "COPD"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "Inhale 2 puffs every 4 hours as needed",
+        "name": "Albuterol 90 MCG Inhaler"
+      }
+    ],
+    "mrn": "MRN106933",
+    "patient_name": "Nancy Thomas",
+    "vitals": [
+      {
+        "name": "Height",
+        "unit": "cm",
+        "value": "182.5"
+      },
+      {
+        "name": "BP",
+        "unit": null,
+        "value": "104.3"
       }
     ]
   },
@@ -619,6 +1139,249 @@
         "name": "HR",
         "unit": "beats/minute",
         "value": "80.3"
+      }
+    ]
+  },
+  "2ac22774afc282b81e78cf2f56ab472ec2e3c358abb2ad92a04a11a284f2c26f": {
+    "address": "7307 Washington Ave, Salem, OR 52481",
+    "date_of_birth": "1964-05-26",
+    "diagnoses": [
+      {
+        "name": "Major Depressive Disorder"
+      },
+      {
+        "name": "GERD"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "500 MG Oral Tablet - Take 500 mg by mouth twice daily",
+        "name": "Metformin"
+      }
+    ],
+    "mrn": null,
+    "patient_name": "Richard Wilson",
+    "vitals": [
+      {
+        "name": "BP",
+        "unit": null,
+        "value": "110.2"
+      },
+      {
+        "name": "Glu",
+        "unit": "mg/dL",
+        "value": "149.5"
+      },
+      {
+        "name": "HR",
+        "unit": null,
+        "value": "76.2"
+      }
+    ]
+  },
+  "2ac854a9fb1f7e27fb4b13652c22546185ea8cad0a1395c27b20692fef414691": {
+    "address": "5343 Washington Ave, Clinton, OH 68316",
+    "date_of_birth": "1961-03-28",
+    "diagnoses": [
+      {
+        "name": "Hypothyroidism, unspecified (dx 2021-06-02)"
+      },
+      {
+        "name": "Hypothyroidism (dx 2016-06-15)"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "10 MG Oral Tablet - 10mg PO QD",
+        "name": "Lisinopril"
+      },
+      {
+        "dosage": "20 MG Oral Tablet - Take 20 mg by mouth at bedtime",
+        "name": "Atorvastatin"
+      }
+    ],
+    "mrn": "MRN928766",
+    "patient_name": "Mark Jones",
+    "vitals": [
+      {
+        "name": "HR",
+        "unit": "beats/minute",
+        "value": "68.9"
+      },
+      {
+        "name": "Ht",
+        "unit": null,
+        "value": "166.4"
+      }
+    ]
+  },
+  "2bfc3c17ea4a73632348ece937c7a538e7c88ad878bca79f2a5cdfc3c42df675": {
+    "address": "4192 Maple Dr, Fairview, NC 34353",
+    "date_of_birth": "1976-10-25",
+    "diagnoses": [
+      {
+        "name": "Type 2 diabetes mellitus without complications"
+      },
+      {
+        "name": "Hyperlipidemia, unspecified"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "Inhale 2 puffs every 4 hours as needed",
+        "name": "Albuterol 90 MCG Inhaler"
+      },
+      {
+        "dosage": "Take 50 mg by mouth once daily",
+        "name": "Sertraline 50 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN626195",
+    "patient_name": "Joseph Miller",
+    "vitals": [
+      {
+        "name": "Height",
+        "unit": "cm",
+        "value": "165.1"
+      },
+      {
+        "name": "Temperature",
+        "unit": null,
+        "value": "37.0"
+      },
+      {
+        "name": "Glucose",
+        "unit": null,
+        "value": "158.4"
+      },
+      {
+        "name": "Blood Pressure",
+        "unit": null,
+        "value": "137.7"
+      }
+    ]
+  },
+  "2e11ce71df38474bd6623f256b621dcd374f104cd23985d3ec41d6b8e5acd12c": {
+    "address": "4362 Washington Ave, Clinton, OH 53093",
+    "date_of_birth": "1986-10-07",
+    "diagnoses": [
+      {
+        "name": "Gastro-esophageal reflux disease without esophagitis"
+      },
+      {
+        "name": "Hyperlipidemia, unspecified"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "5 MG Oral Tablet - 5mg PO QD",
+        "name": "Amlodipine"
+      },
+      {
+        "dosage": "20 MG Oral Capsule - Take 20 mg by mouth once daily",
+        "name": "Omeprazole"
+      },
+      {
+        "dosage": "500 MG Oral Tablet - Take 500 mg by mouth twice daily",
+        "name": "Metformin"
+      }
+    ],
+    "mrn": "MRN608136",
+    "patient_name": "Paul Rodriguez",
+    "vitals": [
+      {
+        "name": "BP",
+        "unit": null,
+        "value": "106.0"
+      },
+      {
+        "name": "Glu",
+        "unit": "mg/dL",
+        "value": "93.5"
+      }
+    ]
+  },
+  "2f181ea1dca49e399f9d24166b55f6a3e6a6b65c441eff09f196148d4a754bb1": {
+    "address": null,
+    "date_of_birth": "1951-08-30",
+    "diagnoses": [
+      {
+        "name": "HTN"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "Take 10 mg by mouth once daily",
+        "name": "Lisinopril 10 MG Oral Tablet"
+      },
+      {
+        "dosage": "Take 500 mg by mouth twice daily",
+        "name": "Metformin 500 MG Oral Tablet"
+      },
+      {
+        "dosage": "dosage not recorded",
+        "name": "Levothyroxine 75 MCG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN666456",
+    "patient_name": "David Jones",
+    "vitals": [
+      {
+        "name": "HR",
+        "unit": "beats/minute",
+        "value": "71.1"
+      },
+      {
+        "name": "Temp",
+        "unit": "degF",
+        "value": "97.0"
+      },
+      {
+        "name": "Ht",
+        "unit": "in_i",
+        "value": "60.8"
+      }
+    ]
+  },
+  "30060577e864a0ca74688d03f7749033ca330b46a3faea286b354804b546ce09": {
+    "address": "3252 Cedar Ln, Clinton, OH 41236",
+    "date_of_birth": "1971-07-16",
+    "diagnoses": [
+      {
+        "name": "MDD"
+      },
+      {
+        "name": "Type 2 diabetes mellitus"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "20mg PO QHS",
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN568849",
+    "patient_name": "Jennifer Anderson",
+    "vitals": [
+      {
+        "name": "Temp",
+        "unit": "Cel",
+        "value": "37.0"
+      },
+      {
+        "name": "BP",
+        "unit": null,
+        "value": "133.9"
+      },
+      {
+        "name": "HR",
+        "unit": null,
+        "value": "60.7"
+      },
+      {
+        "name": "Glu",
+        "unit": null,
+        "value": "119.5"
       }
     ]
   },
@@ -732,6 +1495,31 @@
       }
     ]
   },
+  "3440f4683b166f781494007310057c399462847facc1a5262ef31ba07ba73199": {
+    "address": "8103 Washington Ave, Springfield, IL 10868",
+    "date_of_birth": "1959-11-10",
+    "diagnoses": [
+      {
+        "name": "COPD"
+      },
+      {
+        "name": "Asthma"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "500mg PO BID",
+        "name": "Metformin 500 MG Oral Tablet"
+      },
+      {
+        "dosage": "2puff q4h PRN",
+        "name": "Albuterol 90 MCG Inhaler"
+      }
+    ],
+    "mrn": "MRN779112",
+    "patient_name": "Sandra Martin",
+    "vitals": []
+  },
   "36037cbcd78f0cc08dd7d5300aa6213d276e493195562a8c2d6be3e992f275cc": {
     "address": "3594 Main St, Greenville, SC 62132",
     "date_of_birth": "1991-09-11",
@@ -774,6 +1562,214 @@
         "name": "Ht",
         "unit": null,
         "value": "153.9"
+      }
+    ]
+  },
+  "390133bb897fda9c4b9fe5d4e90222ba4485c03f631eab6fe3a50724834bbaa3": {
+    "address": null,
+    "date_of_birth": "1947-09-09",
+    "diagnoses": [
+      {
+        "name": "Obesity, unspecified"
+      },
+      {
+        "name": "Hypothyroidism, unspecified"
+      },
+      {
+        "name": "hypothyroidism"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "Take 20 mg by mouth once daily",
+        "name": "Omeprazole 20 MG Oral Capsule"
+      },
+      {
+        "dosage": "Take 75 mcg by mouth every morning",
+        "name": "Levothyroxine 75 MCG Oral Tablet"
+      },
+      {
+        "dosage": "10mg PO QD",
+        "name": "Lisinopril 10 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN800596",
+    "patient_name": "Mark Brown",
+    "vitals": [
+      {
+        "name": "Height",
+        "unit": "cm",
+        "value": "177.1"
+      },
+      {
+        "name": "Glucose",
+        "unit": "mg/dL",
+        "value": "73.8"
+      },
+      {
+        "name": "Weight",
+        "unit": "<UNKNOWN>",
+        "value": "64.5"
+      },
+      {
+        "name": "Blood Pressure",
+        "unit": "mm[Hg]",
+        "value": "105.0"
+      }
+    ]
+  },
+  "3c4142bfe02e32004a96be00264ca5211fa79f0d9cada0c32336da91765622c0": {
+    "address": "3663 Oak Ave, Clinton, OH 63848",
+    "date_of_birth": "1968-08-05",
+    "diagnoses": [
+      {
+        "name": "Chronic obstructive pulmonary disease, unspecified"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "500mg PO BID",
+        "name": "Metformin 500 MG Oral Tablet"
+      },
+      {
+        "dosage": "2puff q4h PRN",
+        "name": "Albuterol 90 MCG Inhaler"
+      }
+    ],
+    "mrn": "MRN830132",
+    "patient_name": "Margaret Taylor",
+    "vitals": [
+      {
+        "name": "BP",
+        "unit": "mm[Hg]",
+        "value": "134.0"
+      },
+      {
+        "name": "Wt",
+        "unit": null,
+        "value": "108.2"
+      },
+      {
+        "name": "Temp",
+        "unit": "Cel",
+        "value": "36.4"
+      }
+    ]
+  },
+  "3dae212bb483f9661c20e2cec1baf1f3cb1016a80eb3c38bf629a2b1b27cecf7": {
+    "address": null,
+    "date_of_birth": "1972-05-25",
+    "diagnoses": [
+      {
+        "name": "GERD"
+      },
+      {
+        "name": "Type 2 diabetes mellitus without complications"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "Take 50 mg by mouth once daily",
+        "name": "Sertraline 50 MG Oral Tablet"
+      },
+      {
+        "dosage": null,
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN363926",
+    "patient_name": "Jessica Williams",
+    "vitals": [
+      {
+        "name": "Temperature",
+        "unit": "Cel",
+        "value": "36.8"
+      },
+      {
+        "name": "Height",
+        "unit": "in_i",
+        "value": "61.2"
+      },
+      {
+        "name": "Weight",
+        "unit": null,
+        "value": "72.3"
+      },
+      {
+        "name": "Glucose",
+        "unit": null,
+        "value": "146.4"
+      },
+      {
+        "name": "Blood Pressure",
+        "unit": "mm[Hg]",
+        "value": "113.0"
+      }
+    ]
+  },
+  "3ef2bea2dd64d72450078c9136392e9f3593ee76ed7a39b21c273b1ec2bc9465": {
+    "address": "8724 Pine Rd, Salem, OR 80266",
+    "date_of_birth": "1983-12-05",
+    "diagnoses": [
+      {
+        "name": "GERD"
+      },
+      {
+        "name": "migraine"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "Take 75 mcg by mouth every morning",
+        "name": "Levothyroxine 75 MCG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN402865",
+    "patient_name": "Charles Garcia",
+    "vitals": [
+      {
+        "name": "Wt",
+        "unit": "kg",
+        "value": "108.0"
+      },
+      {
+        "name": "Ht",
+        "unit": null,
+        "value": "151.2"
+      }
+    ]
+  },
+  "3f3f2f05e0ac35c4216641b0709c24ae76e79ef178464e971edfcbb818a10ce9": {
+    "address": "3041 Main St, Franklin, TX 44336",
+    "date_of_birth": "1951-05-10",
+    "diagnoses": [
+      {
+        "name": "Hypothyroidism, unspecified"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "10mg PO QD",
+        "name": "Lisinopril 10 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN387636",
+    "patient_name": "Anthony Moore",
+    "vitals": [
+      {
+        "name": "Glu",
+        "unit": null,
+        "value": "165.5"
+      },
+      {
+        "name": "HR",
+        "unit": null,
+        "value": "80.8"
+      },
+      {
+        "name": "Temp",
+        "unit": "degF",
+        "value": "97.5"
       }
     ]
   },
@@ -851,6 +1847,30 @@
         "value": "101.5"
       }
     ]
+  },
+  "46315d8895aaa22dade7b905b56f4026c89089e3e79c9fe9b87586cb29cb2cce": {
+    "address": "8374 Washington Ave, Salem, OR 25841",
+    "date_of_birth": "1950-02-26",
+    "diagnoses": [
+      {
+        "name": "Migraine, unspecified, not intractable"
+      },
+      {
+        "name": "Type 2 diabetes mellitus without complications"
+      },
+      {
+        "name": "hypothyroidism"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "Take 5 mg by mouth once daily",
+        "name": "Amlodipine 5 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN700534",
+    "patient_name": "Sarah Taylor",
+    "vitals": []
   },
   "47efb067a88ccdb58307dc0460d7785ba4deb0e98ba9f67b69c41e38290cf41f": {
     "address": null,
@@ -1132,6 +2152,40 @@
       }
     ]
   },
+  "4dbccdc8e71a99f0c0bc2abff87da621cfdbe05b2412434772a5b5056226bd88": {
+    "address": "1071 Cedar Ln, Franklin, TX 71862",
+    "date_of_birth": "1976-02-02",
+    "diagnoses": [
+      {
+        "name": "Type 2 diabetes mellitus without complications"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "20mg PO QD",
+        "name": "Omeprazole 20 MG Oral Capsule"
+      }
+    ],
+    "mrn": "MRN560285",
+    "patient_name": "William Johnson",
+    "vitals": [
+      {
+        "name": "BP",
+        "unit": "mm[Hg]",
+        "value": "132.6"
+      },
+      {
+        "name": "Ht",
+        "unit": null,
+        "value": "173.9"
+      },
+      {
+        "name": "Temp",
+        "unit": null,
+        "value": "36.6"
+      }
+    ]
+  },
   "4f8cd3d6782b318bead58832e43948438f617ae23cf21f6a4933f9fe5a59ec0e": {
     "address": "3903 Sunset Dr, Salem, OR 23574",
     "date_of_birth": "1994-11-03",
@@ -1222,6 +2276,45 @@
       }
     ]
   },
+  "4fa8f1c3952819cfcfedba71947b21f58551bfd43c04cd9c983ce741056b7b29": {
+    "address": "8281 Lake St, Greenville, SC 61934",
+    "date_of_birth": "1988-02-14",
+    "diagnoses": [
+      {
+        "name": "HTN"
+      },
+      {
+        "name": "HLD"
+      },
+      {
+        "name": "obesity"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "75mcg PO QAM",
+        "name": "Levothyroxine 75 MCG Oral Tablet"
+      },
+      {
+        "dosage": "Take 75 mcg by mouth every morning",
+        "name": "Levothyroxine 75 MCG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN442622",
+    "patient_name": "Mark Jones",
+    "vitals": [
+      {
+        "name": "Temp",
+        "unit": "Cel",
+        "value": "37.2"
+      },
+      {
+        "name": "Glu",
+        "unit": null,
+        "value": "85.1"
+      }
+    ]
+  },
   "4fdb3872390f9da0672cbbdce13a519744fc7a402e9d3bd35fe92eb7bc0dfb70": {
     "address": "2216 Pine Rd, Springfield, IL 93112",
     "date_of_birth": "1991-09-11",
@@ -1306,6 +2399,46 @@
       }
     ]
   },
+  "51a03b85b3eb29157c9783f289f195a72dd3c422d2053d819cc224a45760444d": {
+    "address": "7827 Main St, Salem, OR 22016",
+    "date_of_birth": "1948-10-03",
+    "diagnoses": [
+      {
+        "name": "Migraine, unspecified, not intractable"
+      },
+      {
+        "name": "HTN"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "20mg PO QD",
+        "name": "Omeprazole 20 MG Oral Capsule"
+      },
+      {
+        "dosage": "Take 20 mg by mouth at bedtime",
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      },
+      {
+        "dosage": "Take 500 mg by mouth twice daily",
+        "name": "Metformin 500 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN559450",
+    "patient_name": "Barbara Thomas",
+    "vitals": [
+      {
+        "name": "Glu",
+        "unit": "mg/dL",
+        "value": "158.0"
+      },
+      {
+        "name": "BP",
+        "unit": "mm[Hg]",
+        "value": "120.6"
+      }
+    ]
+  },
   "52259a4c0ebddeb2a8563f6ffd93707b5e7ecbc8007579764a4c2323c810d423": {
     "address": "2635 Elm St, Georgetown, KY 26813",
     "date_of_birth": "1992-03-15",
@@ -1339,6 +2472,27 @@
       }
     ]
   },
+  "52911d6619085fa39319699027af36c2d4cd493e333210cc8c62b5b440f0a3c2": {
+    "address": "9232 Pine Rd, Bristol, CT 53569",
+    "date_of_birth": "1940-04-23",
+    "diagnoses": [
+      {
+        "name": "Gastro-esophageal reflux disease without esophagitis"
+      },
+      {
+        "name": "Obesity, unspecified"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "10 MG Oral Tablet - Take 10 mg by mouth once daily",
+        "name": "Lisinopril"
+      }
+    ],
+    "mrn": "MRN892911",
+    "patient_name": "Anthony Davis",
+    "vitals": []
+  },
   "53984c15c4a6a84f0a6c84427a5d91ead30c5af8b44f6b687e566a207a331544": {
     "address": "4251 Lake St, Madison, WI 69744",
     "date_of_birth": "1992-09-29",
@@ -1360,6 +2514,157 @@
     "mrn": "MRN710981",
     "patient_name": "Michael Jackson",
     "vitals": []
+  },
+  "53b13460bbbad1d93cb959409889370322a979853e775a3a9fdb2b518d0a582c": {
+    "address": null,
+    "date_of_birth": "1942-04-29",
+    "diagnoses": [
+      {
+        "name": "obesity"
+      },
+      {
+        "name": "COPD"
+      },
+      {
+        "name": "GERD"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "Take 20 mg by mouth at bedtime",
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      },
+      {
+        "dosage": "20mg PO QHS",
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN871411",
+    "patient_name": "Linda Brown",
+    "vitals": [
+      {
+        "name": "Glu",
+        "unit": null,
+        "value": "170.8"
+      },
+      {
+        "name": "BP",
+        "unit": "mm[Hg]",
+        "value": "134.1"
+      },
+      {
+        "name": "Temp",
+        "unit": null,
+        "value": "37.2"
+      }
+    ]
+  },
+  "55244eb61c9afdcd70675453cb893ae9468d35b7528139deb2424cd1b1a31992": {
+    "address": null,
+    "date_of_birth": "1976-12-07",
+    "diagnoses": [
+      {
+        "name": "HTN"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "dosage not recorded",
+        "name": "Levothyroxine 75 MCG Oral Tablet"
+      },
+      {
+        "dosage": "Take 75 mcg by mouth every morning",
+        "name": "Levothyroxine 75 MCG Oral Tablet"
+      },
+      {
+        "dosage": "Take 20 mg by mouth once daily",
+        "name": "Omeprazole 20 MG Oral Capsule"
+      }
+    ],
+    "mrn": "MRN746002",
+    "patient_name": "Matthew Jones",
+    "vitals": [
+      {
+        "name": "Height",
+        "unit": "in_i",
+        "value": "70.6"
+      },
+      {
+        "name": "Blood Pressure",
+        "unit": "mm[Hg]",
+        "value": "109.9"
+      }
+    ]
+  },
+  "55648b7a45bca39583f3ad9a1b5de730199b895a528007b56dfa0408836d728e": {
+    "address": null,
+    "date_of_birth": "2004-12-05",
+    "diagnoses": [
+      {
+        "name": "Unspecified asthma, uncomplicated"
+      },
+      {
+        "name": "obesity"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "Take 10 mg by mouth once daily",
+        "name": "Lisinopril 10 MG Oral Tablet"
+      },
+      {
+        "dosage": "500mg PO BID",
+        "name": "Metformin 500 MG Oral Tablet"
+      },
+      {
+        "dosage": "Take 50 mg by mouth once daily",
+        "name": "Sertraline 50 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN992931",
+    "patient_name": "Elizabeth Rodriguez",
+    "vitals": []
+  },
+  "55fb5f9a31c804555d69be48b11dd9f901dc8f570c651d23794bb84deb1aaf56": {
+    "address": "342 Oak Ave, Salem, OR 33750",
+    "date_of_birth": "1955-04-02",
+    "diagnoses": [
+      {
+        "name": "MDD"
+      },
+      {
+        "name": "Major depressive disorder, single episode, unspecified"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "50mg PO QD",
+        "name": "Sertraline 50 MG Oral Tablet"
+      },
+      {
+        "dosage": "Take 500 mg by mouth twice daily",
+        "name": "Metformin 500 MG Oral Tablet"
+      }
+    ],
+    "mrn": null,
+    "patient_name": "Karen Garcia",
+    "vitals": [
+      {
+        "name": "Weight",
+        "unit": "lb_av",
+        "value": "152.1"
+      },
+      {
+        "name": "Temperature",
+        "unit": "degF",
+        "value": "99.1"
+      },
+      {
+        "name": "Height",
+        "unit": "cm",
+        "value": "162.0"
+      }
+    ]
   },
   "56850c8cc511e694b37ffd6d59a1f2f146bbf3e35ed3556215facea888917d55": {
     "address": "9068 Main St, Clinton, OH 25920",
@@ -1494,6 +2799,32 @@
       }
     ]
   },
+  "5b720a9adb15d3e8e1c6d1c39cbccb6afdb05da5cfefe9f3f76f10200de6f022": {
+    "address": "2954 Main St, Georgetown, KY 99885",
+    "date_of_birth": "1989-04-24",
+    "diagnoses": [
+      {
+        "name": "Migraine, unspecified, not intractable"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "20mg PO QD",
+        "name": "Omeprazole 20 MG Oral Capsule"
+      },
+      {
+        "dosage": "20mg PO QHS",
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      },
+      {
+        "dosage": "Take 75 mcg by mouth every morning",
+        "name": "Levothyroxine 75 MCG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN980651",
+    "patient_name": "Joseph Jackson",
+    "vitals": []
+  },
   "5cab6bab13e65ff5ac97e1e88c39c546595e2689e8edb465a971b13728eb2ad2": {
     "address": "1812 Elm St, Franklin, TX 39886",
     "date_of_birth": "1991-10-21",
@@ -1608,6 +2939,85 @@
       }
     ]
   },
+  "5d99530fde1b17953d89d379f452b38a4a7e3976d794352304578672fce0488f": {
+    "address": "7593 Maple Dr, Salem, OR 81040",
+    "date_of_birth": "1948-09-07",
+    "diagnoses": [
+      {
+        "name": "Major Depressive Disorder (MDD)"
+      },
+      {
+        "name": "Unspecified asthma, uncomplicated"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "5 MG Oral Tablet - Take 5 mg by mouth once daily",
+        "name": "Amlodipine"
+      },
+      {
+        "dosage": "20 MG Oral Capsule - Take 20 mg by mouth once daily",
+        "name": "Omeprazole"
+      },
+      {
+        "dosage": "20 MG Oral Capsule - dosage not recorded",
+        "name": "Omeprazole"
+      }
+    ],
+    "mrn": "MRN153063",
+    "patient_name": "Linda Jones",
+    "vitals": [
+      {
+        "name": "BP",
+        "unit": "mm[Hg]",
+        "value": "130.5"
+      },
+      {
+        "name": "Wt",
+        "unit": "kg",
+        "value": "82.8"
+      },
+      {
+        "name": "HR",
+        "unit": "beats/minute",
+        "value": "57.3"
+      }
+    ]
+  },
+  "5e7c20e8e660c0d965173b4eb2a44550a316e07e55912c5b6a13593c09ddf0d4": {
+    "address": "6931 Washington Ave, Greenville, SC 43132",
+    "date_of_birth": "1998-01-13",
+    "diagnoses": [
+      {
+        "name": "Migraine, unspecified, not intractable"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "50mg PO QD",
+        "name": "Sertraline 50 MG Oral Tablet"
+      }
+    ],
+    "mrn": "<UNKNOWN>",
+    "patient_name": "Elizabeth Johnson",
+    "vitals": [
+      {
+        "name": "Weight",
+        "unit": "kg",
+        "value": "103.9"
+      },
+      {
+        "name": "Temperature",
+        "unit": "Cel",
+        "value": "37.8"
+      },
+      {
+        "name": "Height",
+        "unit": null,
+        "value": "74.7"
+      }
+    ]
+  },
   "61b95d9b154eb42d6c5aa4b920016aba081500bac01516a8f8fb360d40429f6f": {
     "address": "1634 Oak Ave, Bristol, CT 31511",
     "date_of_birth": "1999-05-21",
@@ -1644,6 +3054,93 @@
       }
     ]
   },
+  "6204f10b743f8235a7561d1292759f8cbd06cc2b7ed34c1e7da224a810ae5689": {
+    "address": null,
+    "date_of_birth": "1993-01-30",
+    "diagnoses": [
+      {
+        "name": "Hypothyroidism, unspecified"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "75mcg PO QAM",
+        "name": "Levothyroxine 75 MCG Oral Tablet"
+      },
+      {
+        "dosage": "Take 20 mg by mouth once daily",
+        "name": "Omeprazole 20 MG Oral Capsule"
+      },
+      {
+        "dosage": "dosage not recorded",
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN617326",
+    "patient_name": "Thomas Lopez",
+    "vitals": [
+      {
+        "name": "HR",
+        "unit": "beats/minute",
+        "value": "89.2"
+      },
+      {
+        "name": "Temp",
+        "unit": "Cel",
+        "value": "37.2"
+      }
+    ]
+  },
+  "6518a0087ba7dfdd0c3c31016fe16c7480b08793d8eb9821f156ff4845ecca7f": {
+    "address": null,
+    "date_of_birth": "1972-02-22",
+    "diagnoses": [
+      {
+        "name": "Gastro-esophageal reflux disease without esophagitis"
+      },
+      {
+        "name": "Essential (primary) hypertension"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "2puff q4h PRN",
+        "name": "Albuterol 90 MCG Inhaler"
+      },
+      {
+        "dosage": "20mg PO QHS",
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      },
+      {
+        "dosage": "2puff q4h PRN",
+        "name": "Albuterol 90 MCG Inhaler"
+      }
+    ],
+    "mrn": "MRN907756",
+    "patient_name": "Patricia Moore",
+    "vitals": [
+      {
+        "name": "Glucose",
+        "unit": "mg/dL",
+        "value": "146.7"
+      },
+      {
+        "name": "Temperature",
+        "unit": "Cel",
+        "value": "36.4"
+      },
+      {
+        "name": "Height",
+        "unit": "in_i",
+        "value": "59.8"
+      },
+      {
+        "name": "Heart Rate",
+        "unit": "beats/minute",
+        "value": "97.8"
+      }
+    ]
+  },
   "652c143f0f330381667bc51b8463bac971309b84042d3ee307e05064c79ecc0a": {
     "address": "5435 Sunset Dr, Madison, WI 29833",
     "date_of_birth": "1978-01-08",
@@ -1675,6 +3172,46 @@
       }
     ]
   },
+  "66348a16ee003c72ca36b09b82d9e92420c91465b35a133cc60a806ce52429df": {
+    "address": "2159 Pine Rd, Springfield, IL 81220",
+    "date_of_birth": "1964-10-13",
+    "diagnoses": [
+      {
+        "name": "Migraine, unspecified, not intractable"
+      },
+      {
+        "name": "COPD"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "5 mg by mouth once daily",
+        "name": "Amlodipine 5 MG Oral Tablet"
+      },
+      {
+        "dosage": null,
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      },
+      {
+        "dosage": "50mg PO QD",
+        "name": "Sertraline 50 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN910208",
+    "patient_name": "Paul Williams",
+    "vitals": [
+      {
+        "name": "Ht",
+        "unit": "in_i",
+        "value": "66.7"
+      },
+      {
+        "name": "Wt",
+        "unit": null,
+        "value": "106.3"
+      }
+    ]
+  },
   "66abf63033c8b719be5882fad30b68b0247874153ebb65354d2ed1022118ca81": {
     "address": "5332 Pine Rd, Franklin, TX 36987",
     "date_of_birth": "1945-05-16",
@@ -1692,6 +3229,35 @@
     "mrn": "MRN249289",
     "patient_name": "Joseph Thomas",
     "vitals": []
+  },
+  "68d72449c4475857aac42ccdf6207f5d602f6189d97ebd902d4a22245334154e": {
+    "address": null,
+    "date_of_birth": "1988-07-19",
+    "diagnoses": [
+      {
+        "name": "Gastro-esophageal reflux disease without esophagitis"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "50mg PO QD",
+        "name": "Sertraline 50 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN163182",
+    "patient_name": "Barbara Williams",
+    "vitals": [
+      {
+        "name": "BP",
+        "unit": "mm[Hg]",
+        "value": "130.6"
+      },
+      {
+        "name": "Wt",
+        "unit": null,
+        "value": "75.7"
+      }
+    ]
   },
   "6910a13ad6bb905897857373b202a9a10942e144163ae77c32fb58d1c7e2d67b": {
     "address": "7744 Park Blvd, Madison, WI 63242",
@@ -1778,6 +3344,151 @@
       }
     ]
   },
+  "6b4ca5f114bbed911e9c6b97d2d63b011765da3a89207fcd2acdf2c46fa56421": {
+    "address": "3781 Pine Rd, Georgetown, KY 10794",
+    "date_of_birth": "1948-08-30",
+    "diagnoses": [
+      {
+        "name": "Hypothyroidism, unspecified"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "75mcg PO QAM",
+        "name": "Levothyroxine 75 MCG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN880758",
+    "patient_name": "Robert Wilson",
+    "vitals": [
+      {
+        "name": "Glu",
+        "unit": null,
+        "value": "83.4"
+      },
+      {
+        "name": "Wt",
+        "unit": "kg",
+        "value": "102.7"
+      },
+      {
+        "name": "Temp",
+        "unit": "Cel",
+        "value": "36.7"
+      }
+    ]
+  },
+  "6b72460ed2cb1e35cfc5a4074d50c6bb73fd9b62f16e4a265b8ea83c9fe8cfb9": {
+    "address": "3444 Pine Rd, Fairview, NC 45372",
+    "date_of_birth": "1966-06-24",
+    "diagnoses": [
+      {
+        "name": "GERD"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "Take 20 mg by mouth once daily",
+        "name": "Omeprazole 20 MG Oral Capsule"
+      },
+      {
+        "dosage": "2puff q4h PRN",
+        "name": "Albuterol 90 MCG Inhaler"
+      }
+    ],
+    "mrn": "MRN882824",
+    "patient_name": "David Thomas",
+    "vitals": [
+      {
+        "name": "Glu",
+        "unit": "mg/dL",
+        "value": "149.7"
+      },
+      {
+        "name": "Ht",
+        "unit": "cm",
+        "value": "164.6"
+      },
+      {
+        "name": "HR",
+        "unit": "beats/minute",
+        "value": "75.5"
+      }
+    ]
+  },
+  "6d91e25341f5aec7545ead424c2d8a42c122afa53643aa12ac22297191d57aa3": {
+    "address": null,
+    "date_of_birth": "2001-01-18",
+    "diagnoses": [
+      {
+        "name": "Obesity, unspecified"
+      },
+      {
+        "name": "hypothyroidism"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "500 mg by mouth twice daily",
+        "name": "Metformin 500 MG Oral Tablet"
+      },
+      {
+        "dosage": "20 mg by mouth at bedtime",
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN542666",
+    "patient_name": "Michael Garcia",
+    "vitals": [
+      {
+        "name": "Glu",
+        "unit": null,
+        "value": "149.3"
+      },
+      {
+        "name": "Temp",
+        "unit": null,
+        "value": "99.3"
+      }
+    ]
+  },
+  "6e4d07a08e674ec4978ac526576f861b2a223b244ceddc8ba1d3e7d418792040": {
+    "address": null,
+    "date_of_birth": "1980-03-16",
+    "diagnoses": [
+      {
+        "name": "HLD"
+      },
+      {
+        "name": "COPD"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "2puff q4h PRN",
+        "name": "Albuterol 90 MCG Inhaler"
+      }
+    ],
+    "mrn": "MRN931450",
+    "patient_name": "Nancy Thomas",
+    "vitals": [
+      {
+        "name": "Ht",
+        "unit": "cm",
+        "value": "171.2"
+      },
+      {
+        "name": "Temp",
+        "unit": "Cel",
+        "value": "37.3"
+      },
+      {
+        "name": "Glu",
+        "unit": "mg/dL",
+        "value": "90.4"
+      }
+    ]
+  },
   "6e5f05956c0e55f3667c4b43d652e28f72d3727835e072df43eeda9dddd2c48a": {
     "address": "9944 Maple Dr, Greenville, SC 54321",
     "date_of_birth": "1971-12-03",
@@ -1809,6 +3520,32 @@
         "value": "87.0"
       }
     ]
+  },
+  "6ec22ef0b99bbd13d9c995dd85bc5cd550a721fd5cf6e2bc8701a518a8282d3a": {
+    "address": "6367 Main St, Bristol, CT 20629",
+    "date_of_birth": "1978-10-24",
+    "diagnoses": [
+      {
+        "name": "Essential (primary) hypertension"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "Take 20 mg by mouth at bedtime",
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      },
+      {
+        "dosage": null,
+        "name": "Sertraline 50 MG Oral Tablet"
+      },
+      {
+        "dosage": "500mg PO BID",
+        "name": "Metformin 500 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN627290",
+    "patient_name": "Mark Jones",
+    "vitals": []
   },
   "6eccea2278b05ec46691a9e33c03a120f84accf132b3ae01dc63b2ed58cf24bc": {
     "address": null,
@@ -1914,6 +3651,92 @@
       }
     ]
   },
+  "711fd05e87d82bae58fd432f4d07936c7936428a94ae58f312310b8e4f01414c": {
+    "address": "487 Park Blvd, Arlington, VA 37035",
+    "date_of_birth": "1940-10-31",
+    "diagnoses": [
+      {
+        "name": "obesity"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "dosage not recorded",
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      },
+      {
+        "dosage": "Take 500 mg by mouth twice daily",
+        "name": "Metformin 500 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN108454",
+    "patient_name": "Charles Anderson",
+    "vitals": [
+      {
+        "name": "BP",
+        "unit": "mm[Hg]",
+        "value": "115.3"
+      },
+      {
+        "name": "HR",
+        "unit": null,
+        "value": "69.1"
+      }
+    ]
+  },
+  "727f785485a18138ab5681494ac99d53aeb7f93e7cdc4f5877fe1d8a3539260f": {
+    "address": "3270 Sunset Dr, Fairview, NC 46257",
+    "date_of_birth": "1953-05-31",
+    "diagnoses": [
+      {
+        "name": "hypothyroidism"
+      },
+      {
+        "name": "Chronic obstructive pulmonary disease, unspecified"
+      },
+      {
+        "name": "T2DM"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "dosage not recorded",
+        "name": "Metformin 500 MG Oral Tablet"
+      },
+      {
+        "dosage": "20mg PO QD",
+        "name": "Omeprazole 20 MG Oral Capsule"
+      },
+      {
+        "dosage": "50mg PO QD",
+        "name": "Sertraline 50 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN675462",
+    "patient_name": "David Miller",
+    "vitals": [
+      {
+        "name": "HR",
+        "unit": null,
+        "value": "60.0"
+      },
+      {
+        "name": "Ht",
+        "unit": null,
+        "value": "150.7"
+      },
+      {
+        "name": "Temp",
+        "unit": "Cel",
+        "value": "36.2"
+      },
+      {
+        "name": "BP",
+        "unit": "mm[Hg]",
+        "value": "126.6"
+      }
+    ]
+  },
   "74114135387f1b2bba454419c24324497e172241464a8217de3acf02e9c8010a": {
     "date_of_birth": "1977-08-11",
     "diagnoses": [
@@ -1940,6 +3763,44 @@
         "name": "HR",
         "unit": "beats/minute",
         "value": "75.6"
+      }
+    ]
+  },
+  "744a2c050962b286cd6cbe27f9d0e0fbc249a6a481f82fa10cf21a0b6253aeb2": {
+    "address": "2190 Elm St, Greenville, SC 77039",
+    "date_of_birth": "1996-11-04",
+    "diagnoses": [
+      {
+        "name": "obesity"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "50mg PO QD",
+        "name": "Sertraline 50 MG Oral Tablet"
+      },
+      {
+        "dosage": "Take 20 mg by mouth at bedtime",
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN933197",
+    "patient_name": "Jessica Williams",
+    "vitals": [
+      {
+        "name": "Weight",
+        "unit": null,
+        "value": "236.6"
+      },
+      {
+        "name": "Glucose",
+        "unit": "mg/dL",
+        "value": "80.2"
+      },
+      {
+        "name": "Height",
+        "unit": null,
+        "value": "165.9"
       }
     ]
   },
@@ -2257,6 +4118,91 @@
       }
     ]
   },
+  "7f6429f05fcb34bc94569893922d83989ac378053a8c7c4b673e601bac49dabb": {
+    "address": "902 Oak Ave, Franklin, TX 35288",
+    "date_of_birth": "1949-01-07",
+    "diagnoses": [
+      {
+        "name": "Hypothyroidism, unspecified"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "75mcg PO QAM",
+        "name": "Levothyroxine 75 MCG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN814281",
+    "patient_name": "Lisa Thomas",
+    "vitals": [
+      {
+        "name": "Weight",
+        "unit": "kg",
+        "value": "90.8"
+      },
+      {
+        "name": "Glucose",
+        "unit": "mg/dL",
+        "value": "76.5"
+      },
+      {
+        "name": "Height",
+        "unit": "cm",
+        "value": "159.3"
+      },
+      {
+        "name": "Blood Pressure",
+        "unit": null,
+        "value": "116.7"
+      },
+      {
+        "name": "Heart Rate",
+        "unit": "beats/minute",
+        "value": "99.9"
+      }
+    ]
+  },
+  "81785934e29d936cfedfd47cd4fc18e11c9d18a5ee9213ba3f4e7050c20f2ece": {
+    "address": "4939 Cedar Ln, Salem, OR 81207",
+    "date_of_birth": "1975-11-09",
+    "diagnoses": [
+      {
+        "name": "Migraine, unspecified, not intractable"
+      },
+      {
+        "name": "Chronic obstructive pulmonary disease, unspecified"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "Take 10 mg by mouth once daily",
+        "name": "Lisinopril 10 MG Oral Tablet"
+      },
+      {
+        "dosage": "20mg PO QD",
+        "name": "Omeprazole 20 MG Oral Capsule"
+      }
+    ],
+    "mrn": null,
+    "patient_name": "Barbara Taylor",
+    "vitals": [
+      {
+        "name": "Temp",
+        "unit": "Cel",
+        "value": "36.8"
+      },
+      {
+        "name": "HR",
+        "unit": "beats/minute",
+        "value": "72.3"
+      },
+      {
+        "name": "Ht",
+        "unit": null,
+        "value": "177.5"
+      }
+    ]
+  },
   "81f4039333d1a16d19b48b19d1eb27b72f509e4c6766292150c495765a850092": {
     "address": "827 Main St, Madison, WI 48575",
     "date_of_birth": "2000-09-03",
@@ -2404,6 +4350,40 @@
       }
     ]
   },
+  "8b4cd52cf937d1eb39e9c4ebbc0b3edf7d97f1a7377e3c8dbd8c0b2e89be2ec3": {
+    "address": "8869 Elm St, Salem, OR 47737",
+    "date_of_birth": "1990-10-06",
+    "diagnoses": [
+      {
+        "name": "T2DM"
+      },
+      {
+        "name": "MDD"
+      },
+      {
+        "name": "Essential (primary) hypertension"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "10mg PO QD",
+        "name": "Lisinopril 10 MG Oral Tablet"
+      },
+      {
+        "dosage": "Take 20 mg by mouth once daily",
+        "name": "Omeprazole 20 MG Oral Capsule"
+      }
+    ],
+    "mrn": "MRN999636",
+    "patient_name": "Nancy Hernandez",
+    "vitals": [
+      {
+        "name": "BP",
+        "unit": null,
+        "value": "123.5"
+      }
+    ]
+  },
   "8bc5b08925b652e4b08fd977c1a68f1392d35d26ff88909198f379147f9b1d73": {
     "address": "6681 Elm St, Georgetown, KY 93645",
     "date_of_birth": "1964-10-03",
@@ -2525,6 +4505,45 @@
       }
     ]
   },
+  "9406f6e271dd06b5c30094f815622702c3eda0a1503a1bee0aaa2c2e33a387e4": {
+    "address": "1100 Elm St, Franklin, TX 99388",
+    "date_of_birth": "1978-03-30",
+    "diagnoses": [
+      {
+        "name": "GERD"
+      },
+      {
+        "name": "Migraine, unspecified, not intractable"
+      },
+      {
+        "name": "asthma"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "Take 20 mg by mouth once daily",
+        "name": "Omeprazole 20 MG Oral Capsule"
+      },
+      {
+        "dosage": "dosage not recorded",
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN819425",
+    "patient_name": "Betty Gonzalez",
+    "vitals": [
+      {
+        "name": "Weight",
+        "unit": "kg",
+        "value": "60.5"
+      },
+      {
+        "name": "Height",
+        "unit": "in_i",
+        "value": "70.4"
+      }
+    ]
+  },
   "94f24ce10fdb0ba430458d9256a386b27f325fb4c7b63242df48b63888d72026": {
     "date_of_birth": "1961-12-20",
     "diagnoses": [
@@ -2579,6 +4598,48 @@
     "mrn": "MRN637727",
     "patient_name": "Elizabeth Rodriguez",
     "vitals": []
+  },
+  "96138018338e63bafe2d558fc3ead01c1f4d706491c3348196faea5749570596": {
+    "address": "9675 Pine Rd, Fairview, NC 11950",
+    "date_of_birth": "1974-01-04",
+    "diagnoses": [
+      {
+        "name": "Migraine, unspecified, not intractable"
+      },
+      {
+        "name": "Chronic obstructive pulmonary disease, unspecified"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "10 mg by mouth once daily",
+        "name": "Lisinopril 10 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN443254",
+    "patient_name": "James Rodriguez",
+    "vitals": [
+      {
+        "name": "Temp",
+        "unit": "<UNKNOWN>",
+        "value": "97.7"
+      },
+      {
+        "name": "HR",
+        "unit": "beats/minute",
+        "value": "97.7"
+      },
+      {
+        "name": "Ht",
+        "unit": "<UNKNOWN>",
+        "value": "61.5"
+      },
+      {
+        "name": "BP",
+        "unit": "<UNKNOWN>",
+        "value": "118.6"
+      }
+    ]
   },
   "9637b9ef21dda4b3b34ab8612397b2083c121fc4f01a200e7f8ab4cc05384db7": {
     "address": "8207 Oak Ave, Madison, WI 53315",
@@ -2704,6 +4765,38 @@
         "name": "Temp",
         "unit": "Cel",
         "value": "36.7"
+      }
+    ]
+  },
+  "995ad7f64d89bed4ca36cb174d87b0ff41a2a2b8136fbe7471cd3d5bf3f6dd65": {
+    "address": null,
+    "date_of_birth": "1966-07-15",
+    "diagnoses": [
+      {
+        "name": "Hypothyroidism, unspecified"
+      },
+      {
+        "name": "Major depressive disorder, single episode, unspecified"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "Take 5 mg by mouth once daily",
+        "name": "Amlodipine 5 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN985447",
+    "patient_name": "Michael Williams",
+    "vitals": [
+      {
+        "name": "BP",
+        "unit": "mm[Hg]",
+        "value": "107.2"
+      },
+      {
+        "name": "Glu",
+        "unit": null,
+        "value": "149.2"
       }
     ]
   },
@@ -2885,6 +4978,86 @@
       }
     ]
   },
+  "a2a8c78d54fcb70325a50ffe8b173c85980d390541331284d1d47358e3badc0c": {
+    "address": "3679 Pine Rd, Salem, OR 26240",
+    "date_of_birth": "2001-10-28",
+    "diagnoses": [
+      {
+        "name": "obesity"
+      },
+      {
+        "name": "HLD"
+      },
+      {
+        "name": "T2DM"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "20mg PO QHS",
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      },
+      {
+        "dosage": "Inhale 2 puffs every 4 hours as needed",
+        "name": "Albuterol 90 MCG Inhaler"
+      },
+      {
+        "dosage": "Take 20 mg by mouth at bedtime",
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN467663",
+    "patient_name": "William Jackson",
+    "vitals": [
+      {
+        "name": "Height",
+        "unit": "cm",
+        "value": "160.7"
+      },
+      {
+        "name": "Heart Rate",
+        "unit": "beats/minute",
+        "value": "99.7"
+      }
+    ]
+  },
+  "a2b5bc1f34f54ccb0607be6534353390ed668a1feed06142822ee9674b5d5334": {
+    "address": "8162 Park Blvd, Salem, OR 86614",
+    "date_of_birth": "1963-03-22",
+    "diagnoses": [
+      {
+        "name": "HLD"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "20mg PO QD",
+        "name": "Omeprazole 20 MG Oral Capsule"
+      },
+      {
+        "dosage": "dosage not recorded",
+        "name": "Levothyroxine 75 MCG Oral Tablet"
+      },
+      {
+        "dosage": "2puff q4h PRN",
+        "name": "Albuterol 90 MCG Inhaler"
+      }
+    ],
+    "mrn": "MRN952227",
+    "patient_name": "Daniel Jackson",
+    "vitals": [
+      {
+        "name": "HR",
+        "unit": "beats/minute",
+        "value": "95.7"
+      },
+      {
+        "name": "Ht",
+        "unit": null,
+        "value": "167.3"
+      }
+    ]
+  },
   "a3b241f799460ded54fc3445cd3fbf9dbafc6d10bfc34fd36fd8564df00888f7": {
     "address": "4396 Main St, Salem, OR 23688",
     "date_of_birth": "1968-01-16",
@@ -2923,6 +5096,48 @@
         "name": "Ht",
         "unit": "[in_i]",
         "value": "70.4"
+      }
+    ]
+  },
+  "a40ba9ca4f5ef1f6a777e568a880e53a71d15d027eefd92040f3cb7ddaf9330b": {
+    "address": "5882 Cedar Ln, Franklin, TX 90501",
+    "date_of_birth": "1994-02-28",
+    "diagnoses": [
+      {
+        "name": "Major depressive disorder, single episode, unspecified"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "5 MG Oral Tablet - Take 5 mg by mouth once daily",
+        "name": "Amlodipine"
+      },
+      {
+        "dosage": "500 MG Oral Tablet - 500mg PO BID",
+        "name": "Metformin"
+      },
+      {
+        "dosage": "10 MG Oral Tablet - Take 10 mg by mouth once daily",
+        "name": "Lisinopril"
+      }
+    ],
+    "mrn": "<UNKNOWN>",
+    "patient_name": "Lisa Hernandez",
+    "vitals": [
+      {
+        "name": "Ht",
+        "unit": null,
+        "value": "151.6"
+      },
+      {
+        "name": "Wt",
+        "unit": null,
+        "value": "232.4"
+      },
+      {
+        "name": "Glu",
+        "unit": null,
+        "value": "81.5"
       }
     ]
   },
@@ -3009,6 +5224,49 @@
       }
     ]
   },
+  "a5d26be3e790242c5bd58aa0ee641552be73a5dd8db28f9b3f59654534ef875c": {
+    "address": "1922 Maple Dr, Clinton, OH 61646",
+    "date_of_birth": "1953-12-11",
+    "diagnoses": [
+      {
+        "name": "migraine (dx 2017-04-13)"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "20mg PO QHS",
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      },
+      {
+        "dosage": "500mg PO BID",
+        "name": "Metformin 500 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN385577",
+    "patient_name": "Anthony Moore",
+    "vitals": [
+      {
+        "name": "Height",
+        "unit": "cm",
+        "value": "169.5"
+      },
+      {
+        "name": "Glucose",
+        "unit": "mg/dL",
+        "value": "116.6"
+      },
+      {
+        "name": "Temperature",
+        "unit": null,
+        "value": "37.4"
+      },
+      {
+        "name": "Weight",
+        "unit": "kg",
+        "value": "85.3"
+      }
+    ]
+  },
   "a68138fd6e41e293b65a8fe396a659e312818b06b3e3625482de5a8ef92d2916": {
     "address": "2344 Pine Rd, Greenville, SC 88743",
     "date_of_birth": "1998-06-24",
@@ -3043,6 +5301,79 @@
         "name": "Temp",
         "unit": null,
         "value": "99.1"
+      }
+    ]
+  },
+  "a720955d32a4541b9322d388a3a8d3ca73a024973a70b28ff9f2333d42648586": {
+    "address": "9262 Park Blvd, Salem, OR 11077",
+    "date_of_birth": "1966-10-15",
+    "diagnoses": [
+      {
+        "name": "Hypothyroidism, unspecified"
+      },
+      {
+        "name": "MDD"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "10mg PO QD",
+        "name": "Lisinopril 10 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN890075",
+    "patient_name": "Mary Lopez",
+    "vitals": [
+      {
+        "name": "Temp",
+        "unit": "degF",
+        "value": "98.2"
+      },
+      {
+        "name": "Wt",
+        "unit": "kg",
+        "value": "94.8"
+      },
+      {
+        "name": "Ht",
+        "unit": null,
+        "value": "171.4"
+      }
+    ]
+  },
+  "a89eac548fc3503cbb6634659eecab539f9d4257ee8355712cdb29957ab91142": {
+    "address": "8591 Washington Ave, Greenville, SC 75377",
+    "date_of_birth": "1962-04-10",
+    "diagnoses": [
+      {
+        "name": "COPD"
+      },
+      {
+        "name": "Migraine, unspecified, not intractable"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "dosage not recorded",
+        "name": "Sertraline 50 MG Oral Tablet"
+      },
+      {
+        "dosage": "Inhale 2 puffs every 4 hours as needed",
+        "name": "Albuterol 90 MCG Inhaler"
+      }
+    ],
+    "mrn": "MRN536476",
+    "patient_name": "Linda Hernandez",
+    "vitals": [
+      {
+        "name": "BP",
+        "unit": "mm[Hg]",
+        "value": "108.9"
+      },
+      {
+        "name": "Wt",
+        "unit": null,
+        "value": "58.8"
       }
     ]
   },
@@ -3227,6 +5558,44 @@
       }
     ]
   },
+  "aaedfcb08111d91248306143d0a72d14813a2f10a6d7c27b3ae50d00a5f96dd6": {
+    "address": null,
+    "date_of_birth": "1990-06-30",
+    "diagnoses": [
+      {
+        "name": "HTN"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "10mg PO QD",
+        "name": "Lisinopril 10 MG Oral Tablet"
+      },
+      {
+        "dosage": "20mg PO QHS",
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN418594",
+    "patient_name": "Michael Jones",
+    "vitals": [
+      {
+        "name": "Ht",
+        "unit": null,
+        "value": "165.2"
+      },
+      {
+        "name": "Wt",
+        "unit": null,
+        "value": "71.8"
+      },
+      {
+        "name": "HR",
+        "unit": null,
+        "value": "97.6"
+      }
+    ]
+  },
   "ab575edaefe18b1fff1bc8ca7fe3f4ba1cff91eea54df49933a01ae2091ff398": {
     "address": null,
     "date_of_birth": "1955-04-02",
@@ -3261,6 +5630,74 @@
         "name": "Temp",
         "unit": "degF",
         "value": "100.0"
+      }
+    ]
+  },
+  "ac308ace416f4f6e22d3cd2b4c47762048de1c9139cffd20210fc5e49015133a": {
+    "address": "4104 Cedar Ln, Madison, WI 49341",
+    "date_of_birth": "1994-08-19",
+    "diagnoses": [
+      {
+        "name": "Hypothyroidism, unspecified"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "5mg PO QD",
+        "name": "Amlodipine 5 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN308573",
+    "patient_name": "Betty Taylor",
+    "vitals": [
+      {
+        "name": "Height",
+        "unit": "in_i",
+        "value": "64.2"
+      },
+      {
+        "name": "Temperature",
+        "unit": "degF",
+        "value": "97.7"
+      }
+    ]
+  },
+  "ad0e37e0aebb3f4594ebff46d4303aa199fd103f17fe05a7ccfa2ba6d74c5664": {
+    "address": "6012 Oak Ave, Bristol, CT 28836",
+    "date_of_birth": "1947-05-12",
+    "diagnoses": [
+      {
+        "name": "Unspecified asthma, uncomplicated"
+      },
+      {
+        "name": "Migraine, unspecified, not intractable"
+      },
+      {
+        "name": "Chronic obstructive pulmonary disease, unspecified"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "Inhale 2 puffs every 4 hours as needed",
+        "name": "Albuterol 90 MCG Inhaler"
+      },
+      {
+        "dosage": "20mg PO QHS",
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      }
+    ],
+    "mrn": null,
+    "patient_name": "Anthony Williams",
+    "vitals": [
+      {
+        "name": "HR",
+        "unit": "beats/minute",
+        "value": "68.1"
+      },
+      {
+        "name": "Ht",
+        "unit": "cm",
+        "value": "153.7"
       }
     ]
   },
@@ -3302,6 +5739,88 @@
       }
     ]
   },
+  "af6380604607ab9a37a105fa7a7facbbc17559d7bb6a6a5731ee1cfe07160afc": {
+    "address": null,
+    "date_of_birth": "1977-01-21",
+    "diagnoses": [
+      {
+        "name": "HTN"
+      },
+      {
+        "name": "Unspecified asthma, uncomplicated"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "50mg PO QD",
+        "name": "Sertraline 50 MG Oral Tablet"
+      },
+      {
+        "dosage": "Inhale 2 puffs every 4 hours as needed",
+        "name": "Albuterol 90 MCG Inhaler"
+      },
+      {
+        "dosage": "20mg PO QHS",
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN834891",
+    "patient_name": "Steven Taylor",
+    "vitals": [
+      {
+        "name": "Height",
+        "unit": "cm",
+        "value": "172.7"
+      },
+      {
+        "name": "Temperature",
+        "unit": "degF",
+        "value": "97.7"
+      }
+    ]
+  },
+  "afad25813c51cc74d34600879500d9573ed3eae918a716904618621e202fc499": {
+    "address": "9606 Main St, Arlington, VA 59185",
+    "date_of_birth": "1964-05-30",
+    "diagnoses": [
+      {
+        "name": "MDD"
+      },
+      {
+        "name": "Hyperlipidemia, unspecified"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "not recorded",
+        "name": "Amlodipine 5 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN564637",
+    "patient_name": "Matthew Williams",
+    "vitals": [
+      {
+        "name": "Wt",
+        "unit": null,
+        "value": "61.1"
+      },
+      {
+        "name": "Glu",
+        "unit": "mg/dL",
+        "value": "103.9"
+      },
+      {
+        "name": "Ht",
+        "unit": "in_i",
+        "value": "59.9"
+      },
+      {
+        "name": "BP",
+        "unit": "mm[Hg]",
+        "value": "130.6"
+      }
+    ]
+  },
   "b2439d04e7742eb326e8e61e7a75e824c7e6bf8b64d0677b7493e5642b79ea40": {
     "address": "970 Oak Ave, Salem, OR 86519",
     "date_of_birth": "1974-01-31",
@@ -3336,6 +5855,81 @@
         "name": "Wt",
         "unit": null,
         "value": "198.4"
+      }
+    ]
+  },
+  "b511c18bf861c3bb2860752aab8c6e4571d4b0a1ac2e3eaec0b9cbdb474a035f": {
+    "address": "2101 Washington Ave, Madison, WI 50212",
+    "date_of_birth": "1961-12-20",
+    "diagnoses": [
+      {
+        "name": "Hypothyroidism, unspecified"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "20mg PO QD",
+        "name": "Omeprazole 20 MG Oral Capsule"
+      },
+      {
+        "dosage": "Take 500 mg by mouth twice daily",
+        "name": "Metformin 500 MG Oral Tablet"
+      },
+      {
+        "dosage": "50mg PO QD",
+        "name": "Sertraline 50 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN334053",
+    "patient_name": "James Rodriguez",
+    "vitals": [
+      {
+        "name": "HR",
+        "unit": "beats/minute",
+        "value": "80.3"
+      }
+    ]
+  },
+  "b5e59f82d87f618155586e1d483c7a204ccf60bd34e1097de137090f0f819e13": {
+    "address": "5026 Park Blvd, Clinton, OH 53926",
+    "date_of_birth": "1957-05-24",
+    "diagnoses": [
+      {
+        "name": "asthma (dx 2017-08-25)"
+      },
+      {
+        "name": "COPD (dx 2017-03-19)"
+      },
+      {
+        "name": "Unspecified asthma, uncomplicated (dx 2023-07-11)"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "50 mg by mouth once daily",
+        "name": "Sertraline 50 MG Oral Tablet"
+      },
+      {
+        "dosage": "5mg PO QD",
+        "name": "Amlodipine 5 MG Oral Tablet"
+      },
+      {
+        "dosage": "75mcg PO QAM",
+        "name": "Levothyroxine 75 MCG Oral Tablet"
+      }
+    ],
+    "mrn": "<UNKNOWN>",
+    "patient_name": "Charles Taylor",
+    "vitals": [
+      {
+        "name": "BP",
+        "unit": null,
+        "value": "138.1"
+      },
+      {
+        "name": "Ht",
+        "unit": "cm",
+        "value": "180.4"
       }
     ]
   },
@@ -3518,6 +6112,88 @@
       }
     ]
   },
+  "c18d24609c5c9db1d84bc3e688b0501e521b8d3353b26b9e8991df77d5caf2ad": {
+    "address": "843 Lake St, Salem, OR 72961",
+    "date_of_birth": "1991-06-13",
+    "diagnoses": [
+      {
+        "name": "Migraine, unspecified, not intractable"
+      },
+      {
+        "name": "COPD"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "75mcg PO QAM",
+        "name": "Levothyroxine 75 MCG Oral Tablet"
+      },
+      {
+        "dosage": "2puff q4h PRN",
+        "name": "Albuterol 90 MCG Inhaler"
+      },
+      {
+        "dosage": "dosage not recorded",
+        "name": "Albuterol 90 MCG Inhaler"
+      }
+    ],
+    "mrn": "MRN809489",
+    "patient_name": "Elizabeth Brown",
+    "vitals": [
+      {
+        "name": "Temperature",
+        "unit": "Cel",
+        "value": "37.7"
+      },
+      {
+        "name": "Blood Pressure",
+        "unit": "mm[Hg]",
+        "value": "133.1"
+      }
+    ]
+  },
+  "c1cf4a53051e863e673621a48eee2a81d31bd18c190f6a8ef23d2093c19c98d3": {
+    "address": "3657 Oak Ave, Salem, OR 48269",
+    "date_of_birth": "1958-04-29",
+    "diagnoses": [
+      {
+        "name": "Chronic obstructive pulmonary disease, unspecified"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "Take 75 mcg by mouth every morning",
+        "name": "Levothyroxine 75 MCG Oral Tablet"
+      },
+      {
+        "dosage": "Take 500 mg by mouth twice daily",
+        "name": "Metformin 500 MG Oral Tablet"
+      },
+      {
+        "dosage": "Take 10 mg by mouth once daily",
+        "name": "Lisinopril 10 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN802258",
+    "patient_name": "Sandra Rodriguez",
+    "vitals": [
+      {
+        "name": "Weight",
+        "unit": "kg",
+        "value": "72.4"
+      },
+      {
+        "name": "Height",
+        "unit": "<UNKNOWN>",
+        "value": "189.9"
+      },
+      {
+        "name": "Blood Pressure",
+        "unit": "mm[Hg]",
+        "value": "114.8"
+      }
+    ]
+  },
   "c2b92ac9f945b605768a6c9240dfe24c9b365aa408ed96f85066bf6ec5879af6": {
     "address": "5762 Cedar Ln, Greenville, SC 86191",
     "date_of_birth": "1953-05-12",
@@ -3539,6 +6215,45 @@
     "mrn": "MRN735710",
     "patient_name": "Sarah Anderson",
     "vitals": []
+  },
+  "c50ee1ffeb8d6dac9951ef482573ce6ecc24d7622b0fbcad21991f08a883755a": {
+    "address": "4767 Oak Ave, Springfield, IL 58712",
+    "date_of_birth": "1996-03-05",
+    "diagnoses": [
+      {
+        "name": "Essential (primary) hypertension"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "dosage not recorded",
+        "name": "Lisinopril 10 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN921967",
+    "patient_name": "James Brown",
+    "vitals": [
+      {
+        "name": "Weight",
+        "unit": null,
+        "value": "55.0"
+      },
+      {
+        "name": "Blood Pressure",
+        "unit": null,
+        "value": "135.3"
+      },
+      {
+        "name": "Temperature",
+        "unit": null,
+        "value": "97.3"
+      },
+      {
+        "name": "Glucose",
+        "unit": "mg/dL",
+        "value": "88.2"
+      }
+    ]
   },
   "c539fddcf781c0fb440417d3b8ed5778e9fe1600a2bd32f01e4ccbe6670c1ecb": {
     "address": "1037 Oak Ave, Arlington, VA 33159",
@@ -3583,6 +6298,77 @@
       }
     ]
   },
+  "c761d9332d906b51be875f25a93e52362740ff842341bf2c9679623ddd7ce5f6": {
+    "address": "9060 Sunset Dr, Madison, WI 12466",
+    "date_of_birth": "1991-04-30",
+    "diagnoses": [
+      {
+        "name": "GERD"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "Take 50 mg by mouth once daily",
+        "name": "Sertraline 50 MG Oral Tablet"
+      },
+      {
+        "dosage": "Take 20 mg by mouth once daily",
+        "name": "Omeprazole 20 MG Oral Capsule"
+      },
+      {
+        "dosage": "dosage not recorded",
+        "name": "Lisinopril 10 MG Oral Tablet"
+      }
+    ],
+    "mrn": null,
+    "patient_name": "Nancy Miller",
+    "vitals": []
+  },
+  "c882304cc1a44a94bf0c2b974a50b28e5be205ca9823c3e09e9b285c30fa1aab": {
+    "address": "8134 Elm St, Arlington, VA 52300",
+    "date_of_birth": "1974-01-31",
+    "diagnoses": [
+      {
+        "name": "MDD"
+      },
+      {
+        "name": "GERD"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "10 mg by mouth once daily",
+        "name": "Lisinopril 10 MG Oral Tablet"
+      },
+      {
+        "dosage": "2puff q4h PRN",
+        "name": "Albuterol 90 MCG Inhaler"
+      },
+      {
+        "dosage": "2puff q4h PRN",
+        "name": "Albuterol 90 MCG Inhaler"
+      }
+    ],
+    "mrn": "MRN201414",
+    "patient_name": "Patricia Williams",
+    "vitals": [
+      {
+        "name": "HR",
+        "unit": "beats/minute",
+        "value": "79.8"
+      },
+      {
+        "name": "Temp",
+        "unit": "Cel",
+        "value": "36.9"
+      },
+      {
+        "name": "BP",
+        "unit": null,
+        "value": "126.8"
+      }
+    ]
+  },
   "cef8cdc325599ae571f0ba7d691d7094c9219ab4451aef4a885df9399faab76c": {
     "address": "578 Main St, Clinton, OH 72441",
     "date_of_birth": "1999-10-30",
@@ -3621,6 +6407,40 @@
       }
     ]
   },
+  "d110b213ea174b1360120ea7b16470c3a86810b16feba2b69d2f0a97edb9e0d7": {
+    "address": "9294 Cedar Ln, Springfield, IL 97457",
+    "date_of_birth": "1974-04-05",
+    "diagnoses": [
+      {
+        "name": "HLD"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "dosage not recorded",
+        "name": "Amlodipine 5 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN627335",
+    "patient_name": "Jessica Martinez",
+    "vitals": [
+      {
+        "name": "HR",
+        "unit": "beats/minute",
+        "value": "83.9"
+      },
+      {
+        "name": "Temp",
+        "unit": "degF",
+        "value": "97.2"
+      },
+      {
+        "name": "BP",
+        "unit": "mm[Hg]",
+        "value": "133.2"
+      }
+    ]
+  },
   "d1ff1b8d297bee15bd6ce1f03e3b91fb76456dffaeb35143fecec1f1c048d2ee": {
     "address": "8762 Oak Ave, Arlington, VA 78825",
     "date_of_birth": "1996-07-31",
@@ -3647,6 +6467,100 @@
         "name": "Temp",
         "unit": null,
         "value": "36.1"
+      }
+    ]
+  },
+  "d216f7eed4654141045b7a0d04941d24409054fa1bfb5ad3ae8928f1595c4a14": {
+    "address": "9263 Main St, Greenville, SC 17583",
+    "date_of_birth": "1994-11-03",
+    "diagnoses": [
+      {
+        "name": "Obesity, unspecified"
+      },
+      {
+        "name": "HLD"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "Take 20 mg by mouth once daily",
+        "name": "Omeprazole 20 MG Oral Capsule"
+      },
+      {
+        "dosage": "Take 20 mg by mouth at bedtime",
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN991014",
+    "patient_name": "William Thomas",
+    "vitals": []
+  },
+  "d2cf6d3a33e37ed6cfdeedbd6b306c74a107ff88431e2ab09d5b49aa92ca35db": {
+    "address": "3734 Sunset Dr, Springfield, IL 74784",
+    "date_of_birth": "1974-05-30",
+    "diagnoses": [
+      {
+        "name": "Migraine, unspecified, not intractable"
+      },
+      {
+        "name": "Major depressive disorder, single episode, unspecified"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "Take 5 mg by mouth once daily",
+        "name": "Amlodipine 5 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN346961",
+    "patient_name": "James Rodriguez",
+    "vitals": [
+      {
+        "name": "Glu",
+        "unit": null,
+        "value": "154.7"
+      },
+      {
+        "name": "Temp",
+        "unit": "Cel",
+        "value": "36.4"
+      }
+    ]
+  },
+  "d4c78a4e0ce2e7bbdca8e14941f948c00f329956613a86f96737dd8df40bb772": {
+    "address": "9327 Sunset Dr, Clinton, OH 92402",
+    "date_of_birth": "1987-07-01",
+    "diagnoses": [
+      {
+        "name": "Unspecified asthma, uncomplicated"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "Take 50 mg by mouth once daily",
+        "name": "Sertraline 50 MG Oral Tablet"
+      },
+      {
+        "dosage": "Take 500 mg by mouth twice daily",
+        "name": "Metformin 500 MG Oral Tablet"
+      },
+      {
+        "dosage": "Take 20 mg by mouth at bedtime",
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN474795",
+    "patient_name": "Mary Thomas",
+    "vitals": [
+      {
+        "name": "Temp",
+        "unit": "Cel",
+        "value": "37.7"
+      },
+      {
+        "name": "BP",
+        "unit": null,
+        "value": "123.0"
       }
     ]
   },
@@ -3727,6 +6641,79 @@
       }
     ]
   },
+  "d6ebed4de1f559eecc434483478bffc0766b0119ea573995f141740f754e0ceb": {
+    "address": "7620 Pine Rd, Arlington, VA 62597",
+    "date_of_birth": "1965-11-21",
+    "diagnoses": [
+      {
+        "name": "Hypothyroidism, unspecified"
+      },
+      {
+        "name": "Major depressive disorder, single episode, unspecified"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "Take 5 mg by mouth once daily",
+        "name": "Amlodipine 5 MG Oral Tablet"
+      },
+      {
+        "dosage": "Take 50 mg by mouth once daily",
+        "name": "Sertraline 50 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN177103",
+    "patient_name": "Richard Moore",
+    "vitals": [
+      {
+        "name": "HR",
+        "unit": "beats/minute",
+        "value": "72.7"
+      },
+      {
+        "name": "Ht",
+        "unit": null,
+        "value": "187.6"
+      },
+      {
+        "name": "Wt",
+        "unit": "lb_av",
+        "value": "181.9"
+      }
+    ]
+  },
+  "d74ad622ed17bc5195057925d7777d5c6f999af4e7d8c1d68c01b66614ca3357": {
+    "address": "6058 Main St, Fairview, NC 36121",
+    "date_of_birth": "1954-10-08",
+    "diagnoses": [
+      {
+        "name": "Chronic obstructive pulmonary disease, unspecified"
+      },
+      {
+        "name": "Gastro-esophageal reflux disease without esophagitis"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "500mg PO BID",
+        "name": "Metformin 500 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN497382",
+    "patient_name": "Sandra Johnson",
+    "vitals": [
+      {
+        "name": "BP",
+        "unit": "mm[Hg]",
+        "value": "116.2"
+      },
+      {
+        "name": "Ht",
+        "unit": "cm",
+        "value": "169.1"
+      }
+    ]
+  },
   "d91fc74e2c7b54ae56e1cc4bb0615f22f067fda7a565bee516cf88ddc7f7ced6": {
     "date_of_birth": "1961-06-25",
     "diagnoses": [
@@ -3764,6 +6751,35 @@
         "name": "HR",
         "unit": "beats/minute",
         "value": "65.3"
+      }
+    ]
+  },
+  "d9ba8b7d0c6b14c6cbbed75895df5c2d53aa77e434ac35fb56c6528261c45fd8": {
+    "address": "2456 Main St, Georgetown, KY 33249",
+    "date_of_birth": "1976-11-17",
+    "diagnoses": [
+      {
+        "name": "HTN"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "2puff q4h PRN",
+        "name": "Albuterol 90 MCG Inhaler"
+      }
+    ],
+    "mrn": "MRN589710",
+    "patient_name": "Barbara Wilson",
+    "vitals": [
+      {
+        "name": "HR",
+        "unit": "beats/minute",
+        "value": "74.9"
+      },
+      {
+        "name": "BP",
+        "unit": null,
+        "value": "116.9"
       }
     ]
   },
@@ -3805,6 +6821,168 @@
         "name": "Temp",
         "unit": "Cel",
         "value": "36.6"
+      }
+    ]
+  },
+  "dd6a1a3e08b15bf1ae15dac374f2cdac7dbe2d7112bb06003c5afdc76866d223": {
+    "address": null,
+    "date_of_birth": "1994-05-27",
+    "diagnoses": [
+      {
+        "name": "Hyperlipidemia, unspecified"
+      },
+      {
+        "name": "HLD"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "20mg PO QHS",
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      },
+      {
+        "dosage": "Take 50 mg by mouth once daily",
+        "name": "Sertraline 50 MG Oral Tablet"
+      }
+    ],
+    "mrn": null,
+    "patient_name": "Daniel Johnson",
+    "vitals": [
+      {
+        "name": "Glucose",
+        "unit": "mg/dL",
+        "value": "153.1"
+      },
+      {
+        "name": "Blood Pressure",
+        "unit": null,
+        "value": "125.1"
+      },
+      {
+        "name": "Heart Rate",
+        "unit": "beats/minute",
+        "value": "68.9"
+      },
+      {
+        "name": "Temperature",
+        "unit": null,
+        "value": "99.1"
+      }
+    ]
+  },
+  "ddb0270946d503fbed83f1620ed70883de2fe05b76972eafa799ea7c7903a6bb": {
+    "address": "6480 Cedar Ln, Arlington, VA 37337",
+    "date_of_birth": "1979-01-26",
+    "diagnoses": [
+      {
+        "name": "COPD"
+      },
+      {
+        "name": "hypothyroidism"
+      },
+      {
+        "name": "obesity"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "not recorded",
+        "name": "Metformin 500 MG Oral Tablet"
+      },
+      {
+        "dosage": "Take 20 mg by mouth once daily",
+        "name": "Omeprazole 20 MG Oral Capsule"
+      }
+    ],
+    "mrn": null,
+    "patient_name": "Lisa Jones",
+    "vitals": []
+  },
+  "de0b4ce1c19f87d0c74a42ebbfa4549a4dbae5f0c65d4c9651f7e3dad220c0df": {
+    "address": "6478 Oak Ave, Arlington, VA 27649",
+    "date_of_birth": "1985-07-06",
+    "diagnoses": [
+      {
+        "name": "Major depressive disorder, single episode, unspecified"
+      },
+      {
+        "name": "Type 2 diabetes mellitus without complications"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "2puff q4h PRN",
+        "name": "Albuterol 90 MCG Inhaler"
+      },
+      {
+        "dosage": "Take 20 mg by mouth once daily",
+        "name": "Omeprazole 20 MG Oral Capsule"
+      },
+      {
+        "dosage": "10mg PO QD",
+        "name": "Lisinopril 10 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN968524",
+    "patient_name": "Karen Hernandez",
+    "vitals": [
+      {
+        "name": "Weight",
+        "unit": "kg",
+        "value": "87.1"
+      },
+      {
+        "name": "Glucose",
+        "unit": "mg/dL",
+        "value": "72.9"
+      }
+    ]
+  },
+  "de92e5cb968eb80e951928b2f004b7664298bc675e671d1418ac0363a7f83f1a": {
+    "address": "2116 Oak Ave, Springfield, IL 86419",
+    "date_of_birth": "1941-05-17",
+    "diagnoses": [
+      {
+        "name": "Unspecified asthma, uncomplicated"
+      },
+      {
+        "name": "Chronic obstructive pulmonary disease, unspecified"
+      },
+      {
+        "name": "obesity"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "10mg PO QD",
+        "name": "Lisinopril 10 MG Oral Tablet"
+      },
+      {
+        "dosage": null,
+        "name": "Metformin 500 MG Oral Tablet"
+      },
+      {
+        "dosage": "50mg PO QD",
+        "name": "Sertraline 50 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN857537",
+    "patient_name": "Charles Anderson",
+    "vitals": [
+      {
+        "name": "Glu",
+        "unit": "mg/dL",
+        "value": "149.1"
+      },
+      {
+        "name": "Ht",
+        "unit": null,
+        "value": "59.6"
+      },
+      {
+        "name": "Temp",
+        "unit": "Cel",
+        "value": "37.8"
       }
     ]
   },
@@ -3877,6 +7055,111 @@
         "value": "97.2"
       }
     ]
+  },
+  "e17c52b5dbb23323bce250342768cee5eac36daf2d618cf987a0edc44c1f137b": {
+    "address": null,
+    "date_of_birth": "1979-05-03",
+    "diagnoses": [
+      {
+        "name": "Essential (primary) hypertension"
+      },
+      {
+        "name": "Obesity"
+      },
+      {
+        "name": "COPD"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "10 mg by mouth once daily",
+        "name": "Lisinopril 10 MG Oral Tablet"
+      },
+      {
+        "dosage": "dosage not recorded",
+        "name": "Sertraline 50 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN936433",
+    "patient_name": "Lisa Miller",
+    "vitals": [
+      {
+        "name": "Glucose",
+        "unit": "mg/dL",
+        "value": "116.0"
+      },
+      {
+        "name": "Height",
+        "unit": "cm",
+        "value": "169.2"
+      }
+    ]
+  },
+  "e1fdc136c6e3dfc85db01bfca3c06ec4158f09d1e60081277f86ed4bc4758835": {
+    "address": "6342 Main St, Greenville, SC 29626",
+    "date_of_birth": "1965-07-12",
+    "diagnoses": [
+      {
+        "name": "hypothyroidism"
+      },
+      {
+        "name": "Unspecified asthma, uncomplicated"
+      },
+      {
+        "name": "COPD"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "20mg PO QHS",
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN576419",
+    "patient_name": "Steven Hernandez",
+    "vitals": [
+      {
+        "name": "BP",
+        "unit": "mm[Hg]",
+        "value": "129.2"
+      },
+      {
+        "name": "Ht",
+        "unit": null,
+        "value": "69.7"
+      },
+      {
+        "name": "Wt",
+        "unit": "kg",
+        "value": "100.5"
+      }
+    ]
+  },
+  "e28f004dd384528f27152f0fec79db7f78838b6e9b17f5834b5624cb2bc11f6d": {
+    "address": null,
+    "date_of_birth": "1999-08-27",
+    "diagnoses": [
+      {
+        "name": "Major Depressive Disorder (MDD)"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "20mg PO QHS",
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      },
+      {
+        "dosage": "50 mg by mouth once daily",
+        "name": "Sertraline 50 MG Oral Tablet"
+      },
+      {
+        "dosage": null,
+        "name": "Levothyroxine 75 MCG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN497562",
+    "patient_name": "William Wilson",
+    "vitals": []
   },
   "e2e715a97b13a5f17fa64cd6aa56be98fb6ba554c8d6d5f4aa31ba145eea4522": {
     "date_of_birth": "1952-01-18",
@@ -4049,6 +7332,83 @@
     "patient_name": "Barbara Wilson",
     "vitals": []
   },
+  "ea4c6fe63a6c057fa2a62ddaaf1c802802d3e5898024ffef4fc8c7463c09b130": {
+    "address": "8777 Lake St, Arlington, VA 83657",
+    "date_of_birth": "1955-10-01",
+    "diagnoses": [
+      {
+        "name": "Hyperlipidemia, unspecified"
+      },
+      {
+        "name": "HLD"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": null,
+        "name": "Lisinopril 10 MG Oral Tablet"
+      },
+      {
+        "dosage": "Take 20 mg by mouth at bedtime",
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      },
+      {
+        "dosage": "5mg PO QD",
+        "name": "Amlodipine 5 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN614259",
+    "patient_name": "Sarah Martinez",
+    "vitals": [
+      {
+        "name": "HR",
+        "unit": null,
+        "value": "71.8"
+      },
+      {
+        "name": "BP",
+        "unit": "mm[Hg]",
+        "value": "113.6"
+      },
+      {
+        "name": "Temp",
+        "unit": null,
+        "value": "97.2"
+      }
+    ]
+  },
+  "eb1278c989bbd887590497a7dc5e627ea97c9de40b640f6b9687055a7981e7b8": {
+    "address": "2395 Cedar Ln, Fairview, NC 88853",
+    "date_of_birth": "1978-08-14",
+    "diagnoses": [
+      {
+        "name": "HLD"
+      },
+      {
+        "name": "hypothyroidism"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "50mg PO QD",
+        "name": "Sertraline 50 MG Oral Tablet"
+      }
+    ],
+    "mrn": null,
+    "patient_name": "Margaret Hernandez",
+    "vitals": [
+      {
+        "name": "Weight",
+        "unit": "lb_av",
+        "value": "232.8"
+      },
+      {
+        "name": "Height",
+        "unit": null,
+        "value": "156.0"
+      }
+    ]
+  },
   "eb19636ec12d96479e53a21de247b9fa9fcaed065961817a9239d26792dfb450": {
     "address": "6133 Elm St, Franklin, TX 65076",
     "date_of_birth": "1972-12-22",
@@ -4089,6 +7449,51 @@
       }
     ]
   },
+  "ec75c0e7642485526310c57d8212715ca22d15408440f409f757b34dac956099": {
+    "address": "4706 Cedar Ln, Clinton, OH 38449",
+    "date_of_birth": "1950-02-11",
+    "diagnoses": [
+      {
+        "name": "HTN"
+      },
+      {
+        "name": "T2DM"
+      },
+      {
+        "name": "Unspecified asthma, uncomplicated"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "75mcg PO QAM",
+        "name": "Levothyroxine 75 MCG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN352792",
+    "patient_name": "Thomas Gonzalez",
+    "vitals": [
+      {
+        "name": "Temp",
+        "unit": null,
+        "value": "98.6"
+      },
+      {
+        "name": "HR",
+        "unit": "beats/minute",
+        "value": "55.8"
+      },
+      {
+        "name": "BP",
+        "unit": "mm[Hg]",
+        "value": "101.6"
+      },
+      {
+        "name": "Wt",
+        "unit": null,
+        "value": "206.4"
+      }
+    ]
+  },
   "ed843fdbf8fa53e24f1b352235edf37dae72b3798b090cbbfa8dc872dc0b248a": {
     "address": "4754 Maple Dr, Greenville, SC 85200",
     "date_of_birth": "1963-12-09",
@@ -4121,6 +7526,108 @@
         "value": "120.3"
       }
     ]
+  },
+  "edab6db629efe50186c1609f0000e63964ea727828baee2a5ae918f001c290d7": {
+    "address": null,
+    "date_of_birth": "1959-01-01",
+    "diagnoses": [
+      {
+        "name": "Gastro-esophageal reflux disease without esophagitis"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": null,
+        "name": "Albuterol 90 MCG Inhaler"
+      },
+      {
+        "dosage": "2puff q4h PRN",
+        "name": "Albuterol 90 MCG Inhaler"
+      }
+    ],
+    "mrn": "MRN299254",
+    "patient_name": "Sandra Smith",
+    "vitals": [
+      {
+        "name": "Weight",
+        "unit": null,
+        "value": "105.3"
+      }
+    ]
+  },
+  "ee2ad84ad97be5cc5e97467c649e3a77c45508d523e68214b8dce17a35091a2f": {
+    "address": "4931 Washington Ave, Salem, OR 10784",
+    "date_of_birth": "1989-04-28",
+    "diagnoses": [
+      {
+        "name": "Obesity, unspecified"
+      },
+      {
+        "name": "Hyperlipidemia, unspecified"
+      },
+      {
+        "name": "Migraine"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "dosage not recorded",
+        "name": "Amlodipine 5 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN273148",
+    "patient_name": "Michael Thomas",
+    "vitals": []
+  },
+  "ef0b309f892f93f5a8c1d13f432973fd3c50f61aacd6850b336bf8440f1627e9": {
+    "address": "9538 Pine Rd, Salem, OR 64848",
+    "date_of_birth": "1945-06-07",
+    "diagnoses": [
+      {
+        "name": "Gastro-esophageal reflux disease without esophagitis"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "Inhale 2 puffs every 4 hours as needed",
+        "name": "Albuterol 90 MCG Inhaler"
+      }
+    ],
+    "mrn": "MRN517479",
+    "patient_name": "Sarah Lopez",
+    "vitals": [
+      {
+        "name": "HR",
+        "unit": "beats/minute",
+        "value": "90.4"
+      },
+      {
+        "name": "Ht",
+        "unit": "cm",
+        "value": "158.2"
+      }
+    ]
+  },
+  "f0286ac94ad9d7084302900bec198a0372798186a12fce61b7faa57641048254": {
+    "address": "4590 Elm St, Arlington, VA 38147",
+    "date_of_birth": "1947-02-02",
+    "diagnoses": [
+      {
+        "name": "Major depressive disorder, single episode, unspecified"
+      },
+      {
+        "name": "Hyperlipidemia, unspecified"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "500mg PO BID",
+        "name": "Metformin 500 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN491172",
+    "patient_name": "Margaret Gonzalez",
+    "vitals": []
   },
   "f128bcdebf0c8bee8e782cca4db80b89aa731145039452cb4ecab88c768559b2": {
     "address": "7908 Elm St, Greenville, SC 50515",
@@ -4196,6 +7703,74 @@
       }
     ]
   },
+  "f1fc082b22d352ff7eb7a09740045e928c2a9c65898aee3f9b15834123e59b7a": {
+    "address": "8579 Cedar Ln, Bristol, CT 51877",
+    "date_of_birth": "1984-12-04",
+    "diagnoses": [
+      {
+        "name": "Essential (primary) hypertension"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "20mg PO QD",
+        "name": "Omeprazole 20 MG Oral Capsule"
+      }
+    ],
+    "mrn": null,
+    "patient_name": "Mark Williams",
+    "vitals": [
+      {
+        "name": "Temperature",
+        "unit": "Cel",
+        "value": "37.1"
+      }
+    ]
+  },
+  "f2a60ca06288f0944d258eac64842841fb86570d345303d16bddca0dd2e26c9e": {
+    "address": "9835 Cedar Ln, Bristol, CT 42370",
+    "date_of_birth": "1960-10-07",
+    "diagnoses": [
+      {
+        "name": "Gastro-esophageal reflux disease without esophagitis"
+      },
+      {
+        "name": "COPD"
+      },
+      {
+        "name": "Major depressive disorder, single episode, unspecified"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "75mcg PO QAM",
+        "name": "Levothyroxine 75 MCG Oral Tablet"
+      },
+      {
+        "dosage": null,
+        "name": "Amlodipine 5 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN402099",
+    "patient_name": "Elizabeth Johnson",
+    "vitals": [
+      {
+        "name": "Weight",
+        "unit": null,
+        "value": "135.1"
+      },
+      {
+        "name": "Blood Pressure",
+        "unit": "mm[Hg]",
+        "value": "102.9"
+      },
+      {
+        "name": "Height",
+        "unit": "cm",
+        "value": "180.0"
+      }
+    ]
+  },
   "f369e0eec7a527dbc6793ff5c0d4024d40171c1150c5276b479fc21096913b75": {
     "address": "5595 Park Blvd, Fairview, NC 67320",
     "date_of_birth": "1961-06-25",
@@ -4235,6 +7810,39 @@
         "name": "HR",
         "unit": "beats/minute",
         "value": "65.3"
+      }
+    ]
+  },
+  "f49a4eb7d51da6bbf67a112a5df15edef55882afc5b5ab0eb24cdf5c8009de0a": {
+    "address": "4190 Elm St, Madison, WI 59013",
+    "date_of_birth": "1963-10-17",
+    "diagnoses": [
+      {
+        "name": "Migraine, unspecified, not intractable"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "Take 20 mg by mouth once daily",
+        "name": "Omeprazole 20 MG Oral Capsule"
+      },
+      {
+        "dosage": "2puff q4h PRN",
+        "name": "Albuterol 90 MCG Inhaler"
+      }
+    ],
+    "mrn": "MRN319869",
+    "patient_name": "Jessica Smith",
+    "vitals": [
+      {
+        "name": "HR",
+        "unit": "beats/minute",
+        "value": "72.4"
+      },
+      {
+        "name": "BP",
+        "unit": null,
+        "value": "135.4"
       }
     ]
   },
@@ -4341,6 +7949,38 @@
       }
     ]
   },
+  "fb593f6e27b1aba8c8370f3d9838b9f6089aed80487878b79488ceb7ceaf6f8a": {
+    "address": "4578 Oak Ave, Springfield, IL 51423",
+    "date_of_birth": "1999-12-07",
+    "diagnoses": [
+      {
+        "name": "Type 2 diabetes mellitus without complications"
+      },
+      {
+        "name": "Essential (primary) hypertension"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "50mg PO QD",
+        "name": "Sertraline 50 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN945362",
+    "patient_name": "Charles Moore",
+    "vitals": [
+      {
+        "name": "Height",
+        "unit": "cm",
+        "value": "168.4"
+      },
+      {
+        "name": "Heart Rate",
+        "unit": "beats/minute",
+        "value": "65.9"
+      }
+    ]
+  },
   "fceb0aa9e0c82c3b7047e993ee1e4a11422c859fdd650e132d78e2226f0c66e3": {
     "address": "437 Elm St, Georgetown, KY 10315",
     "date_of_birth": "1986-01-17",
@@ -4408,6 +8048,42 @@
         "name": "Wt",
         "unit": null,
         "value": "75.7"
+      }
+    ]
+  },
+  "ff54ab96d4de9426a9a45611a490ec17032df3c32d343f105d0ca9885c484421": {
+    "address": "2163 Main St, Greenville, SC 77886",
+    "date_of_birth": "1942-08-06",
+    "diagnoses": [
+      {
+        "name": "migraine"
+      },
+      {
+        "name": "asthma"
+      }
+    ],
+    "medications": [
+      {
+        "dosage": "20mg PO QHS",
+        "name": "Atorvastatin 20 MG Oral Tablet"
+      },
+      {
+        "dosage": "10mg PO QD",
+        "name": "Lisinopril 10 MG Oral Tablet"
+      }
+    ],
+    "mrn": "MRN289179",
+    "patient_name": "Daniel Rodriguez",
+    "vitals": [
+      {
+        "name": "BP",
+        "unit": "mm[Hg]",
+        "value": "129.6"
+      },
+      {
+        "name": "Glu",
+        "unit": null,
+        "value": "128.4"
       }
     ]
   },

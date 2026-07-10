@@ -228,6 +228,13 @@ def main():
     base_model = AutoModelForCausalLM.from_pretrained(BASE_MODEL, dtype=torch.float16)
     base_model.to(device)
 
+    # Seed the global RNG before LoRA adapter creation -- LoRA's A matrices
+    # are Kaiming-uniform initialized from the global RNG (B is zero-init,
+    # so it doesn't matter, but A does). Without this, only the per-epoch
+    # data-shuffle order (via the separate `gen` generator below) was
+    # reproducible; the adapter's own starting weights were not.
+    torch.manual_seed(42)
+
     lora_config = LoraConfig(**LORA_CONFIG)
     model = get_peft_model(base_model, lora_config)
     model.to(device)
@@ -250,6 +257,9 @@ def main():
 
     history = {"epoch": [], "train_loss": [], "val_loss": []}
     gen = torch.Generator().manual_seed(42)
+
+    checkpoints_dir = args.out / "checkpoints"
+    best_epoch, best_val_loss = None, float("inf")
 
     print(f"\nTraining for {args.epochs} epochs (batch size {args.batch_size}, lr {args.lr}) on {device} ...")
     start = time.time()
@@ -281,8 +291,29 @@ def main():
         history["val_loss"].append(val_loss)
         print(f"epoch {epoch}/{args.epochs}  train_loss={train_loss:.4f}  val_loss={val_loss:.4f}")
 
+        # Checkpoint every epoch -- cheap (4.2 MB adapter) and lets the best
+        # epoch be recovered after the fact instead of only ever having the
+        # last one.
+        checkpoint_dir = checkpoints_dir / f"epoch_{epoch}"
+        checkpoint_dir.mkdir(parents=True, exist_ok=True)
+        model.save_pretrained(checkpoint_dir)
+
+        if val_loss < best_val_loss:
+            best_val_loss = val_loss
+            best_epoch = epoch
+
     elapsed = time.time() - start
     print(f"\nTraining finished in {elapsed:.1f}s")
+    print(f"Best epoch: {best_epoch} (val_loss={best_val_loss:.4f})")
+
+    # Reload the best epoch's adapter weights before generating samples and
+    # saving the primary adapter -- otherwise both would silently reflect
+    # whichever epoch happened to run last, not the best one, even though
+    # val loss plateaus/ticks up after epoch ~3 on this dataset (see module
+    # docstring).
+    model.load_adapter(
+        str(checkpoints_dir / f"epoch_{best_epoch}"), adapter_name="default", torch_device=str(device)
+    )
 
     # --- Before/after generation samples (base vs. fine-tuned) -------------
 
@@ -328,6 +359,9 @@ def main():
         "training_seconds": round(elapsed, 1),
         "final_train_loss": history["train_loss"][-1],
         "final_val_loss": history["val_loss"][-1],
+        "best_epoch": best_epoch,
+        "best_train_loss": history["train_loss"][best_epoch - 1],
+        "best_val_loss": best_val_loss,
         "loss_history": history,
     }
     (args.out / "config.json").write_text(json.dumps(config_out, indent=2))

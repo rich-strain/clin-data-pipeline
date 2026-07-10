@@ -684,3 +684,96 @@ this pass) are done.
 
 **Not yet done:** Rich's own rehearsal of the "one app, five stages"
 walkthrough narrative — a presentation exercise, not a build task.
+
+---
+
+**Three bugs fixed, full pipeline rebuild + retrain — complete and
+verified.**
+
+1. **`generate_fhir.py` date-ceiling bug.** Onset/effective/asserted dates
+   were generated up to a hardcoded ceiling (`date(2026, 7, 8)`), but
+   `redact.py` then shifts dates by up to +/- `SHIFT_RANGE_DAYS` (365) with
+   no bound check — a date generated near the ceiling could shift past it.
+   Fixed by importing `SHIFT_RANGE_DAYS` from `curation.redact` (single
+   source of truth, no duplicated magic number — confirmed no circular
+   import, since `redact.py` has no dependency on `generate_fhir.py`) and
+   generating against `GENERATION_CEILING = TRUE_CEILING -
+   timedelta(days=SHIFT_RANGE_DAYS)` instead. Still a fixed historical
+   ceiling, not a dynamic `date.today()` — just correctly reduced by the
+   maximum possible shift. See docs/design_decisions.md's redact section
+   for full verification numbers.
+2. **`normalize.py` diagnosis-matching gap.** 3 specific paraphrase
+   variants observed in real Haiku extraction output — `"Hypertension
+   (HTN)"`, `"Major depressive disorder"`, `"Type 2 Diabetes Mellitus"` —
+   matched neither a canonical name nor a known abbreviation, so records
+   carrying only one of these phrasings didn't count toward their true
+   diagnosis category in `rebalance.py`. Fixed with a small
+   `_DIAGNOSIS_PARAPHRASES` lookup, same pattern as the existing
+   `_ABBREV_TO_CANONICAL` table. Scoped to exactly these 3 phrasings, not
+   the full unmatched-values list (dosage/unit variants remain unmatched,
+   still out of scope). See docs/design_decisions.md's normalize/rebalance
+   sections.
+3. **`train_runner.py` checkpoint/reproducibility gap.** Only the
+   data-shuffle order was seeded, not the LoRA adapter's own initial
+   weights; and the script only ever kept the *last* epoch's adapter even
+   though val loss reliably plateaus/ticks up before the last epoch on
+   this dataset size. Fixed: `torch.manual_seed(42)` before adapter
+   creation; every epoch checkpointed to `training_results/checkpoints/
+   epoch_{N}/`; best (lowest val_loss) epoch tracked and its weights
+   reloaded via PEFT's `load_adapter` before generating samples and saving
+   the primary `training_results/adapter/`; `config.json` now records
+   `best_epoch`/`best_train_loss`/`best_val_loss` alongside the full
+   `loss_history`. `app.py`'s Stage E page updated to state which epoch was
+   selected and why.
+
+**Full pipeline regenerated and reverified end to end** (generate_fhir -> 
+generate_notes -> extractor -> normalize -> redact -> rebalance ->
+synthesize -> split -> format_jsonl), same rigor as prior full rebuilds:
+
+- `generate_fhir.py`: spot-checked all 677 dated resources — max generated
+  onset/effective date `2025-07-05`, safely under the new `2025-07-08`
+  generation ceiling.
+- `extractor.py`: 100 fresh Haiku calls as expected (new patient UUIDs ->
+  new cache keys); cache grew from 120 to 220 entries.
+- `normalize.py`: confirmed all 3 targeted phrasings no longer appear in
+  the unmatched-values list (48 unmatched values remain at this scale, all
+  unrelated dosage/unit variants, e.g. raw UCUM codes and dosage text
+  without the "Take ... by mouth" framing — out of scope for this pass).
+- `redact.py`: spot-checked shifted `note_date` across all 100 records —
+  max shifted value `2026-05-10`, safely under the true `2026-07-08`
+  ceiling (zero violations, vs. 20/100 before the fix).
+- `rebalance.py`: confirmed every one of the 10 canonical diagnosis
+  categories now shows a non-zero, plausible `before` count (13-22
+  records) — no phantom zero/singleton categories from mis-normalized
+  diagnosis names remain. 32 duplicates added (target 22-28 per category
+  depending on multi-diagnosis overshoot).
+- `synthesize.py`: zero categories at zero this run (all organically
+  represented after rebalance) — correctly made zero API calls.
+- `split.py`: 100 original patient groups -> 80 train / 20 val;
+  reconfirmed zero patient-group leakage.
+- `format_jsonl.py`: full per-patient leakage check (name, DOB, MRN,
+  address) across all 132 records — **zero leaks**.
+
+**Final counts (this rebuild):** 100 patients -> 100 extracted -> 100
+normalized -> 100 redacted -> 132 rebalanced (32 duplicates) -> 132
+synthesized (0 new) -> 132 eligible for Stage D (0 synthesized to exclude)
+-> **112 train / 20 val** (`data/splits/train.jsonl` / `val.jsonl`). This
+supersedes the prior 139 train / 20 val counts — the difference reflects
+the normalize.py fix changing which records land in which
+`rebalance_duplicate_of` group, not a data-loss bug.
+
+**Stage E retrained on the rebuilt data (112 train / 20 val examples, 906.0s
+wall clock on MPS):** train loss declined every epoch (0.1309 -> 0.0238 ->
+0.0127 -> 0.0101 -> 0.0068 -> 0.0055); val loss was lowest at **epoch 3
+(0.0304)**, after declining from 0.0548 (epoch 1) and 0.0375 (epoch 2), then
+ticking back up through epochs 4-6 (0.0338, 0.0368, 0.0364) — the same
+mild-overfitting shape as before, now correctly captured: the shipped
+adapter is reloaded from epoch 3's checkpoint, not epoch 6's. Verified:
+`training_results/checkpoints/` contains 6 valid epoch checkpoints, the
+selected best epoch (3) matches the lowest val_loss in the printed history,
+and `training_results/adapter/adapter_model.safetensors` is byte-identical
+(checksum-verified) to `checkpoints/epoch_3/adapter_model.safetensors`.
+
+**Re-ran the `streamlit.testing.v1.AppTest` verification** against the
+fully regenerated `data/` and `training_results/`: initial load plus all 5
+sidebar stage clicks produce zero exceptions and zero warnings.
