@@ -777,3 +777,44 @@ and `training_results/adapter/adapter_model.safetensors` is byte-identical
 **Re-ran the `streamlit.testing.v1.AppTest` verification** against the
 fully regenerated `data/` and `training_results/`: initial load plus all 5
 sidebar stage clicks produce zero exceptions and zero warnings.
+
+---
+
+**Post-Step-9 addition: scikit-learn-ready feature encoding (Stage A) —
+complete and verified.** Prompted by a review question — the flattened
+feature table alone only demonstrates "FHIR → flat CSV," not "FHIR →
+ML-ready features," which is what tying this branch to a classical-ML
+workflow claims. `generation/encode_features.py` closes that gap with real
+`sklearn.preprocessing` transforms: `OneHotEncoder` (gender, missing →
+all-zero), `MultiLabelBinarizer` (conditions/medications, one 0/1 column
+per canonical code, imported from `generate_fhir.py`), and unit-normalize
+(lb→kg, in→cm, °F→°C) + `SimpleImputer` (mean) for vitals. Output:
+`data/generated/patient_features_encoded.csv` (100 rows × 34 feature
+columns, all numeric, 0 missing cells). Deliberately does NOT fit a model —
+this synthetic data has no genuine outcome label, so a "predictive model"
+would be a meaningless overclaim; the encoding itself is the demonstrated
+skill. Rationale + trade-offs in docs/design_decisions.md (new "Stage
+A/encode" section).
+
+Verified independently against source data: single-diagnosis patient
+(James Rodriguez) → exactly one `dx:` column = 1, gender all-zero
+(correctly encoded missing); multi-diagnosis patient (Patricia Williams,
+MDD + GERD) → exactly two `dx:` columns = 1 (the multi-label case);
+unit normalization (138.7 lb → 62.9 kg); imputation (55 missing systolic
+BP → 0 missing, filled with column mean). `scikit-learn` added to
+requirements.txt.
+
+**App (Stage A) updated:** the raw flattened table and the new encoded view
+are now **collapsed-by-default expanders** (matching the FHIR-bundle
+expander pattern already on that page), keeping this parallel classical-ML
+branch available without crowding the primary extraction/curation
+narrative. The encoding expander shows a before/after highlight for one
+patient (for legibility — a 34-column raw table isn't easy to scan row by
+row), the raw→encoded shape summary (read off the real data), the actual
+sklearn code, **and the full encoded matrix (all 100 patients)** below it —
+so it's directly comparable against the full raw table in its own expander,
+matching how every other before/after in this app (Stage C's rebalance/
+synthesize tables) shows the complete data, not just an example. Re-ran
+`AppTest`: initial load + all 5 stage clicks, zero exceptions; confirmed
+the encoding section renders real before/after content and the full table
+(not the missing-file fallback).

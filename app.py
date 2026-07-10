@@ -62,10 +62,93 @@ def find_by_patient(records: list[dict], patient_id: str) -> dict | None:
     return next((r for r in records if r.get("patient_id") == patient_id), None)
 
 
+ENCODING_CODE = '''from sklearn.preprocessing import OneHotEncoder, MultiLabelBinarizer
+from sklearn.impute import SimpleImputer
+
+# gender -> one independent 0/1 column per category (missing -> all-zero),
+# so the model never sees a false male<->female ordering.
+OneHotEncoder(categories=[["female", "male"]], handle_unknown="ignore")
+
+# conditions / medications -> one 0/1 column per canonical code. A patient
+# can be 1 in several at once (multi-label) — one-hot can't represent that.
+MultiLabelBinarizer(classes=CONDITION_DISPLAYS)
+
+# vitals -> unit-normalized to canonical units (lb->kg, in->cm, degF->degC),
+# then missing readings mean-imputed so no cell is left blank.
+SimpleImputer(strategy="mean")'''
+
+
+def render_encoding_section(features, encoded, example_id):
+    """Renders the raw -> scikit-learn-ready before/after for one patient,
+    plus the shape/dtype summary and the real preprocessing code."""
+    if encoded is None:
+        st.info(
+            "Encoded feature matrix not found. Run `python generation/"
+            "encode_features.py` to generate `data/generated/"
+            "patient_features_encoded.csv`."
+        )
+        return
+
+    st.caption(
+        "The flattened table above is human-readable but **not** directly "
+        "usable by a classical ML model: `gender` is text, `conditions`/"
+        "`medications` pack several values into one string, vitals arrive in "
+        "mixed units with gaps. `generation/encode_features.py` closes that "
+        "gap with standard `sklearn.preprocessing` transforms — the same data, "
+        "now a fully numeric matrix a scikit-learn estimator could `.fit()` on."
+    )
+
+    raw_row = features[features["patient_id"] == example_id]
+    enc_row = encoded[encoded["patient_id"] == example_id]
+    if not raw_row.empty and not enc_row.empty:
+        raw_row = raw_row.iloc[0]
+        enc_row = enc_row.iloc[0]
+        dx_on = [c.replace("dx: ", "") for c in encoded.columns if c.startswith("dx:") and enc_row[c] == 1]
+        raw_gender = raw_row["gender"] if isinstance(raw_row["gender"], str) and raw_row["gender"] else "(missing)"
+
+        before, after = st.columns(2)
+        with before:
+            st.markdown("**Before** (human-readable)")
+            st.markdown(
+                f"- `gender`: {raw_gender}\n"
+                f"- `conditions`: {raw_row['conditions']}"
+            )
+        with after:
+            st.markdown("**After** (scikit-learn-ready)")
+            dx_lines = "\n".join(f"    - `dx: {d}` = 1" for d in dx_on) or "    - (none)"
+            st.markdown(
+                f"- `gender_female` = {enc_row['gender_female']}, "
+                f"`gender_male` = {enc_row['gender_male']}"
+                + ("  _(missing → all-zero)_" if raw_gender == "(missing)" else "")
+                + "\n- diagnosis columns set to 1 (all others 0):\n"
+                + dx_lines
+            )
+
+    raw_types = features.drop(columns=["patient_id"]).dtypes
+    n_non_numeric = int(sum(not pd.api.types.is_numeric_dtype(t) for t in raw_types))
+    feature_cols = [c for c in encoded.columns if c != "patient_id"]
+    st.markdown(
+        f"**Shape:** raw `{len(features)} × {len(features.columns) - 1}` "
+        f"({n_non_numeric} non-numeric columns) → "
+        f"encoded `{len(encoded)} × {len(feature_cols)}` "
+        f"(**all numeric**, 0 missing cells)."
+    )
+    st.caption(
+        "`patient_id` is retained only as a join key, not a model feature; "
+        "identifiers (MRN, name, DOB) and the now-constant unit columns are "
+        "dropped."
+    )
+    st.code(ENCODING_CODE, language="python")
+
+    st.markdown("**Full encoded matrix** (all patients) — for direct comparison against the raw table above:")
+    st.dataframe(encoded, width='stretch')
+
+
 def render_stage_a():
     bundles = load_json("data/generated/fhir_bundles.json")
     notes = load_jsonl("data/generated/clinical_notes.jsonl")
     features = load_csv("data/generated/patient_features.csv")
+    encoded = load_csv("data/generated/patient_features_encoded.csv")
 
     if missing(
         "data/generated/fhir_bundles.json",
@@ -94,13 +177,22 @@ def render_stage_a():
 
     st.subheader("Flattened feature table")
     st.caption(
-        "Raw, unredacted Stage A demonstration output — one row per patient, "
-        "projected from the FHIR bundles above. This table still carries real "
-        "synthetic names/DOB and is a separate, parallel artifact never "
-        "consumed by Stage D/E training; the redacted branch that actually "
-        "feeds fine-tuning is shown in Stages C and D."
+        "A *view* derived from the FHIR bundles above — one row per patient. "
+        "This is the classical-ML preparation branch (parallel to the "
+        "notes → extraction branch); it is never consumed by Stage D/E "
+        "training. Expand for the raw table and the scikit-learn-ready "
+        "encoding derived from it."
     )
-    st.dataframe(features, width='stretch')
+    with st.expander("Flattened feature table (raw, one row per patient)", expanded=False):
+        st.caption(
+            "Raw, unredacted Stage A demonstration output — still carries real "
+            "synthetic names/DOB/MRN. A separate, parallel artifact never fed to "
+            "fine-tuning; the redacted branch that actually feeds training is "
+            "shown in Stages C and D."
+        )
+        st.dataframe(features, width='stretch')
+    with st.expander("Scikit-learn-ready encoding (numeric feature matrix)", expanded=False):
+        render_encoding_section(features, encoded, patient_resource["id"])
 
     st.subheader("Sample clinical note")
     st.caption("Free-text note generated to feed Stage B's extraction — not derived from the FHIR data above.")

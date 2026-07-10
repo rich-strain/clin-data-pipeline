@@ -27,6 +27,62 @@ it throws away a reading that's still probably informative (generation
 order is not random) for one that's more conservative but loses signal for
 no measurable benefit in this synthetic-only pipeline.
 
+## Stage A/encode — scikit-learn-ready feature matrix
+
+**Added after Step 9 was already complete**, in response to a fair review
+question: the flattened feature table, on its own, only demonstrates
+"denormalize nested FHIR into a flat CSV." That's a real step, but it's not
+the same skill as "prepare FHIR data for a classical ML model" — which is
+what tying this branch back to a scikit-learn workflow actually claims.
+`generation/encode_features.py` closes that gap so the claim is earned, not
+implied, turning "flattened for display" into "flattened for machine
+learning."
+
+**The transforms, and why each (not just that each was used):**
+
+- **`gender` → `OneHotEncoder`.** A naive `male=0, female=1` integer map
+  would let the model compute `female - male = 1` and potentially learn a
+  pattern along that meaningless number line. One-hot gives each category
+  its own independent 0/1 column, encoding "these are unordered categories"
+  rather than "points on a scale." Missing gender (dropped ~15% of the time
+  by the messiness toggle) is represented as all-zero across the one-hot
+  columns via `handle_unknown="ignore"` — a defensible, explicit encoding of
+  "absent," distinct from either category being present.
+- **`conditions` / `medications` → `MultiLabelBinarizer`.** These are the
+  interesting case: a patient legitimately has *several* diagnoses at once,
+  so this is multi-label, not single-category — one-hot cannot represent it.
+  One 0/1 column per canonical ICD-10 condition / RxNorm medication
+  (imported from `generate_fhir.py`, the single source of truth, with a
+  fixed `classes=` so the feature schema is stable regardless of which
+  categories happen to appear in a given run). A patient can be 1 in several
+  columns simultaneously.
+- **vital `*_value` → unit-normalize, then `SimpleImputer`.** Unit
+  normalization first (lb→kg, in→cm, °F→°C, using the unit column `flatten`
+  emits): a body-weight column mixing `92` (kg) and `138` (lb) is genuinely
+  garbage as a feature, so harmonizing units is required feature prep, not
+  optional polish — and skipping it would make the "ML-ready" claim false.
+  Then mean imputation fills genuinely-missing readings so no cell is blank.
+
+**Trade-offs stated honestly:** mean imputation is the simplest defensible
+default — it distorts the distribution less than zero-fill but ignores any
+structure in the missingness (a vital may be absent *because* it wasn't
+clinically relevant, not at random); a production pipeline might add a
+missing-indicator column or a model-based imputer. Identifiers
+(`patient_id`/`mrn`/name/`birth_date`) are dropped as non-features
+(`patient_id` is re-attached only as a join key), and the `*_unit` columns
+are dropped because, after normalization, they're constant (zero-variance)
+and carry no signal.
+
+**Deliberately not done: fitting an actual model.** This synthetic data has
+no genuine labeled outcome (no readmission flag, no real target), so
+training a "predictive model" on it would manufacture a meaningless result —
+exactly the kind of overclaiming Stage E's honest framing avoids. The
+encoding *is* the demonstrated skill here; a fabricated target would add
+nothing real. In the app, both the raw flattened table and this encoded view
+are collapsed-by-default expanders on the Stage A page, so this parallel
+classical-ML branch is available to a reviewer who wants it without crowding
+the primary extraction/curation narrative.
+
 ## Stage C — normalize
 
 **The problem:** Stage B's extraction output preserves the note's own

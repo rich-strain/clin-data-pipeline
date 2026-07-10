@@ -1,6 +1,7 @@
 streamlit
 anthropic
 pandas
+scikit-learn
 python-dotenv
 torch
 transformers
